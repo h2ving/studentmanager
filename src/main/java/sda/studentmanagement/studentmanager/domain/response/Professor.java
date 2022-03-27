@@ -1,4 +1,4 @@
-package sda.studentmanagement.studentmanager.domain.responce;
+package sda.studentmanagement.studentmanager.domain.response;
 
 
 import lombok.Data;
