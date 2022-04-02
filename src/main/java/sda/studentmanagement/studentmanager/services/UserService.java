@@ -26,4 +26,8 @@ public class UserService {
         //TODO: Implement authorities for student/professor and add saveduser to that repository.
         return savedUser;
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
 }

@@ -6,4 +6,5 @@ import sda.studentmanagement.studentmanager.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    User getUserByEmail(String email);
 }
