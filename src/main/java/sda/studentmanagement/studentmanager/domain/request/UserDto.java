@@ -2,6 +2,7 @@ package sda.studentmanagement.studentmanager.domain.request;
 
 import com.sun.istack.NotNull;
 import lombok.Data;
+import sda.studentmanagement.studentmanager.services.validations.ValidEmail;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -18,6 +19,7 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
+    @ValidEmail
     private String email;
 
     @NotNull
