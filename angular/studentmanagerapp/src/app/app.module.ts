@@ -8,8 +8,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
 import { StudentComponent } from './components/student/student.component';
+import { LoginComponent } from './components/login/login.component';
 
 const appRoutes: Routes = [
+  { path: '', component: LoginComponent },
   { path: 'student', component: StudentComponent }
 ];
 
@@ -17,6 +19,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     StudentComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

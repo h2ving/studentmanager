@@ -1,0 +1,32 @@
+<div class="login-bg"></div>
+
+<div class="login-container">
+  <div class="illustrator-container">
+    <img src="../../../assets/illustration.svg" alt="School management illustration">
+  </div>
+
+  <form class="form-container" (ngSubmit)="onSubmit()">
+    <h1>School Management System</h1>
+
+    <fa-icon [icon]="faUserCircle" class="user-logo"></fa-icon>
+    
+    <div class="input-container">
+      <fa-icon [icon]="faUser" class="input-icon"></fa-icon>
+      <input type="email" name="email" [(ngModel)]="email" placeholder="Email">
+    </div>
+
+    <div class="input-container">
+      <fa-icon [icon]="faLock" class="input-icon"></fa-icon>
+      <input type="password" name="password" [(ngModel)]="password" placeholder="*********">
+    </div>
+
+    <div class="form-login">
+      <div class="checkbox-container">
+        <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" value="rememberMe">
+        <label for="rememberMe">Remember me</label><br>
+      </div>
+
+      <input type="submit" value="LOGIN">
+    </div>
+  </form>
+</div>
