@@ -1,0 +1,188 @@
+$dark-color: #2e2e2e;
+$light-color: #f3f3f3;
+$white-color: #fff;
+
+.login-bg {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  background: url("../../../assets/login-bg.jpg") no-repeat center center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    pointer-events: none;
+  }
+}
+
+.login-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  height: 600px;
+
+  .illustrator-container {
+    background: rgba($color: #fffbf7, $alpha: 0.9);
+
+    img { height: 100%; }
+  }
+
+  .form-container {
+    padding: 2rem;
+    width: 450px;
+    border: 2px solid rgba($color: #fffbf7, $alpha: 0.9);
+    border-left: 0;
+    background: rgba($color: $white-color, $alpha: 0.7);
+
+    h1 {
+      text-align: center;
+      color: $dark-color;
+      margin-bottom: 3rem;
+    }
+
+    .user-logo {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      font-size: 100px;
+      color: $white-color;
+      opacity: 0.6;
+    }
+
+    .input-container {
+      margin-bottom: 1.5rem;
+      display: flex;
+  
+      .input-icon {
+        background: $light-color;
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+      }
+      
+      input[type=email], input[type=password] {
+        width: 100%;
+        border: none;
+        outline: 1px solid transparent;
+        opacity: 0.7;
+        padding-left: 10px;
+        color: $dark-color;
+        z-index: 99 !important;
+      }
+    }
+
+    .form-login {
+      width: 80%;
+      margin: 0 auto;
+
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+
+        input[type=checkbox] {
+          margin-left: 12px;
+          margin-right: 8px;
+          appearance: none;
+          outline: 0;
+          cursor: pointer;
+          position: relative;
+          width: 18px;
+          height: 18px;
+          border-radius: 1px;
+          background-color: $white-color;
+          opacity: 0.9;
+
+          &::before {
+            position: absolute;
+            content: '';
+            top: 2px;
+            left: 6px;
+            width: 4px;
+            height: 10px;
+            border-style: solid;
+            border-color: $white-color;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 0;
+          }
+
+          &:checked {
+            border-color: $dark-color;
+            background: $dark-color;
+  
+            &::before { opacity: 0.9; }
+          }
+        }
+  
+        label { color: $dark-color; }
+      }
+
+
+      input[type=submit] {
+        cursor: pointer;
+        background-color: $light-color;
+        letter-spacing: 1px;
+        margin-top: 10px;
+        width: 100%;
+        height: 40px;
+        border: 0;
+        outline: 0;
+        opacity: 0.8;
+        box-shadow: 2px 6px 16px $dark-color;
+
+        &:hover { opacity: 0.9; }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1320px) {
+  .login-container {
+    .illustrator-container img { width: 500px; }
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .login-container {
+    flex-direction: column;
+
+    .illustrator-container { display: none; }
+    .form-container { border-left: 2px solid rgba($color: #fffbf7, $alpha: 0.8); }
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .login-container {
+    width: 95%;
+
+    .form-container { width: 100%; }
+  }
+}
+
+@media only screen and (max-height: 700px) {
+  .login-container {
+    height: 530px;
+
+    .form-container h1 { margin-bottom: 0; }
+  }
+}
+
+@media only screen and (max-height: 540px) {
+  .login-container {
+    transform: translate(-50%, -40%);
+  }
+}
+
+@media only screen and (max-height: 450px) {
+  .login-container {
+    transform: translate(-50%, -30%);
+  }
+}
