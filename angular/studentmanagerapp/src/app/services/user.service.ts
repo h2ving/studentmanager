@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { User } from '../model/user.model';
+import { User } from '../models/user.model';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -38,6 +38,20 @@ export class UserService {
     const url = `${this.apiUrl}/user/registration`;
 
     return this.http.post<User>(url, user, httpOptions);
+  }
+
+  // Get all Users
+  getUsers(): Observable<User[]> {
+    const url = `${this.apiUrl}/user`;
+
+    return this.http.get<User[]>(url);
+  }
+
+  // Get User by ID
+  getUserById(userId: number): Observable<User> {
+    const url = `${this.apiUrl}/user/${userId}`;
+
+    return this.http.get<User>(url, httpOptions);
   }
 
   // Edit User
