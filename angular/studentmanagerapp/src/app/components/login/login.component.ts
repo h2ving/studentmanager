@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
   faUserCircle = faUserCircle;
   faUser = faUser;
   faLock = faLock;
-  userName: string;
+  email: string;
   password: string;
   rememberMe: boolean = false;
 
