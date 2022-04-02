@@ -1,4 +1,10 @@
 package sda.studentmanagement.studentmanager.repositories;
 
-public class UserRepository {
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import sda.studentmanagement.studentmanager.domain.User;
+
+public interface UserRepository extends JpaRepository<User, Integer> {
+
+    User getUserByEmail(String email);
 }
