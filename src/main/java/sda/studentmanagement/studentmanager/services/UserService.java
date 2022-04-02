@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.domain.request.UserDto;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
-import sda.studentmanagement.studentmanager.services.validations.EmailValidator;
 
 @Service
 public class UserService {
@@ -16,13 +15,13 @@ public class UserService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    private EmailValidator emailValidator;
-
     public User createNewUser(UserDto userDto) {
         User user = new User();
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
+        user.setMobileNumber(userDto.getMobileNumber());
+        user.setDateOfBirth(userDto.getDateOfBirth());
         user.setPassword(encoder.encode(userDto.getPassword()));
 
         User savedUser = userRepository.save(user);

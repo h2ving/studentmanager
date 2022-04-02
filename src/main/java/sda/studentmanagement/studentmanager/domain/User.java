@@ -2,8 +2,10 @@ package sda.studentmanagement.studentmanager.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,6 +26,12 @@ public class User {
     private String lastName;
 
     @Column
+    private Date dateOfBirth;
+
+    @Column
+    private String role;
+
+    @Column
     private String email;
 
     @Column
@@ -34,6 +42,10 @@ public class User {
 
     @Column
     private boolean enabled;
+
+    @Column
+    @CreatedDate
+    private Date createdAt;
 
     public User(String username, String email, String password) {
         this.username = username;

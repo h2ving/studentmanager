@@ -8,6 +8,7 @@ import sda.studentmanagement.studentmanager.services.validations.PasswordMatches
 import sda.studentmanagement.studentmanager.services.validations.ValidEmail;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -33,5 +34,15 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
-    private String matchingPassword;
+    private Date dateOfBirth;
+
+    @NotNull
+    @NotEmpty
+    private String mobileNumber;
+
+    @NotNull
+    @NotEmpty
+    private String role;
+
+
 }
