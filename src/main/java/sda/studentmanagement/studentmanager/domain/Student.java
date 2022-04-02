@@ -1,4 +1,4 @@
-package sda.studentmanagement.studentmanager.domain.response;
+package sda.studentmanagement.studentmanager.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
