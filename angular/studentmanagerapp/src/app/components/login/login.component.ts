@@ -1,7 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faUserCircle, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
-
 import { Subscription } from 'rxjs';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -18,12 +18,11 @@ export class LoginComponent implements OnInit {
 
   subscription: Subscription;
 
-  constructor() {
-  }
+  constructor(private userService: UserService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   onSubmit() {
+    this.userService.logIn(this.email, this.password);
   }
 }
