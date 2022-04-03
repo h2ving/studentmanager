@@ -1,7 +1,6 @@
 package sda.studentmanagement.studentmanager.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,43 +8,36 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class Session {
 
     @Id
     @GeneratedValue
     private int id;
 
     @NotBlank
-    @Size(max = 100)
-    private String name;
+    private LocalDateTime startDateTime;
 
     @NotBlank
-    @Lob
-    private String description;
-
-    @NotBlank
-    private LocalDate startDate;
-
-    @NotBlank
-    private LocalDate endDate;
-
-    @NotBlank
-    @Size(max = 5)
+    @Size(max = 3)
     private int academicHours;
 
     @NotBlank
-    private boolean remote;
+    @Size(max = 255)
+    private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<User> user_id;
+    @JoinColumn(name = "user_id")
+    private List<User> user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 }

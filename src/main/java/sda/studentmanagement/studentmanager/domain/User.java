@@ -1,59 +1,54 @@
 package sda.studentmanagement.studentmanager.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
-@Getter
-@Setter
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
-    private String username;
-
-    @Column
-    private String firstName;
-
-    @Column
-    private String lastName;
-
-    @Column
-    private Date dateOfBirth;
-
-    @Column
-    private String role;
-
-    @Column
+    @NotBlank
+    @Size(min = 6, max = 45)
     private String email;
 
-    @Column
+    @NotBlank
+    @Size(min = 6, max = 255)
     private String password;
 
-    @Column
-    private String mobileNumber;
+    @NotBlank
+    @Size(max = 45)
+    private String role;
 
-    @Column
-    private boolean enabled;
+    @NotBlank
+    @Size(max = 45)
+    private String firstName;
 
-    @Column
+    @NotBlank
+    @Size(max = 45)
+    private String lastName;
+
+    @NotBlank
+    private LocalDate DOB;
+
+    @Size(max = 45)
+    private String mobile;
+
     @CreatedDate
-    private Date createdAt;
-
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.enabled = true;
-    }
-
-    public User() {
-    }
+    private LocalDate createdAt;
 }
