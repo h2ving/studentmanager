@@ -40,9 +40,9 @@ export class UserService {
     return this.http.post<User>(url, user, httpOptions);
   }
 
-  // Get all Users
-  getUsers(): Observable<User[]> {
-    const url = `${this.apiUrl}/user`;
+  // Get all users by role
+  getAllStudents(): Observable<User[]> {
+    const url = `${this.apiUrl}/user/students`;
 
     return this.http.get<User[]>(url);
   }
