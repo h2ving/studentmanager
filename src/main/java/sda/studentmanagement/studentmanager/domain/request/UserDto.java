@@ -1,7 +1,6 @@
 package sda.studentmanagement.studentmanager.domain.request;
 
 import com.sun.istack.NotNull;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import sda.studentmanagement.studentmanager.services.validations.PasswordMatches;
@@ -31,6 +30,10 @@ public class UserDto {
     @NotNull
     @NotEmpty
     private String password;
+
+    @NotNull
+    @NotEmpty
+    private String matchingPassword;
 
     @NotNull
     @NotEmpty
