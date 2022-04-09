@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-student',
@@ -6,10 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./student.component.scss']
 })
 export class StudentComponent implements OnInit {
+  faSignOutAlt = faSignOutAlt;
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
 }
