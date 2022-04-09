@@ -20,9 +20,11 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
-        user.setMobileNumber(userDto.getMobileNumber());
-        user.setDateOfBirth(userDto.getDateOfBirth());
+        user.setMobile(userDto.getMobile());
+        user.setDOB(userDto.getDOB());
         user.setPassword(encoder.encode(userDto.getPassword()));
+        user.setGender(userDto.getGender());
+        user.setRole(userDto.getRole());
 
         User savedUser = userRepository.save(user);
         //TODO: Implement authorities for student/professor and add saveduser to that repository.

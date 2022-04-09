@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @Controller
 public class UserController {
 
@@ -59,13 +61,41 @@ public class UserController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/admin/userlist")
+    @GetMapping("/admin/userlist")
     @ResponseBody
     public List<User> returnUserRepo() {
 
         List<User> user = (List<User>) userRepo.findAll(); //Direct access to the repo
 
         return user;
+    }
+
+    @GetMapping(value = "/admin/user/{id}", produces = "application/json")
+    @ResponseBody
+    public User returnUser(@PathVariable("id") int id) {
+
+        User user = userRepo.findById(id).orElse(null); //Direct access to the repo
+
+        return user;
+    }
+
+    @DeleteMapping(value = "/admin/user/{id}")
+    @ResponseBody
+    public String deleteUser(@PathVariable("id") int id) {
+        if (userRepo.findById(id) != null) {
+            userRepo.deleteById(id);
+            return "Done";
+        } else return "None";
+    }
+
+    @PostMapping(value = "/admin/addUser", consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    public String addUser(@RequestBody UserDto userDto, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "Booop!";
+        }
+        userService.createNewUser(userDto);
+        return userDto.toString();
     }
 
     @RequestMapping(value = "/admin/drop")
@@ -87,7 +117,7 @@ public class UserController {
     @ResponseBody
     public void addALotOfRandomUsers() {
         List<User> userList = new ArrayList<User>();
-        for(int i = 0; i < 100; i++){
+        for (int i = 0; i < 100; i++) {
             User user = new User();
             user = RandomThings.generateRandomUser();
             userList.add(user);

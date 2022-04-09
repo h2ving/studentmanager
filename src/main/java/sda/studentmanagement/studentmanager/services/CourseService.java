@@ -17,15 +17,16 @@ public class CourseService {
     private CourseRepository courseRepository;
 
     public List<CourseResponse> createNewCourse(int userId, CourseRequest request) {
-        Course course = new Course(request.getName(), request.getDescription(),
-                request.getStartDate(), request.getEndDate(), request.getAcademicHours(),
-                request.getRemote(), userId);
-        courseRepository.save(course);
-        return fromVOs(courseRepository.findAllActive(userId));
+//        Course course = new Course(request.getName(), request.getDescription(),
+//                request.getStartDate(), request.getEndDate(), request.getAcademicHours(),
+//                request.getRemote(), userId);
+//        courseRepository.save(course);
+        return fromVOs(courseRepository.findAll());
     }
 
     public List<CourseResponse> getAll(int userId) {
-        return fromVOs(courseRepository.findAllActive(userId));
+//        return fromVOs(courseRepository.findAllActive(userId));
+        return fromVOs(courseRepository.findAll());
     }
 
     private List<CourseResponse> fromVOs(List<Course> courses) {
@@ -37,6 +38,7 @@ public class CourseService {
         return response;
     }
     private CourseResponse fromVO(Course course) {
-        return new CourseResponse(course.getId(), course.getName(), course.getDescription(), course.getStartDate(),course.getEndDate(),course.getAcademicHours(), course.getRemote(), course.getUserId());
+        //return new CourseResponse(course.getId(), course.getName(), course.getDescription(), course.getStartDate(),course.getEndDate(),course.getAcademicHours(), course.isRemote(), course.getUserId());
+        return new CourseResponse(course.getId(), course.getName(), course.getDescription(), course.getStartDate(), course.getEndDate(),course.getAcademicHours(),course.isRemote());
     }
 }

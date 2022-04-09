@@ -7,6 +7,7 @@ import sda.studentmanagement.studentmanager.services.validations.PasswordMatches
 import sda.studentmanagement.studentmanager.services.validations.ValidEmail;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -37,15 +38,17 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
-    private Date dateOfBirth;
+    private LocalDate DOB;
 
     @NotNull
     @NotEmpty
-    private String mobileNumber;
+    private String mobile;
 
     @NotNull
     @NotEmpty
     private String role;
 
-
+    @NotNull
+    @NotEmpty
+    private String gender;
 }
