@@ -12,6 +12,7 @@ import sda.studentmanagement.studentmanager.domain.request.UserLoginDto;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 import sda.studentmanagement.studentmanager.services.UserService;
 import sda.studentmanagement.studentmanager.utils.RandomThings;
+import sda.studentmanagement.studentmanager.utils.UserUtils;
 import sda.studentmanagement.studentmanager.utils.generationStrategy.*;
 
 import javax.validation.Valid;
@@ -59,6 +60,14 @@ public class UserController {
 
         User user = userService.createNewUser(userDto);
         return "redirect:/";
+    }
+
+    @GetMapping(value = "/", produces = "application/json")
+    @ResponseBody
+    public User showCurrentUser(Model model) throws Exception {
+
+        User user = userRepo.getUserByEmail(UserUtils.getAuthenticatedUserName());
+            return user;
     }
 
     @GetMapping("/admin/userlist")
