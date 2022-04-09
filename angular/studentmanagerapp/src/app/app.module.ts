@@ -9,6 +9,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppComponent } from './app.component';
 import { StudentComponent } from './components/student/student.component';
 import { LoginComponent } from './components/login/login.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { GradesComponent } from './components/grades/grades.component';
+import { GradeItemComponent } from './components/grade-item/grade-item.component';
 
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -20,6 +23,9 @@ const appRoutes: Routes = [
     AppComponent,
     StudentComponent,
     LoginComponent,
+    FooterComponent,
+    GradesComponent,
+    GradeItemComponent,
   ],
   imports: [
     BrowserModule,
