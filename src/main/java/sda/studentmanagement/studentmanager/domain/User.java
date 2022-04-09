@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -44,11 +45,15 @@ public class User {
     private String lastName;
 
     @NotBlank
+    @Size(max = 45)
+    private String gender;
+
+    @Past
     private LocalDate DOB;
 
     @Size(max = 45)
     private String mobile;
 
     @CreatedDate
-    private LocalDate createdAt;
+    private LocalDate createdAt = LocalDate.now();
 }
