@@ -1,15 +1,28 @@
 package sda.studentmanagement.studentmanager.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+/*import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.domain.request.UserDto;
-import sda.studentmanagement.studentmanager.repositories.UserRepository;
+import sda.studentmanagement.studentmanager.repositories.UserRepository;*/
 
-@Service
-public class UserService {
+import sda.studentmanagement.studentmanager.domain.Role;
+import sda.studentmanagement.studentmanager.domain.User;
 
+import java.util.List;
+
+public interface UserService {
+    User saveUser(User user);
+    Role saveRole(Role role);
+    void addRoleToUser(String email, String roleName);
+    User getUser(String email);
+    List<User> getUsers();
+
+    //!!!!! Made just the methods in here and in Implementation we override them
+    // The logic with jwt is little bit different so this is not needed here
+    // Look -> public User saveUser(User user) in Implementation
+/*
     @Autowired
     UserRepository userRepository;
 
@@ -33,5 +46,5 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.getUserByEmail(email);
-    }
+    }*/
 }

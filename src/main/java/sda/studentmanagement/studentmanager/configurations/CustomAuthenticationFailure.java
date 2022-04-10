@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
 
+//!!!!!! DELETE? because we have JWT authentication -> auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+//All Authentication messages are coming from jwt
+/*
 public class CustomAuthenticationFailure implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -19,3 +22,4 @@ public class CustomAuthenticationFailure implements AuthenticationFailureHandler
         response.getOutputStream().println(String.format(jsonPayload, exception.getMessage(), Calendar.getInstance().getTime()));
     }
 }
+*/

@@ -90,7 +90,7 @@ public class RandomThings {
         user.setLastName(RandomThings.getLastname());
         user.setEmail(user.getFirstName().substring(0, 1).toLowerCase() + user.getLastName().toLowerCase() + "@sdaacademy.uni");
         user.setPassword(RandomThings.getPassword());
-        user.setRole(userRole.name());
+        //user.setRole(userRole.name());
         user.setGender(userGender.name());
         user.setDOB(RandomThings.getDOB(userRole));
         user.setMobile(RandomThings.getPhoneNumber());

@@ -10,7 +10,8 @@ import sda.studentmanagement.studentmanager.utils.UserUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Service
+//!!!!! DELETE We don't log out in server side, client just destroys the token in session storage and the we can't make any requests
+/*@Service
 public class CustomLogoutHandler implements LogoutHandler {
 
     @Autowired
@@ -21,4 +22,4 @@ public class CustomLogoutHandler implements LogoutHandler {
         String authenticatedUserName = UserUtils.getAuthenticatedUserName();
         userCache.evictUser(authenticatedUserName);
     }
-}
+}*/

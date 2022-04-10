@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Data
@@ -21,20 +20,8 @@ import java.time.LocalDate;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @NotBlank
-    @Size(min = 6, max = 45)
-    private String email;
-
-    @NotBlank
-    @Size(min = 6, max = 255)
-    private String password;
-
-    @NotBlank
-    @Size(max = 45)
-    private String role;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @NotBlank
     @Size(max = 45)
@@ -45,15 +32,26 @@ public class User {
     private String lastName;
 
     @NotBlank
+    @Size(min = 6, max = 45)
+    private String email;
+
+    @NotBlank
+    @Size(min = 6, max = 255)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
+
+    @NotBlank
     @Size(max = 45)
     private String gender;
 
-    @Past
+    // @Past
     private LocalDate DOB;
 
     @Size(max = 45)
     private String mobile;
 
     @CreatedDate
-    private LocalDate createdAt = LocalDate.now();
+    private final LocalDate createdAt = LocalDate.now();
 }

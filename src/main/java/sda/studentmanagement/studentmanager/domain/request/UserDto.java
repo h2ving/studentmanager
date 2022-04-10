@@ -15,6 +15,8 @@ import java.util.Date;
 @PasswordMatches
 public class UserDto {
 
+    //!!!!! I'm not sure how to use UserDto, UserLoginDto with JWT, or do we even need them? because login method already works and no more configuration is needed
+
     @NotNull
     @NotEmpty
     private String firstName;

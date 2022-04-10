@@ -8,7 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class CourseRequest {
-
+    //!!!!! Don't think we need this one as well
     private String name;
 
     private String description;

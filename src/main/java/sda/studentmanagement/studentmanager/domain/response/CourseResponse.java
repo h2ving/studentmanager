@@ -18,6 +18,9 @@ public class CourseResponse {
     private boolean remote;
     private int userId;
 
+
+    //!!!!! Don't think we need this also since we use repository to get all and just send them from database with ResponseEntity
+    // for example -> return ResponseEntity.ok().body(userService.getUsers());
     public CourseResponse(int id, String name, String description,
                           LocalDate startDate, LocalDate endDate, int academicHours,
                           boolean remote) {

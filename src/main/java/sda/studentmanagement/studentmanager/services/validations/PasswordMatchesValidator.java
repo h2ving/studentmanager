@@ -8,6 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 public class PasswordMatchesValidator
         implements ConstraintValidator<PasswordMatches, Object> {
 
+    //!!!!! Do we need them? since CustomAuthenticationFilter already checks if password match and IF the DON'T server will send 403 Forbidden
     @Override
     public void initialize(PasswordMatches constraintAnnotation) {
     }
