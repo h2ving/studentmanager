@@ -122,7 +122,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //SESSION ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/sessions/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/session/**").hasAnyAuthority("Professor", "Admin");
-        http.authorizeRequests().antMatchers(DELETE, "/api/session/delete/**").hasAnyAuthority("Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/api/session/delete/**").hasAuthority("Admin");
 
         //COURSE ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/course/**").hasAnyAuthority("Student", "Professor", "Admin");
@@ -133,6 +133,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET, "/api/grades/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/grade/**").hasAnyAuthority("Professor", "Admin");
         http.authorizeRequests().antMatchers(GET, "/api/grade/**").hasAnyAuthority("Student", "Professor", "Admin");
+
+        //ATTENDANCE ROUTES
+        http.authorizeRequests().antMatchers(GET, "/api/attendances/**").hasAnyAuthority("Student", "Professor", "Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/attendances/save").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(GET, "/api/attendances").hasAnyAuthority("Professor", "Admin");
 
 
         http.authorizeRequests().anyRequest().authenticated();

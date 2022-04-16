@@ -29,7 +29,7 @@ public class SessionServiceImplementation implements SessionService {
         Session findSession = sessionRepository.findOneById(session.getId());
 
         if(findSession != null) {
-            throw new EntityExistsException("Session with ID \"" + session.getId() + "\" already exists");
+            throw new EntityExistsException("Session with ID \"" + session.getId() + "\" already exists!");
         } else {
             return sessionRepository.save(session);
         }
@@ -64,7 +64,7 @@ public class SessionServiceImplementation implements SessionService {
             }
             return returnSessionsList;
         } else {
-            throw new EntityExistsException("Cannot find any courses named: \"" + courseName + "\" :(");
+            throw new EntityNotFoundException("Cannot find any courses named: \"" + courseName + "\" :(");
         }
     }
 
