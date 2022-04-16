@@ -15,7 +15,7 @@ public class Grade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "session_id")

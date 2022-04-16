@@ -10,6 +10,7 @@ import sda.studentmanagement.studentmanager.repositories.CourseRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,13 +57,29 @@ public class CourseServiceImplementation implements CourseService {
     }
 
     @Override
+    public List<Course> getCoursesByUser(String email) {
+        List<Course> listOfCoursesByUser = new ArrayList<>();
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            for(Course course : getCourses()) {
+                if(course.getUser_id().contains(user)) {
+                    listOfCoursesByUser.add(course);
+                }
+            }
+            return listOfCoursesByUser;
+        } else {
+            throw new EntityExistsException("Couldn't find user with email: \"" + email + "\" ");
+        }
+    }
+
+    @Override
     public List<Course> getCourses() {
         return courseRepository.findAll();
     }
 
     @Override
-    public void addUserToCourse(String email, String courseName) {
-        User user = userRepository.findByEmail(email);
+    public void addUserToCourse(String name, String courseName) {
+        User user = userRepository.findByEmail(name);
         Course course = courseRepository.findByName(courseName);
 
         course.getUser_id().add(user);

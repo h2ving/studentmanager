@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sda.studentmanagement.studentmanager.domain.Session;
 import sda.studentmanagement.studentmanager.services.SessionService;
+import sda.studentmanagement.studentmanager.services.SessionServiceImplementation;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SessionController {
-    private final SessionService sessionService;
+    private final SessionServiceImplementation sessionService;
 
     //Get all Sessions
     @GetMapping("/sessions")
