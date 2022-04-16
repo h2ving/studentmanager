@@ -21,8 +21,8 @@ import java.util.List;
 public class Course {
 
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @NotBlank
     @Size(max = 100)

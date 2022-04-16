@@ -2,17 +2,8 @@ package sda.studentmanagement.studentmanager.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sda.studentmanagement.studentmanager.domain.User;
-import sda.studentmanagement.studentmanager.domain.request.CourseRequest;
-import sda.studentmanagement.studentmanager.domain.response.CourseResponse;
 import sda.studentmanagement.studentmanager.services.CourseService;
-import sda.studentmanagement.studentmanager.services.UserCache;
-import sda.studentmanagement.studentmanager.utils.UserUtils;
-
-import java.util.List;
 
 //!!!!! Use this instead -> /api. @RequiredArgsConstruction so we don't have to @Autowire, just private final CourseService courseService.
 // @Slf4j for logging?. Cors is already disabled in WebSecurityyConfig -> http.csrf().disable();
@@ -21,16 +12,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j*/
 
-@RestController
+/*@RestController
 @RequestMapping("/courses/")
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin("http://localhost:4200/")*/
+
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+@Slf4j
 public class CourseController {
-
-    @Autowired
-    private CourseService courseService;
-
-    @Autowired
-    UserCache userCache;
+    private final CourseService courseService;
 
     //!!!!! We dont need to use UserCache since the route is already authenticated with JWT by adding it into WebSecurityConfig
     //!!!!! -> http.authorizeRequests().antMatchers(POST, "/api/course/save/**").hasAuthority("Admin"); -> Something like this

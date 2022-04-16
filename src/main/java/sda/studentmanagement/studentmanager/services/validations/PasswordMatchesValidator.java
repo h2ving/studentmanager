@@ -1,7 +1,5 @@
 package sda.studentmanagement.studentmanager.services.validations;
 
-import sda.studentmanagement.studentmanager.domain.request.UserDto;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -14,7 +12,8 @@ public class PasswordMatchesValidator
     }
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context){
-        UserDto user = (UserDto) obj;
-        return user.getPassword().equals(user.getMatchingPassword());
+        /*UserDto user = (UserDto) obj;
+        return user.getPassword().equals(user.getMatchingPassword());*/
+        return true;
     }
 }

@@ -9,20 +9,21 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sda.studentmanagement.studentmanager.domain.Role;
 import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.domain.request.RoleToUserFormDto;
 import sda.studentmanagement.studentmanager.services.UserService;
+import sda.studentmanagement.studentmanager.utils.RandomThings;
+import sda.studentmanagement.studentmanager.utils.UserUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -61,7 +62,7 @@ public class UserController {
 
     // Add a new role to user
     @PostMapping("/role/addroletouser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserFormDto form) {
         userService.addRoleToUser(form.getUsername(), form.getRolename());
 
         return ResponseEntity.ok().build();
@@ -108,46 +109,11 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
     }
-/*
-    @Autowired
-    UserService userService;
 
-    @Autowired
-    UserRepository userRepo;
 
-    //!!!!!! DELETE -> Already have /api/user/save
-    @GetMapping("/user/registration")
-    public String userRegistrationForm(WebRequest request, Model model) {
-        UserDto userDto = new UserDto();
-        model.addAttribute("user", userDto);
-        return "user-registration";
-    }
+    // Legacy
 
-    //!!!!! DELETE -> customAuthenticationFilter has already default login Mapping
-    @GetMapping("/user/login")
-    public String userLoginForm(WebRequest request, Model model) {
-        UserLoginDto userDto = new UserLoginDto();
-        model.addAttribute("user", userDto);
-        return "user-login";
-    }
-
-    //!!!!! DELETE -> Log out is handled in Client side
-    @GetMapping("/user/logout")
-    public String userLogoutForm() {
-        return "redirect:/user/login";
-    }
-
-    //!!!!! DELETE -> customAuthenticationFilter has already default login Mapping. This is duplicate
-    @PostMapping("/user/registration")
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserDto userDto, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "user-registration";
-        }
-
-        User user = userService.createNewUser(userDto);
-        return "redirect:/";
-    }
-
+    /*
     //!!!!! Whats this for?
     @GetMapping(value = "/", produces = "application/json")
     @ResponseBody
@@ -155,26 +121,6 @@ public class UserController {
 
         User user = userRepo.getUserByEmail(UserUtils.getAuthenticatedUserName());
             return user;
-    }
-
-    //!!!!! Find All Users? Already done up
-    @GetMapping("/admin/userlist")
-    @ResponseBody
-    public List<User> returnUserRepo() {
-
-        List<User> user = (List<User>) userRepo.findAll(); //Direct access to the repo
-
-        return user;
-    }
-
-    //!!!!! DELETE? -> Get single User? Already done up
-    @GetMapping(value = "/admin/user/{id}", produces = "application/json")
-    @ResponseBody
-    public User returnUser(@PathVariable("id") int id) {
-
-        User user = userRepo.findById(id).orElse(null); //Direct access to the repo
-
-        return user;
     }
 
     //!!!!! Delete User still needs to be handled somehow, not sure how
@@ -185,17 +131,6 @@ public class UserController {
             userRepo.deleteById(id);
             return "Done";
         } else return "None";
-    }
-
-    //!!!!! DELETE -> We already have add User method up
-    @PostMapping(value = "/admin/addUser", consumes = "application/json", produces = "application/json")
-    @ResponseBody
-    public String addUser(@RequestBody UserDto userDto, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "Booop!";
-        }
-        userService.createNewUser(userDto);
-        return userDto.toString();
     }
 
     //!!!!! Whats this use case?
@@ -226,11 +161,6 @@ public class UserController {
             userList.add(user);
         }
         userRepo.saveAll(userList);
-    }*/
-}
-
-@Data
-class RoleToUserForm {
-    private String username;
-    private String rolename;
+    }
+    */
 }

@@ -14,6 +14,7 @@ import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.repositories.RoleRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
+import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,12 +49,18 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(User user) throws EntityExistsException {
         log.info("saving new user {} to db", user.getEmail());
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User findUser = userRepository.findByEmail(user.getEmail());
 
-        return userRepository.save(user);
+        if (findUser != null) {
+            throw new EntityExistsException("User with Email " + user.getEmail() + " already exists");
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            return userRepository.save(user);
+        }
     }
 
     @Override
