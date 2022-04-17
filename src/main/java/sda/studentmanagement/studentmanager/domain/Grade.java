@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
@@ -25,6 +26,6 @@ public class Grade {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotBlank
-    private int grade;
+    @NotNull
+    private Integer grade;
 }

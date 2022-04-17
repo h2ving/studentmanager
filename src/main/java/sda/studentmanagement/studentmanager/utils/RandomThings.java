@@ -1,32 +1,77 @@
 package sda.studentmanagement.studentmanager.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.services.UserService;
 import sda.studentmanagement.studentmanager.utils.generationStrategy.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RandomThings {
     private static UserService userService;
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     public static String getScience() {
         String[] science_first_bit = new String[]{"Physical", "Nuclear", "Mechanical", "Electromagnetical", "Thermodynamical", "Kinetical", "Chemical", "Inorganical", "Electrochemistrical", "Analytical", "Molecular", "Anatomical", "Botanical", "Biological", "Zoological", "Neurobiological", "Marine", "Embryological", "Ecological", "Paleontological", "Genetical", "Digital", "Algoritmical", "Virtual", "Cybernetical", "Empirical", "Ethological", "Astronomical", "Meteorological", "Geological", "Atmospherical", "Glaciological", "Climatological", "Structural", "Medical", "Supplementary", "Theorethical", "Logical", "Forensical", "Logistical", "Military", "Auxiliar", "Practical", "Computer", "Artificial"};
         String[] science_second_bit = new String[]{"Physics", "Mechanics", "Electromagnetic", "Fission", "Thermodynamic", "Kinetic", "Chemistry", "Economy", "Electrochemistry", "Analytic", "Surgery", "Deviology", "Anatomy", "Botany", "Biology", "Zoology", "Neurobiology", "Studies", "Embryology", "Ecology", "Paleontology", "Genetics", "Ethic", "Ethology", "Astronomy", "Biopsy", "Autopsy", "Criminology", "Meteorology", "Geology", "Sounding", "Glaciology", "Climatology", "Structures", "Medicine", "Metallurgy"};
-        String science = science_first_bit[random.nextInt(science_first_bit.length - 1)];
+        StringBuilder science = new StringBuilder(science_first_bit[random.nextInt(science_first_bit.length - 1)]);
 
         for (int j = 0; j < (random.nextInt(2)); j++) {
-            String additionalbit = science;
-            while (science.contains((CharSequence) additionalbit)) {
+            String additionalbit = science.toString();
+            while (science.toString().contains(additionalbit)) {
                 additionalbit = science_first_bit[random.nextInt(science_first_bit.length - 1)];
             }
-            science += " " + additionalbit.toLowerCase();
+            science.append(" ").append(additionalbit.toLowerCase());
         }
-        science += " " + science_second_bit[random.nextInt(science_second_bit.length - 1)].toLowerCase();
+        science.append(" ").append(science_second_bit[random.nextInt(science_second_bit.length - 1)].toLowerCase());
 
-        return science;
+        return science.toString();
+    }
+
+    // Random start date
+    public static LocalDate getCourseStartDate(int daysBeforeNow, int daysAfrerNow) {
+        long randomDate;
+
+        long dateBeforeNow = LocalDate.now().minusDays(daysBeforeNow).toEpochDay();
+        long dateAfterNow = LocalDate.now().plusDays(daysAfrerNow).toEpochDay();
+        randomDate = random.nextLong(dateBeforeNow, dateAfterNow);
+
+        return LocalDate.ofEpochDay(randomDate);
+    }
+
+    // Random end date
+    public static LocalDate getCourseEndDate(LocalDate StartDate, int minLengthInDays, int maxLengthInDays) {
+        long randomDate;
+
+        long EndsNotEarlierThan = StartDate.plusDays(minLengthInDays).toEpochDay();
+        long EndsNotLaterThan = StartDate.plusDays(maxLengthInDays).toEpochDay();
+        randomDate = random.nextLong(EndsNotEarlierThan, EndsNotLaterThan);
+
+        return LocalDate.ofEpochDay(randomDate);
+    }
+
+    // Random academic hours
+    public static int getCourseAcademicHours(LocalDate startDate, LocalDate endDate) {
+        long courseLengthInDays = startDate.until(endDate).getDays();
+        return random.nextInt(1, (int) courseLengthInDays * 5 + 1);
+    }
+
+    public static Course getRandomCourse(){
+        Course course = new Course();
+        course.setName(getScience());
+        course.setDescription(course.getName());
+        course.setStartDate(getCourseStartDate(5, 15));
+        course.setEndDate(getCourseEndDate(course.getStartDate(),10,30));
+        course.setAcademicHours(getCourseAcademicHours(course.getStartDate(),course.getEndDate()));
+        course.setRemote(random.nextBoolean());
+        course.setId(null);
+        List<User> userlist = new ArrayList<>();
+        course.setUsers(userlist);
+        return course;
     }
 
     public static String getName(Gender gender) {
@@ -47,7 +92,7 @@ public class RandomThings {
 
     public static LocalDate getDOB(UserRole role) {
         LocalDate randomDOB = null;
-        long randomDate = 0;
+        long randomDate;
 
         if (role == UserRole.STUDENT) {
             randomDate = random.nextLong(UserRole.STUDENT.minDOB(), UserRole.STUDENT.maxDOB());
@@ -68,11 +113,11 @@ public class RandomThings {
     }
 
     public static String getPhoneNumber() {
-        String phoneNumber = "+3725";
+        StringBuilder phoneNumber = new StringBuilder("+3725");
         for (int i = 0; i < 6; i++) {
-            phoneNumber += random.nextInt(0, 9);
+            phoneNumber.append(random.nextInt(0, 9));
         }
-        return phoneNumber;
+        return phoneNumber.toString();
     }
 
     public static User generateRandomUser(UserRole userRole) {

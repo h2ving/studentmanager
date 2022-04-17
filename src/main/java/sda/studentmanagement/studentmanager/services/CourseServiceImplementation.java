@@ -23,11 +23,14 @@ public class CourseServiceImplementation implements CourseService {
 
     @Override
     public Course saveCourse(Course course) {
+        log.info("saveCourse started");
         Course findCourse = courseRepository.findByName(course.getName());
-
+        log.info("searching for courses");
         if (findCourse != null) {
+            log.info("exists");
             throw new EntityExistsException("Course with Name \"" + course.getName() + "\" already exists");
         } else {
+            log.info("added");
             return courseRepository.save(course);
         }
     }
@@ -62,7 +65,7 @@ public class CourseServiceImplementation implements CourseService {
         User user = userRepository.findByEmail(email);
         if(user != null) {
             for(Course course : getCourses()) {
-                if(course.getUser_id().contains(user)) {
+                if(course.getUsers().contains(user)) {
                     listOfCoursesByUser.add(course);
                 }
             }
@@ -82,6 +85,6 @@ public class CourseServiceImplementation implements CourseService {
         User user = userRepository.findByEmail(name);
         Course course = courseRepository.findByName(courseName);
 
-        course.getUser_id().add(user);
+        course.getUsers().add(user);
     }
 }

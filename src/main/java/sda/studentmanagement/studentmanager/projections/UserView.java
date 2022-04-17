@@ -1,10 +1,12 @@
 package sda.studentmanagement.studentmanager.projections;
 
 import org.springframework.beans.factory.annotation.Value;
+import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.domain.Role;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface UserView {
 
@@ -30,4 +32,6 @@ public interface UserView {
 
     @Value("#{target.age}")
     int getAge();
+
+    List<CourseDTO> getCoursesAssigned();
 }

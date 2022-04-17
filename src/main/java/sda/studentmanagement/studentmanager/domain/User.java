@@ -1,21 +1,24 @@
 package sda.studentmanagement.studentmanager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Local;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import sda.studentmanagement.studentmanager.projections.CourseDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,7 +27,7 @@ import java.util.Collection;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -50,22 +53,41 @@ public class User {
     @Size(max = 45)
     private String gender;
 
-    // @Past
     private LocalDate DOB;
 
     @Size(max = 45)
     private String mobile;
 
     @Transient
-    public int getAge()
-    {
+    public int getAge() {
         Period age = this.DOB.until(LocalDate.now());
         return age.getYears();
-    };
+    }
 
     @CreatedDate
     private final LocalDate createdAt = LocalDate.now();
 
     @LastModifiedDate
     private final LocalDateTime updatedAt = LocalDateTime.now();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "course_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @Column(name = "course_id")
+    List<Course> courses;
+
+    @Transient
+    public List<CourseDTO> getCoursesAssigned() {
+        List<CourseDTO> courseAssigned = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+
+        for (Course course : this.courses)
+        {
+            courseAssigned.add(modelMapper.map(course, CourseDTO.class));
+        }
+        return courseAssigned;
+    }
 }

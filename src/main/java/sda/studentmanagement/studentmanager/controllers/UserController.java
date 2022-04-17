@@ -147,7 +147,7 @@ public class UserController {
 
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
-                log.error("Error logging in: {}", e.getMessage());
+                log.error("Error logging in THERE: {}", e.getMessage());
                 response.setHeader("Error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 Map<String, String> error = new HashMap<>();
