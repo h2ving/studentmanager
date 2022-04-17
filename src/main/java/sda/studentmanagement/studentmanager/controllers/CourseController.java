@@ -2,8 +2,13 @@ package sda.studentmanagement.studentmanager.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.services.CourseService;
+import sda.studentmanagement.studentmanager.services.CourseServiceImplementation;
+
+import java.util.List;
 
 //!!!!! Use this instead -> /api. @RequiredArgsConstruction so we don't have to @Autowire, just private final CourseService courseService.
 // @Slf4j for logging?. Cors is already disabled in WebSecurityyConfig -> http.csrf().disable();
@@ -21,7 +26,7 @@ import sda.studentmanagement.studentmanager.services.CourseService;
 @RequiredArgsConstructor
 @Slf4j
 public class CourseController {
-    private final CourseService courseService;
+    private final CourseServiceImplementation courseService;
 
     //!!!!! We dont need to use UserCache since the route is already authenticated with JWT by adding it into WebSecurityConfig
     //!!!!! -> http.authorizeRequests().antMatchers(POST, "/api/course/save/**").hasAuthority("Admin"); -> Something like this
@@ -30,22 +35,27 @@ public class CourseController {
     // */
 
     // Save new Course
-    /*@PostMapping("/")
-    public ResponseEntity<List<CourseResponse>> createCourse(@RequestBody CourseRequest request) {
-        User user = userCache.getByUsername(UserUtils.getAuthenticatedUserName());
-
-        return ResponseEntity.ok(courseService.createNewCourse(user.getId(), request));
-    }*/
+    @PostMapping("/course/save")
+    public ResponseEntity<Course> saveCourse(@RequestBody Course course) {
+        return ResponseEntity.ok(courseService.saveCourse(course));
+    }
 
 
     // Get all Courses
-/*    @GetMapping("/")
-    public ResponseEntity<List<CourseResponse>> getAllCourses() {
-        User user = userCache.getByUsername(UserUtils.getAuthenticatedUserName());
+    @GetMapping("/courses/all")
+    public ResponseEntity<List<Course>> getAllCourses() {
+        return ResponseEntity.ok(courseService.getCourses());
+    }
 
-        return ResponseEntity.ok(courseService.getAll(user.getId()));
-    }*/
-
+    //GET SPECIFIC COURSE BY COURSE NAME
+    @GetMapping("/course/{courseName}")
+    public ResponseEntity<Course> getCourseByCourseName(@PathVariable("courseName") String courseName) {
+        return ResponseEntity.ok(courseService.getCourse(courseName));
+    }
 
     // Get All courses by one User? using UserEmail
+    @GetMapping("/courses/{userEmail}")
+    public ResponseEntity<List<Course>> getAllCoursesByUserEmail(@PathVariable("userEmail") String email) {
+        return ResponseEntity.ok(courseService.getCoursesByUser(email));
+    }
 }

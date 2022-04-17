@@ -10,5 +10,6 @@ public interface CourseService {
     Course editCourse(Course course);
     Course getCourse(String name);
     List<Course> getCourses();
+    List<Course> getCoursesByUser(String email);
     void addUserToCourse(String email, String courseName);
 }

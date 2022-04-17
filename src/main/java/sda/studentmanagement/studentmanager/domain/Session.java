@@ -20,7 +20,7 @@ public class Session {
 
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
 
     @NotBlank
     private LocalDateTime startDateTime;
