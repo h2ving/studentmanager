@@ -3,6 +3,7 @@ package sda.studentmanagement.studentmanager.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -51,6 +53,13 @@ public class User {
 
     @Size(max = 45)
     private String mobile;
+
+    @Transient
+    public int getAge()
+    {
+        Period age = this.DOB.until(LocalDate.now());
+        return age.getYears();
+    };
 
     @CreatedDate
     private final LocalDate createdAt = LocalDate.now();

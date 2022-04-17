@@ -5,19 +5,18 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sda.studentmanagement.studentmanager.domain.Role;
 import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.domain.request.RoleToUserFormDto;
+import sda.studentmanagement.studentmanager.projections.UserView;
 import sda.studentmanagement.studentmanager.services.UserService;
-import sda.studentmanagement.studentmanager.utils.RandomThings;
-import sda.studentmanagement.studentmanager.utils.UserUtils;
+import sda.studentmanagement.studentmanager.utils.*;
+import sda.studentmanagement.studentmanager.utils.generationStrategy.UserRole;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,12 +42,19 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
+    // Get All Users
+    @GetMapping("/usersview")
+    public ResponseEntity<List<UserView>> getUsersView() {
+        return ResponseEntity.ok().body(userService.getUsersView());
+    }
+
     // Get User by Email
     @GetMapping("/user/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable("email") String userEmail) {
         log.info("User Email is: {}" + userEmail);
         return ResponseEntity.ok().body(userService.getUser(userEmail));
     }
+
 
     // Save a new User to database
     @PostMapping("/user/save")
@@ -58,6 +64,39 @@ public class UserController {
         System.out.println("URI = " + uri);
 
         return ResponseEntity.created(uri).body(userService.saveUser(user));
+    }
+
+    // Create a new random user
+    @PostMapping("/spawn")
+    public ResponseEntity<User> spawnUser() {
+        UserRole role;
+        Random random = new Random();
+        if (random.nextInt(100) > 90) {
+            role = UserRole.PROFESSOR;
+        } else {
+            role = UserRole.STUDENT;
+        }
+        User user = RandomThings.generateRandomUser(role);
+        userService.saveUser(user);
+
+        if (role == UserRole.STUDENT) {
+            userService.addRoleToUser(user.getEmail(), "Student");
+        }
+        if (role == UserRole.PROFESSOR) {
+            userService.addRoleToUser(user.getEmail(), "Professor");
+        }
+
+        return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping("/spawnmany/{amount}")
+    public ResponseEntity<?> spawnManyUsers(@PathVariable("amount") int amount) {
+        if (amount > 0){
+            for (int i = 0; i < amount; i++){
+                spawnUser();
+            }
+        }
+        return ResponseEntity.ok().body(amount + " users generated.");
     }
 
     // Add a new role to user
@@ -73,7 +112,7 @@ public class UserController {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("Secret".getBytes()); // Todo: Into Util class

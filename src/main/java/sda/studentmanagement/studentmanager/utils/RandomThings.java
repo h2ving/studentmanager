@@ -2,13 +2,14 @@ package sda.studentmanagement.studentmanager.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.services.UserService;
 import sda.studentmanagement.studentmanager.utils.generationStrategy.*;
 
 import java.time.LocalDate;
 import java.util.Random;
 
-
 public class RandomThings {
+    private static UserService userService;
     private static Random random = new Random();
 
     public static String getScience() {
@@ -63,37 +64,32 @@ public class RandomThings {
 
     public static String getPassword() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.encode("Th1s1sMyP4ss"); // KISS for a development
+        return encoder.encode("1234"); // KISS for a development
     }
 
-    public static String getPhoneNumber(){
+    public static String getPhoneNumber() {
         String phoneNumber = "+3725";
-        for(int i = 0; i<6;  i++){
-            phoneNumber += random.nextInt(0,9);
+        for (int i = 0; i < 6; i++) {
+            phoneNumber += random.nextInt(0, 9);
         }
         return phoneNumber;
     }
 
-    public static User generateRandomUser(){
+    public static User generateRandomUser(UserRole userRole) {
         Gender userGender;
         if (random.nextInt(1, 3) == 1) { // Genders are distributed evenly. Bound is exclusive, so there is 3
             userGender = Gender.MALE;
         } else userGender = Gender.FEMALE;
-
-        UserRole userRole;
-        if (random.nextInt(0, 100) >= 90) { // 1/10 chance to generate a prof
-            userRole = UserRole.PROFESSOR;
-        } else userRole = UserRole.STUDENT;
 
         User user = new User();
         user.setFirstName(RandomThings.getName(userGender));
         user.setLastName(RandomThings.getLastname());
         user.setEmail(user.getFirstName().substring(0, 1).toLowerCase() + user.getLastName().toLowerCase() + "@sdaacademy.uni");
         user.setPassword(RandomThings.getPassword());
-        //user.setRole(userRole.name());
         user.setGender(userGender.name());
         user.setDOB(RandomThings.getDOB(userRole));
         user.setMobile(RandomThings.getPhoneNumber());
+
         return user;
     }
 

@@ -24,20 +24,20 @@ public class StudentmanagerApplication {
 		return new BCryptPasswordEncoder(); // Todo: Any other way than initialize in here?
 	}
 
-	@Bean
-	CommandLineRunner run(UserService userService) {
-		return args -> {
-			userService.saveRole(new Role(null, "Student"));
-			userService.saveRole(new Role(null, "Professor"));
-			userService.saveRole(new Role(null, "Admin"));
-
-			userService.saveUser(new User(null, "John", "Travolta", "johnt@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 5555 7777"));
-			userService.saveUser(new User(null, "John", "Doe", "johndoe@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 9999 2222"));
-			userService.saveUser(new User(null, "Hanna", "Smith", "hanna@gmail.com", "1234", null, "Female", LocalDate.now(), "+372 8888 1111"));
-
-			userService.addRoleToUser("johnt@gmail.com", "Student");
-			userService.addRoleToUser("johndoe@gmail.com", "Professor");
-			userService.addRoleToUser("hanna@gmail.com", "Admin");
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(UserService userService) {
+//		return args -> {
+//			userService.saveRole(new Role(null, "Student"));
+//			userService.saveRole(new Role(null, "Professor"));
+//			userService.saveRole(new Role(null, "Admin"));
+//
+//			userService.saveUser(new User(null, "John", "Travolta", "johnt@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 5555 7777"));
+//			userService.saveUser(new User(null, "John", "Doe", "johndoe@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 9999 2222"));
+//			userService.saveUser(new User(null, "Hanna", "Smith", "hanna@gmail.com", "1234", null, "Female", LocalDate.now(), "+372 8888 1111"));
+//
+//			userService.addRoleToUser("johnt@gmail.com", "Student");
+//			userService.addRoleToUser("johndoe@gmail.com", "Professor");
+//			userService.addRoleToUser("hanna@gmail.com", "Admin");
+//		};
+//	}
 }
