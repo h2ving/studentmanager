@@ -24,9 +24,9 @@ public class StudentmanagerApplication {
 		return new BCryptPasswordEncoder(); // Todo: Any other way than initialize in here?
 	}
 
-//	@Bean
-//	CommandLineRunner run(UserService userService) {
-//		return args -> {
+	@Bean
+	CommandLineRunner run(UserService userService) {
+		return args -> {
 //			userService.saveRole(new Role(null, "Student"));
 //			userService.saveRole(new Role(null, "Professor"));
 //			userService.saveRole(new Role(null, "Admin"));
@@ -38,6 +38,6 @@ public class StudentmanagerApplication {
 //			userService.addRoleToUser("johnt@gmail.com", "Student");
 //			userService.addRoleToUser("johndoe@gmail.com", "Professor");
 //			userService.addRoleToUser("hanna@gmail.com", "Admin");
-//		};
-//	}
+		};
+	}
 }

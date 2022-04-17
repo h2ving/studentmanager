@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import sda.studentmanagement.studentmanager.domain.Role;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface UserView {
 
@@ -24,6 +25,8 @@ public interface UserView {
     String getMobile();
 
     LocalDate getCreatedAt();
+
+    LocalDateTime getUpdatedAt();
 
     @Value("#{target.age}")
     int getAge();

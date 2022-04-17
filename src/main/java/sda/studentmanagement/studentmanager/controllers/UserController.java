@@ -69,30 +69,41 @@ public class UserController {
     // Create a new random user
     @PostMapping("/spawn")
     public ResponseEntity<User> spawnUser() {
-        UserRole role;
-        Random random = new Random();
-        if (random.nextInt(100) > 90) {
-            role = UserRole.PROFESSOR;
-        } else {
-            role = UserRole.STUDENT;
-        }
-        User user = RandomThings.generateRandomUser(role);
-        userService.saveUser(user);
+        boolean created = false;
+        User user;
 
-        if (role == UserRole.STUDENT) {
-            userService.addRoleToUser(user.getEmail(), "Student");
-        }
-        if (role == UserRole.PROFESSOR) {
-            userService.addRoleToUser(user.getEmail(), "Professor");
-        }
+        // Works in loop in case if random generated user have same email as an existing user
+        do {
+            UserRole role;
+            Random random = new Random();
+            if (random.nextInt(100) > 90) {
+                role = UserRole.PROFESSOR;
+            } else {
+                role = UserRole.STUDENT;
+            }
 
+            user = RandomThings.generateRandomUser(role);
+            log.info("User {} generated", user.getEmail());
+
+            if (userService.getUser(user.getEmail()) == null) {
+                userService.saveUser(user);
+                userService.addRoleToUser(user.getEmail(), role.getRoleName());
+                created = true;
+                log.info("User created successfully");
+            }
+            else
+            {
+                log.info("User with the same email exists. Redo!");
+            }
+        }
+        while(!created);
         return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/spawnmany/{amount}")
     public ResponseEntity<?> spawnManyUsers(@PathVariable("amount") int amount) {
-        if (amount > 0){
-            for (int i = 0; i < amount; i++){
+        if (amount > 0) {
+            for (int i = 0; i < amount; i++) {
                 spawnUser();
             }
         }
@@ -148,58 +159,4 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
     }
-
-
-    // Legacy
-
-    /*
-    //!!!!! Whats this for?
-    @GetMapping(value = "/", produces = "application/json")
-    @ResponseBody
-    public User showCurrentUser(Model model) throws Exception {
-
-        User user = userRepo.getUserByEmail(UserUtils.getAuthenticatedUserName());
-            return user;
-    }
-
-    //!!!!! Delete User still needs to be handled somehow, not sure how
-    @DeleteMapping(value = "/admin/user/{id}")
-    @ResponseBody
-    public String deleteUser(@PathVariable("id") int id) {
-        if (userRepo.findById(id) != null) {
-            userRepo.deleteById(id);
-            return "Done";
-        } else return "None";
-    }
-
-    //!!!!! Whats this use case?
-    @RequestMapping(value = "/admin/drop")
-    @ResponseBody
-    public void dropUserRepo() {
-        userRepo.deleteAll();
-    }
-
-
-    //!!!!! Not sure how adding random Users work atm, needs to take a look
-    @RequestMapping(value = "/admin/addRandomUser")
-    @ResponseBody
-    public User addRandomUser() {
-        User user = new User();
-        user = RandomThings.generateRandomUser();
-        userRepo.save(user);
-        return user;
-    }
-
-    @RequestMapping(value = "/admin/addALotOfRandomUsers")
-    @ResponseBody
-    public void addALotOfRandomUsers() {
-        List<User> userList = new ArrayList<User>();
-        for (int i = 0; i < 100; i++) {
-            User user = new User();
-            user = RandomThings.generateRandomUser();
-            userList.add(user);
-        }
-        userRepo.saveAll(userList);
-    }
-    */
 }

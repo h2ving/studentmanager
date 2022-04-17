@@ -1,13 +1,17 @@
 package sda.studentmanagement.studentmanager.utils.generationStrategy;
 
 public enum Gender {
-    UNSPECIFIED (0),
-    MALE (1),
-    FEMALE (2);
+    UNSPECIFIED ("Unspecified"),
+    MALE ("Male"),
+    FEMALE ("Female");
 
-    public final int genderID;
+    private String genderName;
 
-    private Gender(int genderID) {
-        this.genderID = genderID;
+    private Gender(String genderName) {
+        this.genderName = genderName;
+    }
+
+    public String getGenderName(){
+        return this.genderName;
     }
 }

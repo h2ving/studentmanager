@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.tomcat.jni.Local;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,4 +65,7 @@ public class User {
 
     @CreatedDate
     private final LocalDate createdAt = LocalDate.now();
+
+    @LastModifiedDate
+    private final LocalDateTime updatedAt = LocalDateTime.now();
 }
