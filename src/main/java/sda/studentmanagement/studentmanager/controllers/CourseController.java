@@ -48,13 +48,13 @@ public class CourseController {
     }
 
     //GET SPECIFIC COURSE BY COURSE NAME
-    @GetMapping("/course/{courseName}")
+    @GetMapping("/course/courseName/{courseName}")
     public ResponseEntity<Course> getCourseByCourseName(@PathVariable("courseName") String courseName) {
         return ResponseEntity.ok(courseService.getCourse(courseName));
     }
 
     // Get All courses by one User? using UserEmail
-    @GetMapping("/courses/{userEmail}")
+    @GetMapping("/courses/email/{userEmail}")
     public ResponseEntity<List<Course>> getAllCoursesByUserEmail(@PathVariable("userEmail") String email) {
         return ResponseEntity.ok(courseService.getCoursesByUser(email));
     }

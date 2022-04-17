@@ -10,6 +10,7 @@ import sda.studentmanagement.studentmanager.repositories.CourseRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class CourseServiceImplementation implements CourseService {
             }
             return listOfCoursesByUser;
         } else {
-            throw new EntityExistsException("Couldn't find user with email: \"" + email + "\" ");
+            throw new EntityNotFoundException("Couldn't find user with email: \"" + email + "\" ");
         }
     }
 

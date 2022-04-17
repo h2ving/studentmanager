@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -32,17 +33,17 @@ public class Course {
     @Lob
     private String description;
 
-    @NotBlank
+    @NotNull
     private LocalDate startDate;
 
-    @NotBlank
+    @NotNull
     private LocalDate endDate;
 
-    @NotBlank
+    @NotNull
     @Size(max = 5)
     private int academicHours;
 
-    @NotBlank
+
     private boolean remote;
 
     @ManyToMany(fetch = FetchType.LAZY)

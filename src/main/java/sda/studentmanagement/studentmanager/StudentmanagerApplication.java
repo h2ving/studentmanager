@@ -6,11 +6,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sda.studentmanagement.studentmanager.domain.Role;
-import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.domain.*;
+import sda.studentmanagement.studentmanager.services.AttendanceService;
+import sda.studentmanagement.studentmanager.services.CourseService;
+import sda.studentmanagement.studentmanager.services.SessionService;
 import sda.studentmanagement.studentmanager.services.UserService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.List;
 
 @SpringBootApplication
 public class StudentmanagerApplication {
@@ -25,7 +31,7 @@ public class StudentmanagerApplication {
 	}
 
 	@Bean
-	CommandLineRunner run(UserService userService) {
+	CommandLineRunner run(UserService userService, CourseService courseService, SessionService sessionService, AttendanceService attendanceService) {
 		return args -> {
 			userService.saveRole(new Role(null, "Student"));
 			userService.saveRole(new Role(null, "Professor"));
@@ -38,6 +44,17 @@ public class StudentmanagerApplication {
 			userService.addRoleToUser("johnt@gmail.com", "Student");
 			userService.addRoleToUser("johndoe@gmail.com", "Professor");
 			userService.addRoleToUser("hanna@gmail.com", "Admin");
+
+			courseService.saveCourse(new Course( 1L ,"Flutter", "Mobile development", LocalDate.of(2022, 4, 18), LocalDate.of(2023, 4, 5), 5, true, null ));
+			courseService.saveCourse(new Course( 2L ,"Data science", "Data manipulation and information sciences", LocalDate.of(2022, 4, 18), LocalDate.of(2023, 4, 5), 3, true, null ));
+			courseService.addUserToCourse("johnt@gmail.com", "Flutter");
+			courseService.addUserToCourse("johndoe@gmail.com", "Flutter");
+			courseService.addUserToCourse("hanna@gmail.com", "Data science");
+
+			sessionService.saveSession(new Session(1, LocalDateTime.of(LocalDate.of(2022,4,20), LocalTime.of(20, 15)), 4, "Flutter basics", null, courseService.getCourse("Flutter")));
+
+			attendanceService.saveAttendance(new Attendance(1, true, sessionService.getSession(1L), userService.getUserById(4)));
+
 		};
 	}
 }

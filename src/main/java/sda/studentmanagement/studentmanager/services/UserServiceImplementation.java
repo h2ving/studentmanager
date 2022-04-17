@@ -91,4 +91,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         log.info("Fetching all users");
         return userRepository.findAll();
     }
+
+    @Override
+    public User getUserById(long id) {
+        return userRepository.findById(id);
+    }
 }
