@@ -12,17 +12,33 @@
     
     <div class="input-container">
       <fa-icon [icon]="faUser" class="input-icon"></fa-icon>
-      <input type="email" name="email" [(ngModel)]="email" placeholder="Email">
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="Email"
+        required
+      >
     </div>
 
     <div class="input-container">
       <fa-icon [icon]="faLock" class="input-icon"></fa-icon>
-      <input type="password" name="password" [(ngModel)]="password" placeholder="*********">
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        placeholder="*********"
+        required>
     </div>
 
     <div class="form-login">
       <div class="checkbox-container">
-        <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe" value="rememberMe">
+        <input
+          type="checkbox"
+          name="rememberMe"
+          [(ngModel)]="rememberMe"
+          value="rememberMe"
+        >
         <label for="rememberMe">Remember me</label><br>
       </div>
 

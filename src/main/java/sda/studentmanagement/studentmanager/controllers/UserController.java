@@ -50,6 +50,11 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUser(userEmail));
     }
 
+    @GetMapping("/user/id/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(userService.getUser(id));
+    }
+
     // Save a new User to database
     @PostMapping("/user/save")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
