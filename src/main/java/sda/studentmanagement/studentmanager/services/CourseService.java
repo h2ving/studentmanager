@@ -12,4 +12,5 @@ public interface CourseService {
     List<Course> getCourses();
     List<Course> getCoursesByUser(String email);
     void addUserToCourse(String email, String courseName);
+    Course getCourseById(long id);
 }

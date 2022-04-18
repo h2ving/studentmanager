@@ -87,4 +87,9 @@ public class CourseServiceImplementation implements CourseService {
 
         course.getUsers().add(user);
     }
+
+    @Override
+    public Course getCourseById(long id) {
+        return courseRepository.getById(id);
+    }
 }

@@ -31,9 +31,9 @@ public class StudentmanagerApplication {
 //			userService.saveRole(new Role(null, "Professor"));
 //			userService.saveRole(new Role(null, "Admin"));
 //
-//			userService.saveUser(new User(null, "John", "Travolta", "johnt@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 5555 7777"));
-//			userService.saveUser(new User(null, "John", "Doe", "johndoe@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 9999 2222"));
-//			userService.saveUser(new User(null, "Hanna", "Smith", "hanna@gmail.com", "1234", null, "Female", LocalDate.now(), "+372 8888 1111"));
+//			userService.saveUser(new User(null, "John", "Travolta", "johnt@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 5555 7777", null));
+//			userService.saveUser(new User(null, "John", "Doe", "johndoe@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 9999 2222", null));
+//			userService.saveUser(new User(null, "Hanna", "Smith", "hanna@gmail.com", "1234", null, "Female", LocalDate.now(), "+372 8888 1111", null));
 //
 //			userService.addRoleToUser("johnt@gmail.com", "Student");
 //			userService.addRoleToUser("johndoe@gmail.com", "Professor");

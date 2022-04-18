@@ -2,17 +2,15 @@ package sda.studentmanagement.studentmanager.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sda.studentmanagement.studentmanager.domain.Course;
+import sda.studentmanagement.studentmanager.domain.Session;
 import sda.studentmanagement.studentmanager.domain.User;
-import sda.studentmanagement.studentmanager.services.UserService;
 import sda.studentmanagement.studentmanager.utils.generationStrategy.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.time.*;
+import java.util.*;
+
 
 public class RandomThings {
-    private static UserService userService;
     private static final Random random = new Random();
 
     public static String getScience() {
@@ -60,13 +58,13 @@ public class RandomThings {
         return random.nextInt(1, (int) courseLengthInDays * 5 + 1);
     }
 
-    public static Course getRandomCourse(){
+    public static Course getRandomCourse() {
         Course course = new Course();
         course.setName(getScience());
         course.setDescription(course.getName());
         course.setStartDate(getCourseStartDate(5, 15));
-        course.setEndDate(getCourseEndDate(course.getStartDate(),10,30));
-        course.setAcademicHours(getCourseAcademicHours(course.getStartDate(),course.getEndDate()));
+        course.setEndDate(getCourseEndDate(course.getStartDate(), 10, 30));
+        course.setAcademicHours(getCourseAcademicHours(course.getStartDate(), course.getEndDate()));
         course.setRemote(random.nextBoolean());
         course.setId(null);
         List<User> userlist = new ArrayList<>();
@@ -92,16 +90,12 @@ public class RandomThings {
 
     public static LocalDate getDOB(UserRole role) {
         LocalDate randomDOB = null;
-        long randomDate;
-
         if (role == UserRole.STUDENT) {
-            randomDate = random.nextLong(UserRole.STUDENT.minDOB(), UserRole.STUDENT.maxDOB());
-            randomDOB = LocalDate.ofEpochDay(randomDate);
+            randomDOB = randomDate(UserRole.STUDENT.minDOB(), UserRole.STUDENT.maxDOB());
         }
 
         if (role == UserRole.PROFESSOR) {
-            randomDate = random.nextLong(UserRole.PROFESSOR.minDOB(), UserRole.PROFESSOR.maxDOB());
-            randomDOB = LocalDate.ofEpochDay(randomDate);
+            randomDOB = randomDate(UserRole.STUDENT.minDOB(), UserRole.STUDENT.maxDOB());
         }
 
         return randomDOB;
@@ -118,6 +112,80 @@ public class RandomThings {
             phoneNumber.append(random.nextInt(0, 9));
         }
         return phoneNumber.toString();
+    }
+
+    public static List<Session> generateRandomSessions(Course course) {
+        List<Session> sessionList = new ArrayList<>();
+        int minDuration = 1;
+        int maxDuration = 4;
+        int courseLength = course.getAcademicHours();
+        int sessionLength;
+
+        do {
+            if (courseLength > maxDuration) {
+                sessionLength = random.nextInt(minDuration, maxDuration + 1);
+                courseLength = courseLength - sessionLength;
+            } else {
+                sessionLength = courseLength;
+                courseLength = 0;
+            }
+
+            Session session = new Session();
+            session.setDescription(course.getName() + " session");
+            session.setCourse(course);
+            session.setAcademicHours(sessionLength);
+            session.setStartDateTime(randomEventDateTime(course.getStartDate(), course.getEndDate(), true, true).plusHours(random.nextInt(8, 16 - sessionLength)));
+            session.setUser(null);
+            sessionList.add(session);
+        }
+        while (courseLength != 0);
+
+        // Sorting by date
+        sessionList.sort(Comparator.comparing(Session::getStartDateTime));
+
+        // Enumeration
+        int i = 0;
+        for (Session session : sessionList) {
+            i++;
+            String perfix;
+            if (i < sessionList.size()) {
+                perfix = " " + i;
+            } else {
+                perfix = " Finale";
+            }
+            session.setDescription(session.getDescription() + perfix);
+        }
+
+        return sessionList;
+    }
+
+    private static LocalDateTime randomEventDateTime(LocalDate startDate, LocalDate endDate, boolean onlyWorkweek, boolean atMidnight) {
+        LocalDate date = randomDate(startDate, endDate);
+        if (onlyWorkweek) {
+            while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                date = randomDate(startDate, endDate);
+            }
+        }
+        if (atMidnight) {
+            return date.atStartOfDay();
+        } else {
+            return date.atTime(random.nextInt(23), random.nextInt(59));
+        }
+    }
+
+
+    private static LocalDate randomDate(LocalDate startDate, LocalDate endDate) {
+        long randomDate = random.nextLong(startDate.toEpochDay(), endDate.toEpochDay());
+        return LocalDate.ofEpochDay(randomDate);
+    }
+
+    private static LocalDateTime randomDateTime(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        ZoneOffset offset = OffsetDateTime.now().getOffset();
+        long startLong = startDateTime.toEpochSecond(offset);
+        long endLong = endDateTime.toEpochSecond(offset);
+        long randomDate = random.nextLong(startLong, startLong);
+
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(randomDate), offset);
     }
 
     public static User generateRandomUser(UserRole userRole) {
