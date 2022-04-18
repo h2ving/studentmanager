@@ -26,6 +26,7 @@ export class UserService {
     return this.http.post<any>(url, body);
   }
 
+
   // Log out
   logOut(user: User): Observable<User> {
     const url = `${this.apiUrl}/user/logout/${user.id}`;

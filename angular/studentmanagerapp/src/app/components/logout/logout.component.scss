@@ -1,0 +1,21 @@
+.header-right {
+  display: flex;
+  align-items: center;
+
+  .log-out-logo {
+    cursor: pointer;
+    margin-left: 2rem;
+    font-size: 1.2rem;
+  }
+
+  &-container {
+    display: flex;
+    align-items: center;
+
+    img {
+      height: 50px;
+      width: auto;
+      margin-right: 1rem;
+    }
+  }
+}
