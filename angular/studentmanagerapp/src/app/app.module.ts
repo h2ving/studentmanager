@@ -18,6 +18,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { LogoutComponent } from './components/logout/logout.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { ProfessorComponent } from './components/professor/professor.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { ProfessorComponent } from './components/professor/professor.component';
     LogoutComponent,
     AdminComponent,
     ProfessorComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import { ProfessorComponent } from './components/professor/professor.component';
     ToastrModule.forRoot({ timeOut: 3000, positionClass: 'toast-top-right', preventDuplicates: true })
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
