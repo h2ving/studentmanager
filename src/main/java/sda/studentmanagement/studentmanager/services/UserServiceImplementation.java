@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sda.studentmanagement.studentmanager.projections.UserView;
 import sda.studentmanagement.studentmanager.domain.Role;
 import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.repositories.RoleRepository;
@@ -93,7 +94,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
-    public User getUserById(long id) {
-        return userRepository.findById(id);
+    public List<UserView> getUsersView() {
+        log.info("Fetching all users into a short format");
+
+        return (List<UserView>) userRepository.findAllProjectedBy();
     }
 }

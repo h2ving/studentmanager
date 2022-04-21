@@ -19,81 +19,6 @@ import sda.studentmanagement.studentmanager.filters.CustomAuthorizationFilter;
 import static org.springframework.http.HttpMethod.*;
 
 
-// OLD VERSION
-/*
-@Configuration
-@EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private DataSource dataSource;
-
-
- //!!!!! DELETE We don't log out in server side, client just destroys the token in session storage and the we can't make any requests
-    @Autowired
-    CustomLogoutHandler customLogoutHandler;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        //!!!!!! DELETE? because we have JWT authentication -> auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("SELECT email, password, true from user where email=?") //TODO: add a enabled flag for an user
-                .authoritiesByUsernameQuery("SELECT email, role from user where email=?");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/user/**").permitAll()
-//                .antMatchers("/admin/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .httpBasic()
-//                .and()
-//                .formLogin().loginPage("/user/login")
-//                .loginProcessingUrl("/user/login")
-//                .defaultSuccessUrl("/", true)
-//                .failureHandler(authenticationFailureHandler())
-//                .and()
-//                .logout()
-//                .logoutUrl("/user/logout")
-//                .addLogoutHandler(customLogoutHandler);
-
-
-
-        //!!!!! DELETE, new rules with JWT are down
-
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                .antMatchers("/user/**").hasAnyAuthority("STUDENT", "PROFESSOR")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .and()
-                .httpBasic();
-    }
-
-
-
-
-
-    //!!!!! BCrypt is already used when signing in DELETE
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-
-    //!!!!! Handled with roles already -> .hasAnyAuthority("Student", "Professor", "Admin"); DELETE
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailure();
-    }
-}
-*/
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -118,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/user/save/**", "/api/role/**").hasAuthority("Admin");
         http.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("Student", "Professor", "Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/spawn/**", "/api/spawnmany/**").hasAuthority("Admin");
 
         //SESSION ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/sessions/**").hasAnyAuthority("Student", "Professor", "Admin");
@@ -128,6 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET, "/api/course/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(GET, "/api/courses/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/course/save").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/course/spawn").hasAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/course/spawn/**").hasAuthority("Admin");
 
         //GRADE ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/grades/**").hasAnyAuthority("Student", "Professor", "Admin");

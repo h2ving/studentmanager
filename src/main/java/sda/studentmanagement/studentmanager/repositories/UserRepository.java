@@ -3,8 +3,11 @@ package sda.studentmanagement.studentmanager.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.projections.UserView;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.List;
+
+public interface UserRepository extends JpaRepository<User, Long>{
     User findByEmail(String email);
-    User findById(long id);
+    List<UserView> findAllProjectedBy();
 }

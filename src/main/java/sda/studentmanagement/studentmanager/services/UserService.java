@@ -1,5 +1,6 @@
 package sda.studentmanagement.studentmanager.services;
 
+import sda.studentmanagement.studentmanager.projections.UserView;
 import sda.studentmanagement.studentmanager.domain.Role;
 import sda.studentmanagement.studentmanager.domain.User;
 
@@ -12,4 +13,5 @@ public interface UserService {
     User getUser(String email);
     User getUserById(long id);
     List<User> getUsers();
+    List<UserView> getUsersView();
 }
