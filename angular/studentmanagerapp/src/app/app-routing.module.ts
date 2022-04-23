@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminComponent } from './components/admin/admin.component';
+import { AdminComponent } from './components/Users/admin/admin.component';
 import { LoginComponent } from './components/login/login.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { ProfessorComponent } from './components/professor/professor.component';
-import { StudentComponent } from './components/student/student.component';
+import { ProfessorComponent } from './components/Users/professor/professor.component';
+import { StudentComponent } from './components/Users/student/student.component';
 import { Roles } from './models/roles.model';
 import { AuthGuard } from './shared/auth.guard';
 

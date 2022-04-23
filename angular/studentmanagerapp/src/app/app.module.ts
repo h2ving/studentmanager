@@ -8,18 +8,26 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
-import { StudentComponent } from './components/student/student.component';
+import { StudentComponent } from './components/Users/student/student.component';
 import { LoginComponent } from './components/login/login.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { GradesComponent } from './components/grades/grades.component';
-import { GradeItemComponent } from './components/grade-item/grade-item.component';
+import { FooterComponent } from './components/User-components/footer/footer.component';
+import { StudentGradeListComponent } from './components/Users/student/student-grade-list/student-grade-list.component';
+import { StudentGradeItemComponent } from './components/Users/student/student-grade-item/student-grade-item.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { LogoutComponent } from './components/logout/logout.component';
-import { AdminComponent } from './components/admin/admin.component';
-import { ProfessorComponent } from './components/professor/professor.component';
+import { AdminComponent } from './components/Users/admin/admin.component';
+import { ProfessorComponent } from './components/Users/professor/professor.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
+import { ProfileInformationComponent } from './components/User-components/profile-information/profile-information.component';
+import { StudentCourseListComponent } from './components/Users/student/student-course-list/student-course-list.component';
+import { StudentCourseItemComponent } from './components/Users/student/student-course-item/student-course-item.component';
+import { StudentAttendanceListComponent } from './components/Users/student/student-attendance-list/student-attendance-list.component';
+import { StudentAttendanceItemComponent } from './components/Users/student/student-attendance-item/student-attendance-item.component';
+import { HeaderComponent } from './components/User-components/header/header.component';
+import { SessionListComponent } from './components/User-components/session-list/session-list.component';
+import { SessionItemComponent } from './components/User-components/session-item/session-item.component';
+import { ClockComponent } from './components/User-components/clock/clock.component';
 
 @NgModule({
   declarations: [
@@ -27,13 +35,21 @@ import { LoaderInterceptor } from './interceptors/loader.interceptor';
     StudentComponent,
     LoginComponent,
     FooterComponent,
-    GradesComponent,
-    GradeItemComponent,
+    StudentGradeListComponent,
+    StudentGradeItemComponent,
     PageNotFoundComponent,
-    LogoutComponent,
     AdminComponent,
     ProfessorComponent,
     LoaderComponent,
+    ProfileInformationComponent,
+    StudentCourseListComponent,
+    StudentCourseItemComponent,
+    StudentAttendanceListComponent,
+    StudentAttendanceItemComponent,
+    HeaderComponent,
+    SessionListComponent,
+    SessionItemComponent,
+    ClockComponent,
   ],
   imports: [
     BrowserModule,

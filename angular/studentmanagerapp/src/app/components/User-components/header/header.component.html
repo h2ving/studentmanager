@@ -1,0 +1,23 @@
+<header class="header">
+  <div class="header-left">
+    <img src="../../../../assets/grad_cap.jpg" alt="">
+    
+    <p><b>Welcome to SDA</b> School Management System</p>
+  </div>
+
+  <div class="header-right">
+    <div class="header-right-container">
+      <img [src]="
+        currentUser.gender === 'Male' ? maleImageUrl :
+        currentUser.gender === 'Female' ? femaleImageUrl :
+        defaultImageUrl" alt="Log Out">
+  
+      <div>
+        <b>{{ currentUser.firstName }}</b>
+        <p>{{ currentUser.role }}</p>
+      </div>
+    </div>
+    
+    <fa-icon (click)="clickLogOut()" [icon]="faSignOutAlt" class="log-out-logo"></fa-icon>
+  </div>
+</header>

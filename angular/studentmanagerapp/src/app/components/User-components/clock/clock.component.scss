@@ -1,0 +1,28 @@
+$blue-border: #eeeff4;
+$blue-shadow: #d8dbe2;
+$light-blue-color: #e2e5ec;
+$lighter-blue-color: #f5f6fa;
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  width: 300px;
+}
+
+.time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 55px;
+  height: 55px;
+  border: 2px solid $blue-border;
+  background-color: $lighter-blue-color;
+  margin: 0;
+
+  &:nth-child(2),
+  &:nth-child(4) {
+    border: 0;
+    width: 35px;
+    background-color: #fff;
+  }
+}

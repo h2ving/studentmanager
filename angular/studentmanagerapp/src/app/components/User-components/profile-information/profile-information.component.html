@@ -1,0 +1,26 @@
+<div class="profile">
+  <app-clock></app-clock>
+
+  <div class="profile-table">
+    <div class="profile-table-heading">
+      <p>Name:</p>
+      <p>Gender:</p>
+      <p>Age:</p>
+      <p>Date of Birth:</p>
+      <p>Email:</p>
+      <p>Occupation:</p>
+      <p>Phone:</p>
+      <p>Joined:</p>
+    </div>
+    <div class="profile-table-values">
+      <p>{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+      <p>{{ currentUser.gender }}</p>
+      <p>28</p>
+      <p>{{ currentUser.dob }}</p>
+      <p>{{ currentUser.email }}</p>
+      <p>{{ currentUser.role }}</p>
+      <p>{{ currentUser.mobile }}</p>
+      <p>{{ currentUser.createdAt }}</p>
+    </div>
+  </div>
+</div>
