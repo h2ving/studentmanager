@@ -25,7 +25,7 @@ public class SessionServiceImplementation implements SessionService {
     private final CourseRepository courseRepository;
 
     @Override
-    public Session saveSession(Session session) {
+    public Session saveSession(Session session) throws EntityExistsException {
         Session findSession = sessionRepository.findOneById(session.getId());
 
         if(findSession != null) {
@@ -43,17 +43,18 @@ public class SessionServiceImplementation implements SessionService {
     }
 
     @Override
-    public Session getSession(Long id) {
+    public Session getSession(Long id) throws EntityExistsException {
         Session session = sessionRepository.findOneById(id);
 
-        if(session == null) {
-            throw new EntityExistsException("Session with id - \"" + id + "\" not found");
+        if(session != null) {
+            return session;
+        } else {
+            throw new EntityExistsException("Session with id -\"" + id + "\" not found");
         }
-        return session;
     }
 
     @Override
-    public List<Session> getSessionsByCourseName(String courseName) {
+    public List<Session> getSessionsByCourseName(String courseName) throws EntityNotFoundException {
         Course courseByName = courseRepository.findByName(courseName);
         List<Session> returnSessionsList = new ArrayList<>();
         if(courseByName != null) {

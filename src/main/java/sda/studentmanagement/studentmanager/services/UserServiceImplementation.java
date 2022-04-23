@@ -88,6 +88,11 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
     }
 
     @Override
+    public User getUserById(long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public List<User> getUsers() {
         log.info("Fetching all users");
         return userRepository.findAll();
