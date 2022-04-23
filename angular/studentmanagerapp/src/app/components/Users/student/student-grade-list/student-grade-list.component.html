@@ -1,0 +1,18 @@
+<table>
+  <tr class="table-header">
+    <th>My Grades</th>
+  </tr>
+
+  <tr class="table-titles">
+    <th>Course</th>
+    <th>Date</th>
+    <th>Grade</th>
+  </tr>
+
+  <div class="table-container">
+    <app-student-grade-item
+      *ngFor="let grade of grades;"
+      [grade]="grade"
+    ></app-student-grade-item>
+  </div>
+</table>

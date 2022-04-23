@@ -1,0 +1,30 @@
+$lighter-blue-color: #f5f6fa;
+
+tr {
+  display: flex;
+}
+
+td {
+  width: 100%;
+  text-align: center;
+  padding: 0.4rem 0;
+  font-size: 0.8rem;
+}
+
+.join-course {
+  cursor: pointer;
+}
+
+tr:hover {
+  background-color: $lighter-blue-color;
+}
+
+@media only screen and (max-width: 1440px) {
+  // tr {
+  //   width: 440px;
+  // }
+
+  td {
+    padding: 0.25rem 0;
+  }
+}

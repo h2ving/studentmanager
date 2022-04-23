@@ -1,0 +1,49 @@
+<div class="student-component-container">
+  <app-header [currentUser]="currentUser"></app-header>
+
+  <section class="section-top">
+    <div class="breadcrumb">
+      <h5>Home - {{ currentUser.role }}</h5>
+    </div>
+
+    <div class="cards">
+      <div class="card cards-session highlight">
+        Sessions
+      </div>
+
+      <div class="card cards-grade highlight">
+        Grades
+      </div>
+
+      <div class="card cards-attendance highlight" (click)="toggleAttendance()">
+        Attendance
+      </div>
+
+      <div class="card cards-courses highlight" (click)="toggleCourses()">
+        Courses
+      </div>
+    </div>
+  </section>
+
+  <section class="section-top-card-info" *ngIf="showAttendance">
+    <!-- <app-attendance-list></app-attendance-list> -->
+  </section>
+
+  <section class="section-top-card-info" *ngIf="showCourses">
+    <!-- <app-course-list [currentUser]="currentUser"></app-course-list> -->
+  </section>
+
+  <section class="section-middle">
+    <div class="profile-left">
+      <app-profile-information [currentUser]="currentUser"></app-profile-information>
+
+      <img src="../../../assets/students.jpg" alt="graduation">
+    </div>
+
+    <div class="profile-right">
+      <app-session-list></app-session-list>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+</div>
