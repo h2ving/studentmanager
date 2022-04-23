@@ -19,9 +19,8 @@ public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @NotBlank
     private boolean didAttend;
 
     @OneToOne(fetch = FetchType.LAZY)

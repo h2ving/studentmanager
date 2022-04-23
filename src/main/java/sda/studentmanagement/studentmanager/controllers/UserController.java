@@ -5,19 +5,18 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sda.studentmanagement.studentmanager.domain.Role;
 import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.domain.request.RoleToUserFormDto;
+import sda.studentmanagement.studentmanager.projections.UserView;
 import sda.studentmanagement.studentmanager.services.UserService;
-import sda.studentmanagement.studentmanager.utils.RandomThings;
-import sda.studentmanagement.studentmanager.utils.UserUtils;
+import sda.studentmanagement.studentmanager.utils.*;
+import sda.studentmanagement.studentmanager.utils.generationStrategy.UserRole;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +42,12 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
+    // Get All Users
+    @GetMapping("/usersview")
+    public ResponseEntity<List<UserView>> getUsersView() {
+        return ResponseEntity.ok().body(userService.getUsersView());
+    }
+
     // Get User by Email
     @GetMapping("/user/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable("email") String userEmail) {
@@ -65,6 +70,50 @@ public class UserController {
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 
+    // Create a new random user
+    @PostMapping("/spawn")
+    public ResponseEntity<User> spawnUser() {
+        boolean created = false;
+        User user;
+
+        // Works in loop in case if random generated user have same email as an existing user
+        do {
+            UserRole role;
+            Random random = new Random();
+            if (random.nextInt(100) > 90) {
+                role = UserRole.PROFESSOR;
+            } else {
+                role = UserRole.STUDENT;
+            }
+
+            user = RandomThings.generateRandomUser(role);
+            log.info("User {} generated", user.getEmail());
+
+            if (userService.getUser(user.getEmail()) == null) {
+                userService.saveUser(user);
+                userService.addRoleToUser(user.getEmail(), role.getRoleName());
+                created = true;
+                log.info("User created successfully");
+            }
+            else
+            {
+                log.info("User with the same email exists. Redo!");
+            }
+        }
+        while(!created);
+        return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping("/spawnmany/{amount}")
+    public ResponseEntity<?> spawnManyUsers(@PathVariable("amount") int amount) {
+        if (amount > 0) {
+            for (int i = 0; i < amount; i++) {
+                spawnUser();
+            }
+        }
+        return ResponseEntity.ok().body(amount + " users generated.");
+    }
+
     // Add a new role to user
     @PostMapping("/role/addroletouser")
     public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserFormDto form) {
@@ -78,7 +127,7 @@ public class UserController {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("Secret".getBytes()); // Todo: Into Util class
@@ -102,7 +151,7 @@ public class UserController {
 
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
-                log.error("Error logging in: {}", e.getMessage());
+                log.error("Error logging in THERE: {}", e.getMessage());
                 response.setHeader("Error", e.getMessage());
                 response.setStatus(FORBIDDEN.value());
                 Map<String, String> error = new HashMap<>();
@@ -114,58 +163,4 @@ public class UserController {
             throw new RuntimeException("Refresh token is missing");
         }
     }
-
-
-    // Legacy
-
-    /*
-    //!!!!! Whats this for?
-    @GetMapping(value = "/", produces = "application/json")
-    @ResponseBody
-    public User showCurrentUser(Model model) throws Exception {
-
-        User user = userRepo.getUserByEmail(UserUtils.getAuthenticatedUserName());
-            return user;
-    }
-
-    //!!!!! Delete User still needs to be handled somehow, not sure how
-    @DeleteMapping(value = "/admin/user/{id}")
-    @ResponseBody
-    public String deleteUser(@PathVariable("id") int id) {
-        if (userRepo.findById(id) != null) {
-            userRepo.deleteById(id);
-            return "Done";
-        } else return "None";
-    }
-
-    //!!!!! Whats this use case?
-    @RequestMapping(value = "/admin/drop")
-    @ResponseBody
-    public void dropUserRepo() {
-        userRepo.deleteAll();
-    }
-
-
-    //!!!!! Not sure how adding random Users work atm, needs to take a look
-    @RequestMapping(value = "/admin/addRandomUser")
-    @ResponseBody
-    public User addRandomUser() {
-        User user = new User();
-        user = RandomThings.generateRandomUser();
-        userRepo.save(user);
-        return user;
-    }
-
-    @RequestMapping(value = "/admin/addALotOfRandomUsers")
-    @ResponseBody
-    public void addALotOfRandomUsers() {
-        List<User> userList = new ArrayList<User>();
-        for (int i = 0; i < 100; i++) {
-            User user = new User();
-            user = RandomThings.generateRandomUser();
-            userList.add(user);
-        }
-        userRepo.saveAll(userList);
-    }
-    */
 }

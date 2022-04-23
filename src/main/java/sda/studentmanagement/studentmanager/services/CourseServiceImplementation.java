@@ -10,6 +10,8 @@ import sda.studentmanagement.studentmanager.repositories.CourseRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,11 +24,14 @@ public class CourseServiceImplementation implements CourseService {
 
     @Override
     public Course saveCourse(Course course) {
+        log.info("saveCourse started");
         Course findCourse = courseRepository.findByName(course.getName());
-
+        log.info("searching for courses");
         if (findCourse != null) {
+            log.info("exists");
             throw new EntityExistsException("Course with Name \"" + course.getName() + "\" already exists");
         } else {
+            log.info("added");
             return courseRepository.save(course);
         }
     }
@@ -56,15 +61,36 @@ public class CourseServiceImplementation implements CourseService {
     }
 
     @Override
+    public List<Course> getCoursesByUser(String email) {
+        List<Course> listOfCoursesByUser = new ArrayList<>();
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            for(Course course : getCourses()) {
+                if(course.getUsers().contains(user)) {
+                    listOfCoursesByUser.add(course);
+                }
+            }
+            return listOfCoursesByUser;
+        } else {
+            throw new EntityNotFoundException("Couldn't find user with email: \"" + email + "\" ");
+        }
+    }
+
+    @Override
     public List<Course> getCourses() {
         return courseRepository.findAll();
     }
 
     @Override
-    public void addUserToCourse(String email, String courseName) {
-        User user = userRepository.findByEmail(email);
+    public void addUserToCourse(String name, String courseName) {
+        User user = userRepository.findByEmail(name);
         Course course = courseRepository.findByName(courseName);
 
-        course.getUser_id().add(user);
+        course.getUsers().add(user);
+    }
+
+    @Override
+    public Course getCourseById(long id) {
+        return courseRepository.getById(id);
     }
 }

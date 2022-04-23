@@ -2,26 +2,31 @@ package sda.studentmanagement.studentmanager.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
+import sda.studentmanagement.studentmanager.projections.UserToCourseDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Course {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -32,20 +37,39 @@ public class Course {
     @Lob
     private String description;
 
-    @NotBlank
     private LocalDate startDate;
 
-    @NotBlank
     private LocalDate endDate;
 
-    @NotBlank
-    @Size(max = 5)
-    private int academicHours;
+    @NotNull
+    private Integer academicHours;
 
-    @NotBlank
-    private boolean remote;
+    @NotNull
+    private Boolean remote;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<User> user_id;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "course_user",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "user_id")
+    private List<User> users;
+
+    @Transient
+    public int getStudentsCount(){
+        return this.users.size();
+    }
+
+    @Transient
+    public List<UserToCourseDTO> getUsersAssigned()
+    {
+        List<UserToCourseDTO> usersAssigned = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
+
+        for (User user : this.getUsers()) {
+            usersAssigned.add(modelMapper.map(user, UserToCourseDTO.class));
+        }
+        return usersAssigned;
+    }
 }

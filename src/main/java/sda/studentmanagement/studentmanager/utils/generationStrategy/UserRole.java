@@ -3,34 +3,56 @@ package sda.studentmanagement.studentmanager.utils.generationStrategy;
 import java.time.LocalDate;
 
 public enum UserRole {
-    STUDENT {
+    STUDENT("Student") {
         @Override
-        public long minDOB() {
-            return LocalDate.of(2002, 1, 1).toEpochDay();
+        public LocalDate minDOB() {
+            return LocalDate.of(2002, 1, 1);
         }
 
         @Override
-        public long maxDOB() {
-            return LocalDate.of(2015, 12, 31).toEpochDay();
+        public LocalDate maxDOB() {
+            return LocalDate.of(2015, 12, 31);
         }
     },
-    PROFESSOR {
+    PROFESSOR("Professor") {
         @Override
-        public long minDOB() {
-            return LocalDate.of(1950, 1, 1).toEpochDay();
+        public LocalDate minDOB() {
+            return LocalDate.of(1950, 1, 1);
         }
 
         @Override
-        public long maxDOB() {
-            return LocalDate.of(2000, 12, 31).toEpochDay();
+        public LocalDate maxDOB() {
+            return LocalDate.of(2000, 12, 31);
+        }
+    },
+    ADMIN("Admin") {
+        @Override
+        public LocalDate minDOB() {
+            return LocalDate.of(1950, 1, 1);
+        }
+
+        @Override
+        public LocalDate maxDOB() {
+            return LocalDate.of(2000, 12, 31);
         }
     };
 
-    public long minDOB() {
-        return 0;
+    private String roleName;
+
+    public LocalDate minDOB() {
+        return null;
     }
 
-    public long maxDOB() {
-        return 0;
+    public LocalDate maxDOB() {
+        return null;
+    }
+
+    UserRole(String roleName)
+    {
+        this.roleName = roleName;
+    }
+
+    public String getRoleName(){
+        return this.roleName;
     }
 }
