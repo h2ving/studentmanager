@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faUserCircle, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
-import { UserService } from 'src/app/services/user.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,17 +11,15 @@ export class LoginComponent implements OnInit {
   faUserCircle = faUserCircle;
   faUser = faUser;
   faLock = faLock;
-  email: string;
+  email: any = localStorage.getItem('rememberMeEmail');
   password: string;
-  rememberMe: boolean = false;
+  rememberMe: any = localStorage.getItem('rememberMe');
 
-  subscription: Subscription;
-
-  constructor(private userService: UserService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void { }
 
   onSubmit() {
-    this.userService.logIn(this.email, this.password);
+    this.authService.logIn(this.email, this.password, this.rememberMe);
   }
 }

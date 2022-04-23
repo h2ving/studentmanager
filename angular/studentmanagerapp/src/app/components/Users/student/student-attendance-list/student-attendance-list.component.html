@@ -1,0 +1,19 @@
+<table>
+  <tr class="table-header">
+    <th>Attendance to sessions</th>
+  </tr>
+
+  <tr class="table-titles">
+    <th>Course</th>
+    <th>Session</th>
+    <th>Date</th>
+    <th>Attendance</th>
+  </tr>
+
+  <div class="table-container">
+    <app-student-attendance-item
+      *ngFor="let attendance of attendanceList;"
+      [attendance]="attendance"
+    ></app-student-attendance-item>
+  </div>
+</table>

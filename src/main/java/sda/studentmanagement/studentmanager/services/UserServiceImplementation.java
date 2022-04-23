@@ -16,6 +16,7 @@ import sda.studentmanagement.studentmanager.repositories.RoleRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,6 +48,19 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
         // Todo: Our domain should be AppUser? instead of User
         // Return new Spring Security User
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+    }
+
+    @Override
+    public User getUser(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            log.error("User with Id {} not found", id);
+
+            throw new EntityNotFoundException("User not found");
+        }
+
+        return userRepository.getById(id);
     }
 
     @Override

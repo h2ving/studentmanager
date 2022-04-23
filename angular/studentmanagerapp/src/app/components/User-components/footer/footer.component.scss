@@ -1,0 +1,12 @@
+$blue-border: #eeeff4;
+$blue-text-color: #2a6ee2;
+
+footer {
+  text-align: center;
+  border-top: 2px solid $blue-border;
+  padding: 1rem 0 1rem 1rem;
+
+  b {
+    color: $blue-text-color;
+  }
+}

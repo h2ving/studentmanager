@@ -1,0 +1,19 @@
+<table>
+  <tr class="table-header">
+    <th>Upcoming sessions</th>
+  </tr>
+
+  <tr class="table-titles">
+    <th>Course</th>
+    <th>Description</th>
+    <th>Date</th>
+    <th>Length</th>
+  </tr>
+
+  <div class="table-container">
+    <app-session-item
+      *ngFor="let session of userSessions;"
+      [session]="session"
+    ></app-session-item>
+  </div>
+</table>
