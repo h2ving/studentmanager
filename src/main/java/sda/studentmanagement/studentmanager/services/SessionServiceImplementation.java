@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.domain.Session;
+import sda.studentmanagement.studentmanager.domain.User;
 import sda.studentmanagement.studentmanager.repositories.CourseRepository;
 import sda.studentmanagement.studentmanager.repositories.SessionRepository;
+import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -23,6 +25,7 @@ public class SessionServiceImplementation implements SessionService {
 
     private final SessionRepository sessionRepository;
     private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Session saveSession(Session session) throws EntityExistsException {
@@ -67,6 +70,23 @@ public class SessionServiceImplementation implements SessionService {
         } else {
             throw new EntityNotFoundException("Cannot find any courses named: \"" + courseName + "\" :(");
         }
+    }
+
+    @Override
+    public List<Session> getSessionsByUser(String email) throws EntityNotFoundException {
+        List<Session> sessionsByUser = new ArrayList<>();
+        List<Session> allSessions = sessionRepository.findAll();
+        User user = userRepository.findByEmail(email);
+        if(user != null) {
+            for(Session session : allSessions) {
+                if(session.getUser().equals(user)) {
+                    sessionsByUser.add(session);
+                }
+            }
+        } else {
+            throw new EntityNotFoundException("Can't find user with email \"" + email + "\"");
+        }
+        return sessionsByUser;
     }
 
     @Override
