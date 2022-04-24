@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Attendance } from 'src/app/models/attendance.module';
-import { Course } from 'src/app/models/course.module';
-import { Session } from 'src/app/models/session.module';
+import { User } from 'src/app/models/user.model';
+import { AttendanceService } from 'src/app/services/attendance.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-student-attendance-list',
@@ -9,59 +10,21 @@ import { Session } from 'src/app/models/session.module';
   styleUrls: ['./student-attendance-list.component.scss']
 })
 export class StudentAttendanceListComponent implements OnInit {
-  attendanceList: any[] = [
-    new Attendance(
-      2,
-      new Session(
-        1, 'First meeting of Java', new Date(), 4,
-        new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      true
-    ),
-    new Attendance(
-      3,
-      new Session(2, 'Second meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-    new Attendance(
-      4,
-      new Session(3, 'Third meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      true
-    ),
-    new Attendance(
-      1,
-      new Session(4, 'Fourth meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-    new Attendance(
-      1,
-      new Session(4, 'Fourth meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-    new Attendance(
-      1,
-      new Session(4, 'Fourth meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-    new Attendance(
-      1,
-      new Session(4, 'Fourth meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-    new Attendance(
-      1,
-      new Session(4, 'Fourth meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-    new Attendance(
-      1,
-      new Session(4, 'Fourth meeting of Java', new Date(), 4, new Course(1, 'JavaRemoteEE11', 'Java from scratch', new Date(), new Date(), 388, true)),
-      false
-    ),
-  ];
+  @Input() currentUser: User;
+  attendanceList: Array<Attendance>;
 
-  constructor() { }
+  constructor(private attendanceService: AttendanceService, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
+    this.attendanceService.getUserAttendance(this.currentUser.email)
+      .subscribe({
+        next: (res) => {
+          this.attendanceList = res;
+        },
+        error: (err) => {
+          this.notificationService.showError('Please try again later.', 'Failed to receive Attendance list.')
+        }
+      })
   }
 
 }

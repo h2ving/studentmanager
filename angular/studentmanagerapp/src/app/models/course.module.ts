@@ -2,12 +2,13 @@ export class Course {
   id: number;
   name: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   academicHours: number;
   remote: boolean;
+  studentsCount: number;
 
-  constructor(id: number, name: string, description: string, startDate: Date, endDate: Date, academicHours: number, remote: boolean) {
+  constructor(id: number, name: string, description: string, startDate: string, endDate: string, academicHours: number, remote: boolean, studensCount: number) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -15,5 +16,6 @@ export class Course {
     this.endDate = endDate;
     this.academicHours = academicHours;
     this.remote = remote;
+    this.studentsCount = studensCount;
   }
 }

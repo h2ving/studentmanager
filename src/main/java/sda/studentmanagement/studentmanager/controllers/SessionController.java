@@ -70,5 +70,4 @@ public class SessionController {
     public void hardDeleteSession(@PathVariable("id") Long id) {
         sessionService.deleteSession(id);
     }
-
 }
