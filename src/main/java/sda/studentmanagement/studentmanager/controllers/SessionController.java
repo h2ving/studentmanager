@@ -61,9 +61,9 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessions());
     }
 
-    @GetMapping("/sessions/sessionsByUser/{email}")
-    public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable("email") String email) {
-        return ResponseEntity.ok(sessionService.getSessionsByUser(email));
+    @GetMapping("/sessions/sessionsByUser/{id}")
+    public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(sessionService.getSessionsByUser(id));
     }
 
     @GetMapping("/sessions/{courseName}")

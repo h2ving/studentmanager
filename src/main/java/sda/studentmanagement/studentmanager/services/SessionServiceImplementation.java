@@ -73,10 +73,10 @@ public class SessionServiceImplementation implements SessionService {
     }
 
     @Override
-    public List<Session> getSessionsByUser(String email) throws EntityNotFoundException {
+    public List<Session> getSessionsByUser(Long id) throws EntityNotFoundException {
         List<Session> sessionsByUser = new ArrayList<>();
         List<Session> allSessions = sessionRepository.findAll();
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findOneById(id);
         if(user != null) {
             for(Session session : allSessions) {
                 if(session.getUser().equals(user)) {

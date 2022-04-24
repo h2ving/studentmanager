@@ -11,5 +11,5 @@ public interface SessionService {
     Session getSession(Long id);
     List<Session> getSessions();
     List<Session> getSessionsByCourseName(String courseName);
-    List<Session> getSessionsByUser(String username);
+    List<Session> getSessionsByUser(Long id);
 }
