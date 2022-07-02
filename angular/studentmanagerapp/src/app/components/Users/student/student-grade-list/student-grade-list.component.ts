@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Grade } from 'src/app/models/grade.model';
+import { NotificationService } from 'src/app/services/notification.service';
+import { GradeService } from 'src/app/services/grade.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-student-grade-list',
@@ -7,27 +10,22 @@ import { Grade } from 'src/app/models/grade.model';
   styleUrls: ['./student-grade-list.component.scss']
 })
 export class StudentGradeListComponent implements OnInit {
-  grades: any[] = [
-    new Grade(1, 'JavaRemoteEE11', new Date(), 4),
-    new Grade(2, 'MySql Workshop 2021', new Date(), 3),
-    new Grade(3, 'Angular Crash Course', new Date(), 3),
-    new Grade(4, 'React Hooks', new Date(), 3),
-    new Grade(5, 'CSS Introduction', new Date(), 3),
-    new Grade(6, 'CSS with Sass', new Date(), 3),
-    new Grade(7, 'Designing relational databases', new Date(), 3),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-    new Grade(8, 'Backend technologies', new Date(), 2),
-  ];
+  @Input() currentUser: User;
+  grades: Array<Grade>;
 
-  constructor() { }
+  constructor(private gradeService: GradeService, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
+    console.log(this.currentUser)
+    this.gradeService.getUserGrades(this.currentUser.email).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.grades = res;
+      },
+      error: (err) => {
+        this.notificationService.showError('Please try again later.', 'Failed to receive grades.')
+      }
+    })
   }
 
 }

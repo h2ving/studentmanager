@@ -10,6 +10,7 @@ export class User {
   dob: Date;
   mobile: string;
   createdAt: Date;
+  age: number;
 
   constructor(
     id: number,
@@ -22,6 +23,7 @@ export class User {
     dob: Date,
     mobile: string,
     createdAt: Date,
+    age: number,
   ) {
     this.id = id;
     this.email = email;
@@ -33,5 +35,6 @@ export class User {
     this.dob = dob;
     this.mobile = mobile;
     this.createdAt = createdAt;
+    this.age = age;
   }
 }

@@ -33,7 +33,7 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.getAttendance(id));
     }
 
-    @GetMapping("/attendances/{email}")
+    @GetMapping("/attendances/get/{email}")
     public ResponseEntity<List<Attendance>> getAttendancesByUserEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(attendanceService.getAttendanceListByUser(email));
     }

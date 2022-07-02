@@ -1,8 +1,9 @@
 <tr>
   <td>{{ course.name }}</td>
-  <td>{{ course.description }}</td>
-  <td>{{ course.startDate.toLocaleDateString("en-US") }} - {{ course.endDate.toLocaleDateString("en-US") }}</td>
+  <!-- <td>{{ course.description }}</td> -->
+  <td>{{ course.startDate }} - {{ course.endDate }}</td>
   <td>{{ course.academicHours }}</td>
+  <td>{{ course.studentsCount }}</td>
   <td>{{ course.remote ? '&#9989;' : '&#10060;' }}</td>
   <td *ngIf="allCourses" class="join-course"><b>&#10004;</b></td>
 </tr>

@@ -30,7 +30,6 @@ export class AuthService {
       .subscribe({
         next: (res) => {
           this.setSession(res);
-
           this.getUserProfileByEmail(email).subscribe((res) => {
             this.currentUser = res;
             this.currentUser.role = res.roles[0].name;
@@ -75,19 +74,11 @@ export class AuthService {
 
     return this.http.get(url, { headers: this.headers }).pipe(
       map((res: any) => {
-        this.currentUser = res;
-        this.currentUser.role = res.roles[0].name;
-
         return res || {};
       }),
 
       catchError(this.handleError)
     );
-  }
-
-  // Return the current logged in User
-  getCurrentUser(): User {
-    return this.currentUser;
   }
 
   // Return if User is logged in
@@ -103,7 +94,7 @@ export class AuthService {
     sessionStorage.removeItem('RedirectURI');
     sessionStorage.removeItem('Role');
 
-    //! Experimental
+    // Experimental
     sessionStorage.removeItem('expiry_time');
 
     if (removeAccessToken == null && removeRefreshToken == null) {
@@ -124,7 +115,7 @@ export class AuthService {
     sessionStorage.setItem('access_token', authResult.access_token);
     sessionStorage.setItem('refresh_token', authResult.refresh_token);
 
-    //! Experimental
+    // Experimental
     const currentTime = new Date();
     const expiryTime = moment(currentTime).add(10, 'm').toDate();
     sessionStorage.setItem('expiry_time', expiryTime.toString());

@@ -6,13 +6,13 @@
       <div class="breadcrumb">
         <h5>Home - {{ currentUser.role }}</h5>
       </div>
-  
+
       <div class="cards">
         <div class="card cards-session">
           <p>Next session</p>
           <p>24.04.2022 - 19:00</p>
         </div>
-  
+
         <div
           class="card cards-grade highlight"
           (click)="toggleGrades()"
@@ -20,7 +20,7 @@
         >
           Average grade<span class="grade-value">4.5</span>
         </div>
-  
+
         <div
           class="card cards-attendance highlight"
           (click)="toggleAttendance()"
@@ -28,7 +28,7 @@
         >
           Attendance<span class="attendance-value">95</span>%
         </div>
-  
+
         <div
           class="card cards-courses highlight"
           (click)="toggleCourses()"
@@ -38,31 +38,34 @@
         </div>
       </div>
     </section>
-  
+
     <section class="section-top-card-info" *ngIf="showGrades">
-      <app-student-grade-list></app-student-grade-list>
+      <app-student-grade-list [currentUser]="currentUser"></app-student-grade-list>
     </section>
 
     <section class="section-top-card-info" *ngIf="showAttendance">
-      <app-student-attendance-list></app-student-attendance-list>
+      <app-student-attendance-list [currentUser]="currentUser"></app-student-attendance-list>
     </section>
-  
+
     <section class="section-top-card-info" *ngIf="showCourses">
-      <app-student-course-list></app-student-course-list>
+      <app-student-course-list [currentUser]="currentUser"></app-student-course-list>
     </section>
-  
+
     <section class="section-middle">
       <div class="profile-left">
         <app-profile-information [currentUser]="currentUser"></app-profile-information>
-  
+
         <img src="../../../assets/students.jpg" alt="graduation">
       </div>
-  
+
       <div class="profile-right">
-        <app-session-list></app-session-list>
+        <app-session-list
+          *ngIf="currentUserLoaded"
+          [currentUser]="currentUser"
+        ></app-session-list>
       </div>
     </section>
-  
+
     <app-footer></app-footer>
   </div>
 </div>
