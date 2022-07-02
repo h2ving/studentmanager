@@ -10,24 +10,25 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class CustomAuthenticationFilter  extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -43,14 +44,20 @@ public class CustomAuthenticationFilter  extends UsernamePasswordAuthenticationF
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
+        sda.studentmanagement.studentmanager.domain.User appUser = userRepository.findByEmail(user.getUsername());
 
-        // Todo: "Secret" must be stored in somewhere safe place and brought in(some util class?)
+        String role = appUser.getRoles().iterator().next().getName().toLowerCase(Locale.ROOT);
+        Long id = appUser.getId();
+        String redirectURI = "/" + role + "/" + id;
+
+        // Todo: "Secret"
         Algorithm algorithm = Algorithm.HMAC256("Secret".getBytes());
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("redirectURI", redirectURI)
                 .sign(algorithm);
 
         String refresh_token = JWT.create()
@@ -59,15 +66,17 @@ public class CustomAuthenticationFilter  extends UsernamePasswordAuthenticationF
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
 
-        // Send tokens in JSON after log in
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        Map<String, Object> tokens = new HashMap<>();
+        tokens.put("tokens", Map.of(
+                "access_token", access_token,
+                "refresh_token", refresh_token
+        ));
+        tokens.put("redirectURI", redirectURI);
+
         response.setContentType(APPLICATION_JSON_VALUE);
 
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 
-    // Todo: Can also Override unsuccessfulAuthentication if login was not successful
-    // Todo: In case of Brute Force e.g. too many attempts to 1 user within 15 minutes
+    // Todo: unsuccessfulAuthentication
 }

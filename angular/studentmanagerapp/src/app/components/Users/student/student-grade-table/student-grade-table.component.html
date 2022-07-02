@@ -1,0 +1,42 @@
+<div class="table-container">
+  <table>
+    <caption>Grades</caption>
+  
+    <thead>
+      <tr>
+        <th scope="col">Course</th>
+        <th scope="col">Date</th>
+        <th scope="col">Grade</th>
+      </tr>
+    </thead>
+
+    <select (change)="filterGrades($event)">
+      <option [value]="'All Grades'">All Grades</option>
+
+      <option *ngFor="let course of courses" [value]="course">
+        {{ course }}
+      </option>
+    </select>
+  
+    <tbody>
+
+    <tr
+      *ngIf="grades && grades.length === 0"
+      [ngStyle]="{
+        'padding': '1rem',
+        'white-space': 'pre-wrap'
+      }"
+    >
+      <td data-label="Course">{{ ' ' }}</td>
+      <td data-label="Date">{{ ' ' }}</td>
+      <td data-label="Grade">{{ ' ' }}</td>
+    </tr>
+
+      <tr *ngFor="let grade of grades;">
+        <td data-label="Course">{{ grade.session.course.name }}</td>
+        <td data-label="Date">{{ grade.session.startDateTime | date }}</td>
+        <td data-label="Grade"><b>{{ grade.grade }}</b></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

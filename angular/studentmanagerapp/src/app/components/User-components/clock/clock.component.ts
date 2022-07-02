@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-clock',
@@ -7,37 +6,25 @@ import * as moment from 'moment';
   styleUrls: ['./clock.component.scss']
 })
 export class ClockComponent implements OnInit {
-  h: string;
-  m: string;
-  s: string;
-  private timerId: any = null;
+  currentSec: number = this.getSecondsToday();
+  seconds: number = (this.currentSec / 60) % 1;
+  minutes: number = (this.currentSec / 3600) % 1;
+  hours: number = (this.currentSec / 43200) % 1;
 
   constructor() { }
 
-  ngOnInit() {
-    this.setCurrentTime();
-    this.timerId = this.updateTime();
+  ngOnInit(): void {
   }
 
-  ngOnDestroy() {
-    clearInterval(this.timerId);
+  numSequence(n: number): Array<number> {
+    return Array(n);
   }
 
-  private setCurrentTime() {
-    const currTime = moment(new Date());
+  getSecondsToday(): number {
+    let now: Date = new Date();
+    let today: Date = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let diff = Number(now) - Number(today);
 
-    this.h = this.leadingZeros(moment(currTime).hours());
-    this.m = this.leadingZeros(moment(currTime).minutes());
-    this.s = this.leadingZeros(moment(currTime).seconds());
-  }
-
-  private updateTime() {
-    setInterval(() => {
-      this.setCurrentTime();
-    }, 1000);
-  }
-
-  private leadingZeros(value: number) {
-    return value < 10 ? `0${value}` : value.toString();
+    return Math.round(diff / 1000);
   }
 }

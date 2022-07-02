@@ -12,23 +12,26 @@
     
     <div class="input-container">
       <fa-icon [icon]="faUser" class="input-icon"></fa-icon>
+
       <input
         type="email"
         name="email"
         [(ngModel)]="email"
-        placeholder="Email"
+        placeholder="Email address"
         required
       >
     </div>
 
     <div class="input-container">
       <fa-icon [icon]="faLock" class="input-icon"></fa-icon>
+
       <input
         type="password"
         name="password"
         [(ngModel)]="password"
         placeholder="*********"
-        required>
+        required
+      >
     </div>
 
     <div class="form-login">
@@ -39,6 +42,7 @@
           [(ngModel)]="rememberMe"
           value="rememberMe"
         >
+
         <label for="rememberMe">Remember me</label><br>
       </div>
 

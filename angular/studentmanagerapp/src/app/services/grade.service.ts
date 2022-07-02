@@ -7,15 +7,13 @@ import { Grade } from '../models/grade.model';
   providedIn: 'root'
 })
 export class GradeService {
-
-  private apiUrl: string = 'http://localhost:8080/api';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
+  private apiUrl: string = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) { }
 
-  // Get all Grades from 1 User by email
-  getUserGrades(email: string): Observable<Grade[]> {
-    const url = `${this.apiUrl}/attendances/get/${email}`;
+  getUserGrades(userId: number): Observable<Grade[]> {
+    const url: string = `${this.apiUrl}/grades/user/${userId}`;
 
     return this.http.get<Grade[]>(url, { headers: this.headers })
   }

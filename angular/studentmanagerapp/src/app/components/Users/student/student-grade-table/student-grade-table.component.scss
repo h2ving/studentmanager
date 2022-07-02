@@ -1,0 +1,106 @@
+$blue-text-color: #2a6ee2;
+$blue-border: #eeeff4;
+$lighter-blue-color: #f5f6fa;
+
+.table-container {
+  overflow-y: auto;
+  height: 300px;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+
+    select {
+      width: calc(100% - 1rem);
+      padding: 0.4rem;
+      margin: 0.5rem;
+    }
+
+    caption {
+      color: $blue-text-color;
+      border-bottom: 2px solid $blue-border;
+      text-align: left;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: .35rem .35rem .35rem .625em;
+    }
+
+    thead th {
+      background-color: $lighter-blue-color;
+      position: sticky;
+      top: 0;
+    }
+
+    tr {
+      border-bottom: 2px solid $blue-border;
+      padding: .35rem;
+    }
+
+    th,
+    td {
+      padding: .625rem;
+      text-align: center;
+    }
+
+    th {
+      font-size: .85rem;
+      letter-spacing: .1rem;
+      text-transform: uppercase;
+    }
+
+    tbody {
+      height: 200px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
+    tbody tr {
+      &:hover {
+        background-color: $lighter-blue-color;
+      }
+
+      &:last-child {
+        border: 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  table {
+    thead {
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    tr {
+      border-bottom: 2px solid $blue-border;
+      display: block;
+    }
+
+    td {
+      border-bottom: 2px solid $blue-border;
+      display: block;
+      font-size: .8rem;
+      text-align: right;
+
+      &::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}

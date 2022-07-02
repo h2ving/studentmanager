@@ -1,4 +1,4 @@
-package sda.studentmanagement.studentmanager.domain.requestDto;
+package sda.studentmanagement.studentmanager.dto;
 
 import lombok.Data;
 
@@ -6,5 +6,4 @@ import lombok.Data;
 public class RoleToUserFormDto {
     private String userEmail;
     private String roleName;
-
 }

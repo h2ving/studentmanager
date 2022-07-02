@@ -1,28 +1,87 @@
-$blue-border: #eeeff4;
-$blue-shadow: #d8dbe2;
-$light-blue-color: #e2e5ec;
-$lighter-blue-color: #f5f6fa;
+// Options
+$size: 200px;
+$dark: #000000;
+$blue-text-color : #2a6ee2;
 
-.countdown {
-  display: flex;
-  justify-content: center;
-  width: 300px;
+* {
+  box-sizing: content-box;
 }
 
-.time {
+.clock {
+  height: $size;
+  width: $size;
+  border-radius: #{$size / 2};
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 55px;
-  height: 55px;
-  border: 2px solid $blue-border;
-  background-color: $lighter-blue-color;
-  margin: 0;
+  position: relative;
+  margin: 0 1rem;
 
-  &:nth-child(2),
-  &:nth-child(4) {
-    border: 0;
-    width: 35px;
-    background-color: #fff;
+  &-second,
+  &-minute,
+  &-hour,
+  &-indicator {
+    position: absolute;
+    left: calc(50% - 1px);
+    width: 2px;
+    background: $dark;
+    transform-origin: bottom center;
+    z-index: 2;
+    border-radius: 1px;
+  }
+
+  &-second {
+    height: #{($size / 2) - 10};
+    margin-top: 10px;
+    background: $blue-text-color;
+    animation: time 60s infinite steps(60);
+    z-index: 3;
+  }
+
+  &-minute {
+    height: #{($size / 2) - 20};
+    margin-top: 20px;
+    opacity: 0.75;
+    animation: time 3600s linear infinite;
+  }
+
+  &-hour {
+    height: #{($size / 2) - 40};
+    margin-top: 40px;
+    animation: time 43200s linear infinite;
+  }
+
+  &-indicator {
+    height: #{($size / 2) - 2};
+    border-top: 2px solid $blue-text-color;
+    background: none;
+  }
+
+  &-indicator:nth-of-type(5n) {
+    opacity: 1;
+    height: #{($size / 2) - 7};
+    border-top: 7px solid $dark;
+  }
+
+  &-axis {
+    background: $blue-text-color;
+    width: 5px;
+    height: 5px;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 4;
+    top: #{$size / 2 - 2};
+    right: #{$size / 2 - 3};
+  }
+}
+
+@for $i from 1 through 60 {
+  section:nth-of-type(#{$i}) {
+    transform: rotateZ(calc(6deg * #{$i}));
+  }
+}
+
+@keyframes time {
+  to {
+    transform: rotateZ(360deg);
   }
 }

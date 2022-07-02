@@ -1,0 +1,121 @@
+$blue-text-color: #2a6ee2;
+$blue-border: #eeeff4;
+$blue-shadow: #d8dbe2;
+$lighter-blue-color: #f5f6fa;
+
+.announcements {
+  position: fixed;
+  bottom: 5rem;
+  right: 3rem;
+  width: 25%;
+  height: 0px;
+  overflow-y: auto;
+  background-color: $lighter-blue-color;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 15px 40px;
+  border: 0;
+  border-radius: 6px;
+  opacity: 0;
+  z-index: -99;
+  transition: opacity 120ms linear, height 180ms ease-out;
+
+  &.toggle-announcements {
+    height: calc(100% - 7rem);
+    opacity: 1;
+    border: 2px solid $blue-text-color;
+    z-index: 9999;
+  }
+
+  &-header {
+    background-color: #fff;
+
+    h3 {
+      color: $blue-text-color;
+      padding: 0.3rem 0.6rem 0 0.6rem;
+
+      span {
+        font-size: 1.5rem;
+      }
+    }
+
+    p {
+      font-size: 0.75rem;
+      padding: 0rem 0.6rem 0.6rem 0.6rem;
+      border-bottom: 2px solid $blue-border;
+    }
+  }
+
+  .announcement {
+    padding: .35rem .35rem .35rem .625rem;
+
+    h5 {
+      color: $blue-text-color;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
+
+    &:hover {
+      background-color: #fff;
+    }
+  }
+}
+
+.announcements-button {
+  cursor: pointer;
+
+  .announcements-logo {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    background-color: $blue-text-color;
+    color: #fff;
+    transform: rotateZ(-16deg);
+    z-index: 9999999;
+  }
+
+  .announcements-count {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    background-color: rgb(233, 25, 25);
+    color: #fff;
+    z-index: 9999999;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .announcements {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .announcements {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .announcements {
+    width: 100%;
+    height: 100%;
+    right: 0;
+    bottom: 2rem;
+  }
+}

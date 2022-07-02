@@ -2,24 +2,28 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError, Subject, Subscription, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { NotificationService } from './notification.service';
+import { UserDataInterface } from '../interfaces/user-data-interface';
+import { ResetUserPasswordInterface } from '../interfaces/reset-user-password-interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  jsonHeaders = new HttpHeaders().set('Content-Type', 'application/json');
+  urlEncodedHeaders = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   private apiUrl: string = 'http://localhost:8080/api';
-  headers = new HttpHeaders().set('Content-Type', 'application/json');
+  private subject = new Subject<void>();
   currentUser: User = <User>{};
+  redirectURI: string;
 
   constructor(private http: HttpClient, public router: Router, public notificationService: NotificationService) { }
 
-  // Log in
-  logIn(email: string, password: string, rememberMe: boolean) {
-    const body = `email=${email}&password=${password}`;
-    const url = `${this.apiUrl}/login`;
+  logIn(userEmail: string, password: string, rememberMe: boolean): Subscription {
+    const body: string = `email=${userEmail}&password=${password}`;
+    const url: string = `${this.apiUrl}/login`;
 
     return this.http
       .post<any>(url, body, {
@@ -28,73 +32,61 @@ export class AuthService {
         }
       })
       .subscribe({
-        next: (res) => {
-          this.setSession(res);
-          this.getUserProfileByEmail(email).subscribe((res) => {
-            this.currentUser = res;
-            this.currentUser.role = res.roles[0].name;
+        next: (response) => {
+          const { tokens, redirectURI } = response;
 
-            sessionStorage.setItem('RedirectURI', this.currentUser.role.toLowerCase() + '/' + res.id);
-            sessionStorage.setItem('Role', this.currentUser.role);
+          this.setSession(tokens);
+          this.redirectURI = redirectURI;
 
-            // Save email to Local Storage if rememberMe true
-            if (rememberMe) {
-              localStorage.setItem('rememberMeEmail', email);
-              localStorage.setItem('rememberMe', JSON.stringify(true));
-            } else {
-              localStorage.removeItem('rememberMeEmail');
-              localStorage.removeItem('rememberMe');
-            }
+          // Save Email to Local Storage
+          if (rememberMe) {
+            localStorage.setItem('rememberMeEmail', userEmail);
+            localStorage.setItem('rememberMe', JSON.stringify(true));
+          } else {
+            localStorage.removeItem('rememberMeEmail');
+            localStorage.removeItem('rememberMe');
+          }
 
-            this.router.navigate([this.currentUser.role.toLowerCase() + '/' + res.id]);
-          });
+          this.router.navigate([redirectURI]);
         },
-        error: (err) => {
-          this.notificationService.showError('Invalid Credentials', 'Error');
+        error: () => {
+          this.notificationService.showError('Invalid Credentials');
         }
       });
   }
 
-  // Get User profile by Email
-  getUserProfileByEmail(email: string): Observable<any> {
-    const url = `${this.apiUrl}/user/${email}`;
+  getUserDatatById(userId: number): Observable<User | Error> {
+    const url: string = `${this.apiUrl}/user/data/${userId}`;
 
-    return this.http.get(url, { headers: this.headers }).pipe(
-      map((res) => {
-        return res || {};
-      }),
+    return this.http.get(url, { headers: this.jsonHeaders })
+      .pipe(
+        map((response: any) => {
+          this.currentUser = response;
+          this.currentUser.user.role = response.user.roles.name;
 
-      catchError(this.handleError)
-    );
+          return this.currentUser || {};
+        }),
+
+        catchError(this.handleError)
+      );
   }
 
-  // Get User profile by ID
-  getUserProfileById(id: number): Observable<any> {
-    const url = `${this.apiUrl}/user/id/${id}`;
+  editUser(user: UserDataInterface): Observable<User> {
+    const url: string = `${this.apiUrl}/user`;
 
-    return this.http.get(url, { headers: this.headers }).pipe(
-      map((res: any) => {
-        return res || {};
-      }),
-
-      catchError(this.handleError)
-    );
+    return this.http.patch<any>(url, user, { headers: this.jsonHeaders });
   }
 
-  // Return if User is logged in
-  get isLoggedIn(): boolean {
-    let authAccessToken = sessionStorage.getItem('access_token');
-    return authAccessToken !== null ? true : false;
+  resetUserPassword(userId: number, body: ResetUserPasswordInterface): Observable<any> {
+    const url: string = `${this.apiUrl}/user/${userId}/reset_password`;
+
+    return this.http.put(url, body, { responseType: 'text' });
   }
 
-  // Log User out
-  logOut() {
+  logOut(): void {
     let removeAccessToken = sessionStorage.removeItem('access_token');
     let removeRefreshToken = sessionStorage.removeItem('refresh_token');
-    sessionStorage.removeItem('RedirectURI');
-    sessionStorage.removeItem('Role');
 
-    // Experimental
     sessionStorage.removeItem('expiry_time');
 
     if (removeAccessToken == null && removeRefreshToken == null) {
@@ -102,33 +94,54 @@ export class AuthService {
     }
   }
 
-  // Get the JWT Token from Session Storage
-  getAccessToken() {
-    return sessionStorage.getItem('access_token');
-  }
-  getRefreshToken() {
-    return sessionStorage.getItem('refresh_token');
-  }
-
-  // Set the JWT Token to Session Storage
   setSession(authResult: any) {
     sessionStorage.setItem('access_token', authResult.access_token);
     sessionStorage.setItem('refresh_token', authResult.refresh_token);
 
-    // Experimental
-    const currentTime = new Date();
-    const expiryTime = moment(currentTime).add(10, 'm').toDate();
+    const currentTime: Date = new Date();
+    const expiryTime: Date = moment(currentTime).add(10, 'm').toDate();
     sessionStorage.setItem('expiry_time', expiryTime.toString());
   }
 
-  // Handle and return Error messages
-  handleError(error: HttpErrorResponse) {
+  sendUpdateUserDataEvent(): void {
+    this.subject.next();
+  }
+
+  getUpdateUserDataEvent(): Observable<any> {
+    return this.subject.asObservable();
+  }
+
+  get isLoggedIn(): boolean {
+    let accessToken: string | null = sessionStorage.getItem('access_token');
+    const loggedIn: boolean = accessToken !== null ? true : false;
+
+    return loggedIn;
+  }
+
+  get getTokens(): { accessToken: string, refreshToken: string } {
+    const tokens = {
+      accessToken: sessionStorage.getItem('access_token')!,
+      refreshToken: sessionStorage.getItem('refresh_token')!,
+    };
+
+    return tokens;
+  }
+
+  get getCurrentUser(): User {
+    return this.currentUser;
+  }
+
+  handleError(error: HttpErrorResponse): Observable<Error> {
     let msg = '';
+
     if (error.error instanceof ErrorEvent) {
       msg = error.error.message
     } else {
+      this.notificationService.showError(`${String(error.status)}: ${error.message}`);
       msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
     }
+
+    this.notificationService.showError(`handleError: ${error}`);
 
     return throwError(() => new Error(msg));
   }

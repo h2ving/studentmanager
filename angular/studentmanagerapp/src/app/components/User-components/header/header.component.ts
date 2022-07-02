@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { User } from 'src/app/models/user.model';
+import { UserDataInterface } from 'src/app/interfaces/user-data-interface';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -9,18 +9,18 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  faSignOutAlt = faSignOutAlt;
-  @Input() currentUser: User;
+  @Input() currentUser: UserDataInterface;
   defaultImageUrl: string = '../../../../assets/person-logo.jpg';
   maleImageUrl: string = '../../../../assets/avatar_male.jpg';
   femaleImageUrl: string = '../../../../assets/avatar_female.jpg';
+  faSignOutAlt = faSignOutAlt;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
-  clickLogOut() {
+  clickLogOut(): void {
     this.authService.logOut();
   }
 }

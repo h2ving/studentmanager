@@ -1,26 +1,95 @@
-<div class="profile">
+<div class="container">
   <app-clock></app-clock>
 
-  <div class="profile-table">
-    <div class="profile-table-heading">
-      <p>Name:</p>
-      <p>Gender:</p>
-      <p>Age:</p>
-      <p>Date of Birth:</p>
-      <p>Email:</p>
-      <p>Occupation:</p>
-      <p>Phone:</p>
-      <p>Joined:</p>
+  <div class="profile">
+    <fa-icon
+      [icon]="faEdit"
+      *ngIf="userAction === 'View'"
+      (click)="userAction = 'Edit'"
+    ></fa-icon>
+
+    <fa-icon
+      [icon]="faArrowCircleLeft"
+      *ngIf="userAction !== 'View'"
+      (click)="userAction = 'View'"
+    ></fa-icon>
+
+    <fa-icon
+      [icon]="faKey"
+      class="profile-password"
+      *ngIf="userAction ==='View'"
+      (click)="userAction = 'Password'"
+    ></fa-icon>
+
+    <div class="profile-table" *ngIf="userAction === 'View'">
+      <ul class="headings">
+        <li>Name:</li>
+        <li>Gender:</li>
+        <li>Age:</li>
+        <li>Date of Birth:</li>
+        <li>Email:</li>
+        <li>Occupation:</li>
+        <li>Phone:</li>
+        <li>Joined:</li>
+      </ul>
+
+      <ul class="values">
+        <li>{{ currentUser.firstName }} {{ currentUser.lastName }}</li>
+        <li>{{ currentUser.gender }}</li>
+        <li>{{ currentUser.age }}</li>
+        <li>{{ currentUser.dob | date }}</li>
+        <li>{{ currentUser.email }}</li>
+        <li>{{ currentUser.role }}</li>
+        <li>{{ currentUser.mobile }}</li>
+        <li>{{ currentUser.createdAt | date }}</li>
+      </ul>
     </div>
-    <div class="profile-table-values">
-      <p>{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
-      <p>{{ currentUser.gender }}</p>
-      <p>{{ currentUser.age }}</p>
-      <p>{{ currentUser.dob }}</p>
-      <p>{{ currentUser.email }}</p>
-      <p>{{ currentUser.role }}</p>
-      <p>{{ currentUser.mobile }}</p>
-      <p>{{ currentUser.createdAt }}</p>
+
+    <div class="profile-edit" *ngIf="userAction === 'Edit'">
+      <h3>Edit User</h3>
+
+      <form [formGroup]="editUserForm" (ngSubmit)="submitEditUser()">
+        <label for="firstName">First Name<sup>*</sup></label>
+        <input type="text" name="firstName" placeholder="Your First Name" formControlName="firstName">
+
+        <label for="lastName">Last Name<sup>*</sup></label>
+        <input type="text" name="lastName" placeholder="Your Last Name" formControlName="lastName">
+
+        <label for="gender">Gender<sup>*</sup></label>
+        <select formControlName="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="dob">Date of Birth<sup>*</sup></label>
+        <input type="date" name="dob" placeholder="Your Date of Birth" formControlName="dob">
+
+        <label for="email">Email<sup>*</sup></label>
+        <input type="email" name="email" placeholder="Your Email" formControlName="email">
+
+        <label for="mobile">Mobile<sup>*</sup></label>
+        <input type="tel" name="mobile" placeholder="Your Mobile" formControlName="mobile">
+        
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+
+    <div class="profile-password" *ngIf="userAction === 'Password'">
+      <h3>Reset Password</h3>
+
+      <form [formGroup]="resetUserPasswordForm" (ngSubmit)="submitResetUserPassword()">
+        <label for="oldPassword">Password<sup>*</sup></label>
+        <input type="password" name="oldPassword" formControlName="oldPassword">
+
+        <label for="newPassword">New Password<sup>*</sup></label>
+        <input type="password" name="newPassword" formControlName="newPassword">
+
+        <label for="repeatNewPassword">Repeat New Password<sup>*</sup></label>
+        <input type="password" name="repeatNewPassword" formControlName="repeatNewPassword">
+
+        <input type="submit" value="Submit">
+      </form>
     </div>
   </div>
 </div>
