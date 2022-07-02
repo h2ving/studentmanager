@@ -1,15 +1,24 @@
 package sda.studentmanagement.studentmanager.services;
 
+import org.springframework.data.domain.Page;
 import sda.studentmanagement.studentmanager.domain.Attendance;
 
 import java.util.List;
 
 public interface AttendanceService {
-    Attendance saveAttendance(Attendance att);
-    void deleteAttendance(long id);
-    Attendance editAttendance(Attendance att);
-    Attendance getAttendance(long id);
-    List<Attendance> getAttendanceList();
-    List<Attendance> getAttendanceListByUser(String email);
-    List<Attendance> getAttendanceListBySession(long id);
+    List<Attendance> getAttendances();
+
+    Page<Attendance> getPaginatedAttendances(int pageNumber, int pageSize);
+
+    List<Attendance> getUserAttendances(long userId);
+
+    List<Attendance> getSessionAttendances(long sessionId);
+
+    Attendance getAttendance(long attendanceId);
+
+    Attendance saveAttendance(Attendance attendance);
+
+    Attendance editAttendance(Attendance attendance);
+
+    void deleteAttendance(long attendanceId);
 }

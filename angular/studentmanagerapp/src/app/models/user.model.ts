@@ -1,40 +1,23 @@
-import { Roles } from "./roles.model";
+import { UserDataInterface } from "../interfaces/user-data-interface";
+
 export class User {
-  id: number;
-  email: string;
-  password: string;
-  role: Roles;
-  firstName: string;
-  lastName: string;
-  gender: string;
-  dob: Date;
-  mobile: string;
-  createdAt: Date;
-  age: number;
+  user: UserDataInterface;
+  redirectURI: string;
+  attendancePercentage: number;
+  averageGrade: number;
+  nextSession: string;
 
   constructor(
-    id: number,
-    email: string,
-    password: string,
-    role: Roles,
-    firstName: string,
-    lastName: string,
-    gender: string,
-    dob: Date,
-    mobile: string,
-    createdAt: Date,
-    age: number,
+    user: UserDataInterface,
+    redirectURI: string,
+    attendancePercentage: number,
+    averageGrade: number,
+    nextSession: string
   ) {
-    this.id = id;
-    this.email = email;
-    this.password = password;
-    this.role = role;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.gender = gender;
-    this.dob = dob;
-    this.mobile = mobile;
-    this.createdAt = createdAt;
-    this.age = age;
+    this.user = user,
+      this.redirectURI = redirectURI,
+      this.attendancePercentage = attendancePercentage,
+      this.averageGrade = averageGrade,
+      this.nextSession = nextSession
   }
 }

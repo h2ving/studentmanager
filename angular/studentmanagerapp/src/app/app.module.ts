@@ -11,8 +11,6 @@ import { AppComponent } from './app.component';
 import { StudentComponent } from './components/Users/student/student.component';
 import { LoginComponent } from './components/login/login.component';
 import { FooterComponent } from './components/User-components/footer/footer.component';
-import { StudentGradeListComponent } from './components/Users/student/student-grade-list/student-grade-list.component';
-import { StudentGradeItemComponent } from './components/Users/student/student-grade-item/student-grade-item.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AdminComponent } from './components/Users/admin/admin.component';
@@ -20,13 +18,12 @@ import { ProfessorComponent } from './components/Users/professor/professor.compo
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { ProfileInformationComponent } from './components/User-components/profile-information/profile-information.component';
-import { StudentCourseListComponent } from './components/Users/student/student-course-list/student-course-list.component';
-import { StudentCourseItemComponent } from './components/Users/student/student-course-item/student-course-item.component';
-import { StudentAttendanceListComponent } from './components/Users/student/student-attendance-list/student-attendance-list.component';
-import { StudentAttendanceItemComponent } from './components/Users/student/student-attendance-item/student-attendance-item.component';
+import { StudentCourseTableComponent } from './components/Users/student/student-course-table/student-course-table.component';
+import { StudentGradeTableComponent } from './components/Users/student/student-grade-table/student-grade-table.component';
+import { StudentAnnouncementListComponent } from './components/Users/student/student-announcement-list/student-announcement-list.component';
+import { StudentAttendanceTableComponent } from './components/Users/student/student-attendance-table/student-attendance-table.component';
 import { HeaderComponent } from './components/User-components/header/header.component';
 import { SessionListComponent } from './components/User-components/session-list/session-list.component';
-import { SessionItemComponent } from './components/User-components/session-item/session-item.component';
 import { ClockComponent } from './components/User-components/clock/clock.component';
 
 @NgModule({
@@ -35,21 +32,18 @@ import { ClockComponent } from './components/User-components/clock/clock.compone
     StudentComponent,
     LoginComponent,
     FooterComponent,
-    StudentGradeListComponent,
-    StudentGradeItemComponent,
+    StudentGradeTableComponent,
     PageNotFoundComponent,
     AdminComponent,
     ProfessorComponent,
     LoaderComponent,
     ProfileInformationComponent,
-    StudentCourseListComponent,
-    StudentCourseItemComponent,
-    StudentAttendanceListComponent,
-    StudentAttendanceItemComponent,
+    StudentCourseTableComponent,
+    StudentAttendanceTableComponent,
     HeaderComponent,
     SessionListComponent,
-    SessionItemComponent,
     ClockComponent,
+    StudentAnnouncementListComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +53,7 @@ import { ClockComponent } from './components/User-components/clock/clock.compone
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot({ timeOut: 3000, positionClass: 'toast-top-right', preventDuplicates: true })
+    ToastrModule.forRoot({ timeOut: 3000, positionClass: 'toast-top-right', preventDuplicates: true, enableHtml: true })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },

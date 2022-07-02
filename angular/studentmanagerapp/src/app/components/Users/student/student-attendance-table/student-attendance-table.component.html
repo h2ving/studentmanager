@@ -1,0 +1,44 @@
+<div class="table-container">
+  <table>
+    <caption>Attendance to sessions</caption>
+  
+    <thead>
+      <tr>
+        <th scope="col">Course</th>
+        <th scope="col">Session</th>
+        <th scope="col">Date</th>
+        <th scope="col">Attendance</th>
+      </tr>
+    </thead>
+
+    <select (change)="filterAttendances($event)">
+      <option [value]="'All Attendances'">All Attendances</option>
+
+      <option *ngFor="let course of courses" [value]="course">
+        {{ course }}
+      </option>
+    </select>
+
+    <tbody>
+      <tr
+        *ngIf="attendances && attendances.length === 0"
+        [ngStyle]="{
+          'padding': '1rem',
+          'white-space': 'pre-wrap'
+        }"
+      >
+        <td data-label="Course">{{ ' ' }}</td>
+        <td data-label="Session">{{ ' ' }}</td>
+        <td data-label="Date">{{ ' ' }}</td>
+        <td data-label="Attendance">{{ ' ' }}</td>
+      </tr>
+
+      <tr *ngFor="let attendance of attendances;">
+        <td data-label="Course">{{ attendance.session.course.name }}</td>
+        <td data-label="Session">{{ attendance.session.description }}</td>
+        <td data-label="Date">{{ attendance.session.startDateTime | date }}</td>
+        <td data-label="Attendance"><b>{{ attendance.didAttend ? '&#9989;' : '&#10060;' }}</b></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -5,15 +5,15 @@ export class Session {
   id: number;
   description: string;
   startDateTime: Date;
-  duration: number;
+  academicHours: number;
   course: Course;
   users?: User[];
 
-  constructor(id: number, description: string, startDateTime: Date, duration: number, course: Course, users?: User[]) {
+  constructor(id: number, description: string, startDateTime: Date, academicHours: number, course: Course, users?: User[]) {
     this.id = id;
     this.description = description;
     this.startDateTime = startDateTime;
-    this.duration = duration;
+    this.academicHours = academicHours;
     this.course = course;
     this.users = users;
   }

@@ -21,78 +21,103 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class GradeServiceImplementation implements GradeService {
-
     private final GradeRepository gradeRepository;
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
 
     @Override
+    public List<Grade> getGrades() {
+        return gradeRepository.findAll();
+    }
+
+    @Override
+    public List<Grade> getUserGrades(long userId) {
+        User user = userRepository.findById(userId);
+        List<Grade> userGrades = new ArrayList<>();
+
+        if(user != null) {
+            for(Grade grade : getGrades()) {
+                if(grade.getUser().equals(user)) {
+                    userGrades.add(grade);
+                }
+            }
+
+            return userGrades;
+        } else {
+            throw new EntityExistsException("Cannot find any grades");
+        }
+    }
+
+    @Override
+    public List<Grade> getSessionGrades(long sessionId) {
+        Session session = sessionRepository.findById(sessionId);
+        List<Grade> sessionGrades = new ArrayList<>();
+
+        if(session != null) {
+            for(Grade grade : getGrades()) {
+                if(grade.getSession().equals(session)) {
+                    sessionGrades.add(grade);
+                }
+            }
+
+            return sessionGrades;
+        } else {
+            throw new EntityNotFoundException("Invalid Session ID");
+        }
+    }
+
+    @Override
+    public List<Grade> getUserSessionGrades(long userId, long sessionId) {
+        Session session = sessionRepository.findById(sessionId);
+        User user = userRepository.findById(userId);
+        List<Grade> userSessionGrades = new ArrayList<>();
+
+        if (session != null && user != null) {
+            for(Grade grade : getGrades()) {
+                if(grade.getUser().equals(user) && grade.getSession().equals(session)) {
+                    userSessionGrades.add(grade);
+                }
+            }
+
+            return userSessionGrades;
+        } else {
+            throw new EntityNotFoundException("Invalid Session, User ID");
+        }
+    }
+
+    @Override
+    public Grade getGrade(long gradeId) {
+        Grade grade = gradeRepository.findById(gradeId);
+
+        if(grade == null) {
+            throw new EntityExistsException("Grade not found");
+        }
+
+        return grade;
+    }
+
+    @Override
     public Grade saveGrade(Grade grade) {
-        Grade findGrade = gradeRepository.findOneById(grade.getId());
+        Grade findGrade = gradeRepository.findById(grade.getId());
+
         if(findGrade != null) {
-            throw new EntityExistsException("Grade with ID \"" + grade.getId() + "\" already exists");
+            throw new EntityExistsException("Grade already exists");
         } else {
             return gradeRepository.save(grade);
         }
     }
 
-    //HARDDELETE
     @Override
-    public void deleteGrade(Long id) {
-        Grade grade = gradeRepository.findOneById(id);
+    public Grade editGrade(long gradeId) {
+        // Todo
 
-        gradeRepository.delete(grade);
-
-    }
-
-    @Override
-    public Grade editGrade(Long id) {
         return null;
     }
 
     @Override
-    public Grade getGrade(Long id) {
-        Grade grade = gradeRepository.findOneById(id);
+    public void deleteGrade(long gradeId) {
+        Grade grade = gradeRepository.findById(gradeId);
 
-        if(grade == null) {
-            throw new EntityExistsException("Grade with id - " + id + "not found");
-        }
-        return grade;
-    }
-
-    @Override
-    public List<Grade> getGradesByStudent(String email) {
-        User user = userRepository.findByEmail(email);
-        List<Grade> returnGradeList = new ArrayList<>();
-        if(user != null) {
-            for(Grade grade : getGrades()) {
-                if(grade.getUser().equals(user)) {
-                    returnGradeList.add(grade);
-                }
-            }
-            return returnGradeList;
-        } else {
-            throw new EntityExistsException("Cannot find any grades associated with: \"" + email + "\" :(");
-        }
-    }
-/*
-    @Override
-    public List<Grade> getGradesBySession(Long sessionId) {
-        Session session = sessionRepository.findOneById(sessionId);
-        List<Grade> listOfGradesBySession = new ArrayList<>();
-
-    if(session != null) {
-        for(Grade grade : session.get)
-    } else {
-        throw new EntityNotFoundException("Cannot find any grades associated with user: " + studentName + " in ");
-    }
-
-    }
-
- */
-
-    @Override
-    public List<Grade> getGrades() {
-        return gradeRepository.findAll();
+        gradeRepository.delete(grade);
     }
 }

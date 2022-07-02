@@ -5,11 +5,23 @@ import sda.studentmanagement.studentmanager.domain.Session;
 import java.util.List;
 
 public interface SessionService {
-    Session saveSession(Session session);
-    void deleteSession(Long id);
-    Session editSession(Session session);
-    Session getSession(Long id);
     List<Session> getSessions();
-    List<Session> getSessionsByCourseName(String courseName);
-    List<Session> getSessionsByUser(Long id);
+
+    List<Session> getUpComingSessions();
+
+    List<Session> getUserSessions(long userId);
+
+    List<Session> getCourseSessions(long courseId);
+
+    void addUserToSession(long courseId, long userId);
+
+    void removeUserFromSession(long courseId, long userId);
+
+    Session getSession(long sessionId);
+
+    Session saveSession(Session session);
+
+    Session editSession(Session session);
+
+    void deleteSession(long sessionId);
 }

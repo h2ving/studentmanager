@@ -1,21 +1,26 @@
-<div class="countdown">
-  <div class="time">
-    <h2>{{ h }}</h2>
+  <div class="clock">
+    <div
+      class="clock-second"
+      [ngStyle]="{
+        'animation-delay' : (seconds * 60) * -1 + 's'
+      }"
+    ></div>
+    <div
+      class="clock-minute"
+      [ngStyle]="{
+        'animation-delay' : (minutes * 3600) * -1 + 's'
+      }"
+    ></div>
+    <div
+      class="clock-hour"
+      [ngStyle]="{
+        'animation-delay' : (hours * 43200) * -1 + 's'
+      }"
+    ></div>
+    <div class="clock-axis"></div>
+  
+    <section
+      class="clock-indicator"
+      *ngFor="let n of numSequence(60)"
+    ></section>
   </div>
-
-  <div class="time">
-    <h2>:</h2>
-  </div>
-
-  <div class="time">
-    <h2>{{ m }}</h2>
-  </div>
-
-  <div class="time">
-    <h2>:</h2>
-  </div>
-
-  <div class="time">
-    <h2>{{ s }}</h2>
-  </div>
-</div>

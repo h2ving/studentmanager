@@ -50,3 +50,41 @@ $blue-border: #eeeff4;
     }
   }
 }
+
+@media only screen and (max-width: 768px) {
+  .header {
+    &-left {
+      img {
+        height: 48px;
+      }
+
+      p {
+        font-size: 0.75rem;
+      }
+    }
+
+    &-right {
+      &-container {
+        img {
+          height: 40px;
+          margin-right: 0.5rem;
+        }
+      }
+
+      .log-out-logo {
+        margin-left: 1rem;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .header {
+    &-left {
+      p {
+        display: none;
+      }
+    }
+  }
+}

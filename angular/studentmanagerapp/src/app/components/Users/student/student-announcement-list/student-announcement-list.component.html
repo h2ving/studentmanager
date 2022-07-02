@@ -1,0 +1,27 @@
+<div
+  class="announcements"
+  [ngClass]="{
+    'toggle-announcements': toggleAnnouncements ? true : false
+  }"
+>
+  <div class="announcements-header">
+    <h3>Hello {{ currentUser.firstName }} <span>👋</span></h3>
+    <p>Here are the latest announcments from your ongoing Courses, written by Professors</p>
+  </div>
+
+  <div class="announcement" *ngFor="let announcement of announcements">
+    <h5>{{ announcement.course.name }}</h5>
+    <h6>{{ announcement.date | date }}</h6>
+    <p>{{ announcement.announcement }}</p>
+  </div>
+</div>
+
+<div class="announcements-button" (click)="toggleAnnouncements = !toggleAnnouncements">
+  <fa-icon [icon]="faBullhorn" class="announcements-logo"></fa-icon>
+  
+  <span class="announcements-count" *ngIf="announcements && announcements.length !== 0">
+    {{ announcements && announcements.length }}
+  </span>
+</div>
+
+  

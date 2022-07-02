@@ -1,0 +1,82 @@
+<div class="table-container">
+  <table>
+    <caption
+      (click)="switchCourses('Ongoing')"
+      [ngStyle]="{'color' : selectedCourseType === 'Ongoing' ? '#2a6ee2' : '#000'}"
+    >
+      Ongoing Courses
+    </caption>
+
+    <caption
+      (click)="switchCourses('Past')"
+      [ngStyle]="{'color' : selectedCourseType === 'Past' ? '#2a6ee2' : '#000'}"
+    >
+      Past Courses
+    </caption>
+
+    <caption
+      (click)="switchCourses('All')"
+      [ngStyle]="{'color' : selectedCourseType === 'All' ? '#2a6ee2' : '#000'}"
+    >
+      New Courses
+    </caption>
+  
+    <thead>
+      <tr>
+        <th scope="col">Course</th>
+        <th scope="col">Description</th>
+        <th scope="col">Date</th>
+        <th scope="col">Duration</th>
+        <th scope="col">Active Users</th>
+        <th scope="col">Remote</th>
+        <th scope="col" *ngIf="selectedCourseType === 'All'">Join</th>
+        <th scope="col" *ngIf="selectedCourseType === 'Ongoing'">Leave</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <tr
+        *ngIf="courses && courses.length === 0"
+        [ngStyle]="{
+          'padding': '1rem',
+          'white-space': 'pre-wrap'
+        }"
+      >
+        <td data-label="Course">{{ ' ' }}</td>
+        <td data-label="Description">{{ ' ' }}</td>
+        <td data-label="Date">{{ ' ' }}</td>
+        <td data-label="Duration">{{ ' ' }}</td>
+        <td data-label="Active Users">{{ ' ' }}</td>
+        <td data-label="Remote">{{ ' ' }}</td>
+        <td data-label="Join">{{ ' ' }}</td>
+      </tr>
+
+      <tr *ngFor="let course of courses;">
+        <td data-label="Course"><b>{{ course.name }}</b></td>
+        <td data-label="Description">{{ course.description }}</td>
+        <td data-label="Date">{{ course.startDate | date }} - {{ course.endDate }}</td>
+        <td data-label="Duration">{{ course.academicHours }}</td>
+        <td data-label="Active Users">{{ course.studentsCount }}</td>
+        <td data-label="Remote">{{ course.remote ? '&#9989;' : '&#10060;' }}</td>
+
+        <td
+          data-label="Join"
+          *ngIf="selectedCourseType === 'All'"
+          class="join-leave-course"
+          (click)="joinCourse(course)"
+        >
+          <button>Join</button>
+        </td>
+
+        <td
+          data-label="Leave"
+          *ngIf="selectedCourseType === 'Ongoing'"
+          class="join-leave-course"
+          (click)="leaveCourse(course)"
+        >
+          <button>Leave</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

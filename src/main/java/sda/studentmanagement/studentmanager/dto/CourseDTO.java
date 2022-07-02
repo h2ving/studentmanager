@@ -1,4 +1,4 @@
-package sda.studentmanagement.studentmanager.projections;
+package sda.studentmanagement.studentmanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,11 +13,18 @@ import java.time.LocalDate;
 @Setter
 public class CourseDTO {
     private Long id;
+
     private String name;
+
     private String description;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
+
     private Integer academicHours;
+
     private Boolean remote;
+
     private int studentsCount;
 }

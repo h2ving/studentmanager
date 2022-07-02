@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlSegment } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
@@ -16,24 +16,26 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, public router: Router, public notificationService: NotificationService, private http: HttpClient) { }
 
-  async canActivate(route: ActivatedRouteSnapshot) {
-    const userRole = sessionStorage.getItem('Role');
-    const redirectURI = sessionStorage.getItem('RedirectURI');
-    const accessToken = this.authService.getAccessToken();
-    const refreshToken = this.authService.getRefreshToken();
-    const { isLoggedIn } = this.authService;
+  canLoad() { }
+
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const isLoggedIn: boolean = this.authService.isLoggedIn;
+    const { accessToken, refreshToken }: {
+      accessToken: string, refreshToken: string
+    } = this.authService.getTokens!;
+    const { url }: { url: string } = state;
+
+    const redirectURI: string | undefined = this.jwtHelper.decodeToken(accessToken).redirectURI;
 
     // If not logged in, redirect to login page
     if (isLoggedIn !== true) {
       this.router.navigate(['login']);
     }
 
-    // If page role doesn't match the role, redirect to correct role page
-    if (route.data['roles'].indexOf(userRole) === -1) {
+    // Redirect back to Dashboard if User acces to another role/ID
+    if (url !== redirectURI) {
       this.router.navigate([redirectURI]);
     }
-
-    //Todo: Redirect in case of user changes their ID in url
 
     // If jwt token not expired
     if (accessToken && !this.jwtHelper.isTokenExpired(accessToken)) {
@@ -44,15 +46,13 @@ export class AuthGuard implements CanActivate {
     if (!isRefreshSuccess) {
       this.authService.logOut();
 
-      this.notificationService.showError('Session expired. Please log in again.', 'Error')
-
-      this.router.navigate(["login"]);
+      this.notificationService.showError('Session expired. Please log in again.');
     }
 
     return isRefreshSuccess;
   }
 
-  private async refreshingTokens(accessToken: string | null, refreshToken: string | null): Promise<boolean> {
+  private async refreshingTokens(accessToken: string, refreshToken: string): Promise<boolean> {
     if (!accessToken || !refreshToken) {
       return false;
     }
@@ -66,9 +66,7 @@ export class AuthGuard implements CanActivate {
       }));
 
       this.authService.setSession(response);
-
-      //! Experimantal
-      this.notificationService.showSuccess("Token renewed successfully", "Success")
+      this.notificationService.showSuccess("Token renewed successfully");
 
       isRefreshSuccess = true;
     }

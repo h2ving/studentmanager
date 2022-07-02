@@ -8,18 +8,18 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  rememberMe: any = localStorage.getItem('rememberMe');
+  email: string = localStorage.getItem('rememberMeEmail') || '{}';
+  password: string;
   faUserCircle = faUserCircle;
   faUser = faUser;
   faLock = faLock;
-  email: any = localStorage.getItem('rememberMeEmail');
-  password: string;
-  rememberMe: any = localStorage.getItem('rememberMe');
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void { }
 
-  onSubmit() {
+  onSubmit(): void {
     this.authService.logIn(this.email, this.password, this.rememberMe);
   }
 }

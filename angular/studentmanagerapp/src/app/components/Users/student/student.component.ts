@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { NotificationService } from 'src/app/services/notification.service';
 import { User } from 'src/app/models/user.model';
-import { BehaviorSubject } from 'rxjs';
+import {
+  faSignOutAlt, faGraduationCap, faChartLine, faBook, faPercentage, faPlusCircle,
+} from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-student',
@@ -11,24 +15,52 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./student.component.scss']
 })
 export class StudentComponent implements OnInit {
-  faSignOutAlt = faSignOutAlt;
+  updateUserDataEventSubscription: Subscription;
   currentUser: User = <User>{};
   currentUserLoaded: boolean = false;
+  onGoingCourses: number;
   showAttendance: boolean = false;
   showCourses: boolean = false;
   showGrades: boolean = false;
+  faSignOutAlt = faSignOutAlt;
+  faBook = faBook;
+  faChartLine = faChartLine;
+  faPercentage = faPercentage;
+  faGraduationCap = faGraduationCap;
+  faPlusCircle = faPlusCircle;
 
-  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute) {
+  /**
+   * 1 -> Student -> edeitz@sdaacademy.uni -> ID 52
+   * 2 -> Professor -> lchambers@sdaacademy.uni -> ID 56
+   * 3 -> Admin -> johnd@gmail.com, areardon@sdaacademy.uni -> ID 1, 53
+   */
+
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) {
+    this.updateUserDataEventSubscription = this.authService.getUpdateUserDataEvent()
+      .subscribe(() => {
+        this.getUserData();
+      });
   }
 
   ngOnInit(): void {
-    let id: any = this.activatedRoute.snapshot.paramMap.get('id');
+    this.getUserData();
+  }
 
-    this.authService.getUserProfileById(id).subscribe((res) => {
-      this.currentUser = res;
-      this.currentUser.role = res.roles[0].name;
+  getUserData(): void {
+    let userId: any = this.activatedRoute.snapshot.paramMap.get('id');
+    this.currentUserLoaded = false;
 
-      this.currentUserLoaded = true;
+    this.authService.getUserDatatById(userId).subscribe({
+      next: () => {
+        this.currentUser = this.authService.currentUser;
+        this.currentUserLoaded = true;
+
+        this.onGoingCourses = this.currentUser.user
+          .coursesAssigned.filter((course) => course.endDate < new Date().toLocaleDateString()).length;
+      },
+      error: () => {
+        this.notificationService.showError('Error getting User data, please refresh the page');
+      }
     });
   }
 

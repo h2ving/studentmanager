@@ -4,21 +4,17 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import sda.studentmanagement.studentmanager.domain.*;
 import sda.studentmanagement.studentmanager.services.AttendanceService;
 import sda.studentmanagement.studentmanager.services.CourseService;
 import sda.studentmanagement.studentmanager.services.SessionService;
 import sda.studentmanagement.studentmanager.services.UserService;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class StudentmanagerApplication {
 
 	public static void main(String[] args) {
@@ -33,10 +29,11 @@ public class StudentmanagerApplication {
 	@Bean
 	CommandLineRunner run(UserService userService, CourseService courseService, SessionService sessionService, AttendanceService attendanceService) {
 		return args -> {
+			/*
 			userService.saveRole(new Role(null, "Student"));
 			userService.saveRole(new Role(null, "Professor"));
 			userService.saveRole(new Role(null, "Admin"));
-			/*
+
 			userService.saveUser(new User(null, "John", "Travolta", "johnt@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 5555 7777"));
 			userService.saveUser(new User(null, "John", "Doe", "johndoe@gmail.com", "1234", null, "Male", LocalDate.now(), "+372 9999 2222"));
 			userService.saveUser(new User(null, "Hanna", "Smith", "hanna@gmail.com", "1234", null, "Female", LocalDate.now(), "+372 8888 1111"));

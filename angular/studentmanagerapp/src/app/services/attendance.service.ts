@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { NotificationService } from './notification.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Attendance } from '../models/attendance.module';
 
 @Injectable({
@@ -13,8 +12,8 @@ export class AttendanceService {
 
   constructor(private http: HttpClient) { }
 
-  getUserAttendance(email: string): Observable<Attendance[]> {
-    const url = `${this.apiUrl}/attendances/get/${email}`;
+  getUserAttendance(userId: number): Observable<Attendance[]> {
+    const url: string = `${this.apiUrl}/attendances/user/${userId}`;
 
     return this.http.get<Attendance[]>(url, { headers: this.headers });
   }

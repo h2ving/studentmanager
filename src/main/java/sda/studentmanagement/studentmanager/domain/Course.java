@@ -1,13 +1,12 @@
 package sda.studentmanagement.studentmanager.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
-import sda.studentmanagement.studentmanager.projections.UserToCourseDTO;
+import sda.studentmanagement.studentmanager.dto.UserToCourseDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

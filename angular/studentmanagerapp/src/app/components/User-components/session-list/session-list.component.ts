@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Course } from 'src/app/models/course.module';
 import { Session } from 'src/app/models/session.module';
 import { SessionService } from 'src/app/services/session.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { User } from 'src/app/models/user.model';
-import { AuthService } from 'src/app/services/auth.service';
+import { UserDataInterface } from 'src/app/interfaces/user-data-interface';
+
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-session-list',
@@ -12,26 +12,30 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./session-list.component.scss']
 })
 export class SessionListComponent implements OnInit {
-  @Input() currentUser: User;
+  @Input() currentUser: UserDataInterface;
+  updateSessionsEventSubscriptions: Subscription;
   userSessions: Array<Session>;
 
-  constructor(private sessionService: SessionService, private authService: AuthService, public notificationService: NotificationService) {
+  constructor(private sessionService: SessionService, public notificationService: NotificationService) {
+    this.updateSessionsEventSubscriptions = this.sessionService.getUpdateSessionsEvent()
+      .subscribe(() => {
+        this.updateSessions();
+      });
   }
 
-  ngOnInit(): void {
-    console.log(this.currentUser)
-
-    // this.sessionService.getUserSessions(this.currentUser.email)
-    //   .subscribe({
-    //     next: (response) => {
-    //       console.log(response);
-
-    //       this.userSessions = response;
-    //     },
-    //     error: (error) => {
-    //       this.notificationService.showError('Please refresh the page', 'Error loading Sessions');
-    //     }
-    //   });
+  ngOnInit() {
+    this.updateSessions();
   }
 
+  updateSessions(): void {
+    this.sessionService.getUserSessions(this.currentUser.id)
+      .subscribe({
+        next: (response) => {
+          this.userSessions = response;
+        },
+        error: () => {
+          this.notificationService.showError(`Failed to receive Sessions. Please refresh the page or try again later`);
+        }
+      });
+  }
 }

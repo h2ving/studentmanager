@@ -28,8 +28,8 @@ export class LoaderInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     this.requests.push(request);
-
     this.loaderService.isLoading.next(true);
+
     return new Observable((observer) => {
       const subscription = next.handle(request)
         .subscribe({

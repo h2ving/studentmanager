@@ -16,8 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const accessToken = this.authService.getAccessToken();
-    const refreshToken = this.authService.getRefreshToken();
+    const { accessToken, refreshToken } = this.authService.getTokens;
     let authReq: HttpRequest<any> = req;
 
     if (req.context.get(BYPASS_ACCESS_TOKEN) === true) {

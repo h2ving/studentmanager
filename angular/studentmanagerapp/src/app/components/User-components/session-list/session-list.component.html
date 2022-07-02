@@ -1,19 +1,36 @@
-<table>
-  <tr class="table-header">
-    <th>Upcoming sessions</th>
-  </tr>
+<div class="table-container">
+  <table>
+    <caption>Upcoming Sessions</caption>
+  
+    <thead>
+      <tr>
+        <th scope="col">Course</th>
+        <th scope="col">Description</th>
+        <th scope="col">Date</th>
+        <th scope="col">Academic hours</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <tr
+      *ngIf="userSessions && userSessions.length === 0"
+      [ngStyle]="{
+        'padding': '1rem',
+        'white-space': 'pre-wrap'
+      }"
+    >
+      <td data-label="Course">{{ ' ' }}</td>
+      <td data-label="Description">{{ ' ' }}</td>
+      <td data-label="Date">{{ ' ' }}</td>
+      <td data-label="Academic hours">{{ ' ' }}</td>
+    </tr>
 
-  <tr class="table-titles">
-    <th>Course</th>
-    <th>Description</th>
-    <th>Date</th>
-    <th>Length</th>
-  </tr>
-
-  <div class="table-container">
-    <app-session-item
-      *ngFor="let session of userSessions;"
-      [session]="session"
-    ></app-session-item>
-  </div>
-</table>
+      <tr *ngFor="let session of userSessions;">
+        <td data-label="Course">{{ session.course.name }}</td>
+        <td data-label="Description"><b>{{ session.description }}</b></td>
+        <td data-label="Date">{{ session.startDateTime | date }}</td>
+        <td data-label="Academic hours">{{ session.academicHours }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

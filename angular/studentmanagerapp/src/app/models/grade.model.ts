@@ -1,13 +1,16 @@
+import { Session } from "./session.module";
+import { User } from "./user.model";
+
 export class Grade {
   id: number;
-  course: string;
-  date: Date;
   grade: number;
+  session: Session;
+  user: User;
 
-  constructor(id: number, course: string, date: Date, grade: number) {
+  constructor(id: number, grade: number, session: Session, user: User) {
     this.id = id;
-    this.course = course;
-    this.date = date;
     this.grade = grade;
+    this.session = session;
+    this.user = user;
   }
 }
