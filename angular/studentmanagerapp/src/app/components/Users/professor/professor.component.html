@@ -1,49 +1,134 @@
-<div class="student-component-container">
-  <app-header [currentUser]="currentUser"></app-header>
+<div class="professor-component">
+  <div class="professor-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
 
-  <section class="section-top">
-    <div class="breadcrumb">
-      <h5>Home - {{ currentUser.role }}</h5>
-    </div>
-
-    <div class="cards">
-      <div class="card cards-session highlight">
-        Sessions
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">Home - {{ currentUser.user.role }}</h5>
       </div>
 
-      <div class="card cards-grade highlight">
-        Grades
+      <div class="cards">
+        <div 
+          *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/announcements/professor/', currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>Add an Announcement</p>
+          </div>
+
+          <fa-icon [icon]="faBullhorn" class="card-icon announcement"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+            </p>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/marks/professor', currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>Mark Grades, Attendances</p>
+          </div>
+
+          <fa-icon [icon]="faBook" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+            </p>
+          </div>
+        </div>
+
+        <div
+        *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/sessions/professor/',currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>Manage Sessions</p>
+          </div>
+          
+          <fa-icon [icon]="faEdit" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle" class="info-btn"></fa-icon>
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="card highlight"
+          (click)="toggleCourses()"
+          [ngStyle]="{
+            'box-shadow' : showCourses ? '0px 0px 6px 1px rgba(0,0,0,0.75)' : 'none'
+          }"
+        >
+          <div class="card-info">
+            <span *ngIf="currentUserLoaded">
+              {{ onGoingCourses }}
+            </span>
+
+            <p>Courses</p>
+          </div>
+
+          <fa-icon [icon]="faGraduationCap" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle" class="info-btn"></fa-icon>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-top-card-info" *ngIf="showGrades">
+      <app-student-grade-table [currentUser]="currentUser.user"></app-student-grade-table>
+    </section>
+
+    <section class="section-top-card-info" *ngIf="showAttendance">
+      <app-student-attendance-table [currentUser]="currentUser.user"></app-student-attendance-table>
+    </section>
+
+    <section class="section-top-card-info" *ngIf="showCourses">
+      <app-course-table [currentUser]="currentUser.user"></app-course-table>
+    </section>
+
+    <section class="section-middle">
+      <div class="profile-left">
+        <app-profile-information
+          *ngIf="currentUserLoaded"
+          [currentUser]="currentUser.user"
+        ></app-profile-information>
+
+        <img src="../../../assets/students.jpg" alt="graduation">
       </div>
 
-      <div class="card cards-attendance highlight" (click)="toggleAttendance()">
-        Attendance
+      <div class="profile-right">
+        <app-session-list
+          *ngIf="currentUserLoaded"
+          [currentUser]="currentUser.user"
+        ></app-session-list>
       </div>
+    </section>
 
-      <div class="card cards-courses highlight" (click)="toggleCourses()">
-        Courses
-      </div>
-    </div>
-  </section>
-
-  <section class="section-top-card-info" *ngIf="showAttendance">
-    <!-- <app-attendance-list></app-attendance-list> -->
-  </section>
-
-  <section class="section-top-card-info" *ngIf="showCourses">
-    <!-- <app-course-list [currentUser]="currentUser"></app-course-list> -->
-  </section>
-
-  <section class="section-middle">
-    <div class="profile-left">
-      <app-profile-information [currentUser]="currentUser"></app-profile-information>
-
-      <img src="../../../assets/students.jpg" alt="graduation">
-    </div>
-
-    <div class="profile-right">
-      <app-session-list></app-session-list>
-    </div>
-  </section>
-
-  <app-footer></app-footer>
+      <app-student-announcement-list
+        *ngIf="currentUserLoaded"
+        [currentUser]="currentUser.user"
+      ></app-student-announcement-list>
+    <app-footer></app-footer>
+  </div>
 </div>

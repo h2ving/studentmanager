@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, throwError, Subject, Subscription, tap } from 'rxjs';
+import { catchError, map, Observable, throwError, Subject, Subscription } from 'rxjs';
 import { User } from '../models/user.model';
 import { NotificationService } from './notification.service';
 import { UserDataInterface } from '../interfaces/user-data-interface';

@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminComponent implements OnInit {
 
+  // Admin -> johnd@gmail.com, areardon@sdaacademy.uni -> ID 1, 53
+
   constructor() { }
 
   ngOnInit(): void {

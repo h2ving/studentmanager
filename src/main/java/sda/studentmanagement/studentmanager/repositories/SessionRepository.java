@@ -4,12 +4,15 @@ package sda.studentmanagement.studentmanager.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import sda.studentmanagement.studentmanager.domain.Session;
+import sda.studentmanagement.studentmanager.projections.SessionDataProjection;
 
 import java.util.Date;
 import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
     List<Session> findAll();
+
+    List<SessionDataProjection> findAllProjectedBy();
 
     Session findById(long sessionId);
 

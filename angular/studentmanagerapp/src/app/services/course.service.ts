@@ -19,6 +19,12 @@ export class CourseService {
     return this.http.get<Course[]>(url, { headers: this.headers });
   }
 
+  getCourse(courseId: number): Observable<Course> {
+    const url: string = `${this.apiUrl}/course/${courseId}`;
+
+    return this.http.get<Course>(url, { headers: this.headers });
+  }
+
   getUserCourses(userId: number, checkCourseContainsUser: boolean): Observable<Course[]> {
     const url: string = `${this.apiUrl}/courses/user/${userId}?userCourses=${checkCourseContainsUser}`;
 

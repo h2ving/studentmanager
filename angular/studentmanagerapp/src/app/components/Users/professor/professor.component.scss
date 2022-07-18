@@ -8,7 +8,7 @@ $blue-border: #eeeff4;
 $blue-shadow: #d8dbe2;
 $light-blue-color: #e2e5ec;
 
-.student-component {
+.professor-component {
   background-color: $light-blue-color;
 
   &-container {
@@ -28,38 +28,59 @@ $light-blue-color: #e2e5ec;
         display: flex;
         justify-content: space-between;
 
-        &-session {
-          flex-direction: column;
-        }
-
         .card {
-          width: 100%;
-          height: 100px;
+          position: relative;
           display: flex;
           justify-content: center;
           align-items: center;
-          color: #fff;
-          font-size: 1.2rem;
+          width: 100%;
+          height: 125px;
           margin-right: 2rem;
+          color: #fff;
+          padding: 1rem;
 
-          .grade-value,
-          .attendance-value,
-          .course-value {
-            margin-left: 1rem;
-            font-size: 1.6rem;
+          &-info {
+            margin-right: 150px;
+            margin-bottom: 20px;
           }
 
-          .attendance-value {
+          &-icon {
+            position: absolute;
+            top: 10px;
+            right: 40px;
+            font-size: 60px;
+            color: rgb(0, 0, 0, 0.25);
+
+            &.announcement {
+              transform: rotateZ(-16deg);
+            }
+          }
+
+          .expand {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 0.15rem 0;
+            background-color: rgb(0, 0, 0, 0.15);
+
+            fa-icon {
+              margin-left: 0.25rem;
+            }
+          }
+
+          span {
+            margin-left: 1rem;
             margin-right: 0.5rem;
+            font-size: 1.6rem;
           }
 
           &.highlight {
             cursor: pointer;
-            box-shadow: 0px 0px 15px 2px #8e8e8e;
 
             &:hover {
-              box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.5);
-              opacity: 0.9;
+              opacity: .85;
             }
           }
 
@@ -69,6 +90,10 @@ $light-blue-color: #e2e5ec;
 
           &:nth-child(1) {
             background: linear-gradient(90deg, rgba(138, 195, 74, 1) 0%, $green-color 100%);
+
+            .card-info {
+              margin-right: 85px;
+            }
           }
 
           &:nth-child(2) {
@@ -93,6 +118,7 @@ $light-blue-color: #e2e5ec;
 
     .section-middle {
       padding: 1rem;
+      margin: 1rem 0;
       display: flex;
       justify-content: space-between;
 
@@ -115,22 +141,10 @@ $light-blue-color: #e2e5ec;
 }
 
 @media only screen and (max-width: 1440px) {
-  .student-component {
+  .professor-component {
     &-container {
       width: 100%;
       box-shadow: 0;
-
-      .section-top .cards {
-        .card {
-          height: 75px;
-          font-size: 1.1rem;
-
-          .grade,
-          .attendance {
-            font-size: 1.4rem;
-          }
-        }
-      }
 
       .section-middle {
         .profile-left {
@@ -138,6 +152,119 @@ $light-blue-color: #e2e5ec;
             height: 300px;
             width: 550px;
           }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .professor-component {
+    &-container {
+      .section-top .cards .card {
+        &-info {
+          margin-right: 85px;
+        }
+
+        &-icon {
+          right: 10px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .professor-component {
+    &-container {
+      .section-top .cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+
+        .card {
+          justify-content: space-between;
+          margin-right: 0;
+
+          &-info {
+            margin: 0;
+          }
+
+          &-icon {
+            display: block;
+          }
+
+          .expand {
+            margin-left: -1rem;
+          }
+        }
+      }
+
+      .section-middle {
+        flex-direction: column;
+        margin: 0;
+
+        .profile-left {
+          margin-right: 0;
+          margin-bottom: 1rem;
+
+          img {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .professor-component {
+    &-container {
+
+      .section-top .cards {
+        display: flex;
+        flex-direction: column;
+
+        .card {
+          white-space: nowrap;
+          height: 50px;
+          margin: 0.2rem 0;
+
+          &-info {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 0;
+
+            p {
+              margin: 0;
+              padding: 0;
+            }
+
+            &:nth-child(1) {
+              p {
+                margin-left: 1rem;
+              }
+            }
+          }
+
+          &-icon {
+            display: none;
+          }
+
+          .expand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 30%;
+            right: 0;
+          }
+        }
+      }
+
+      .section-middle {
+        .profile-left img {
+          object-fit: contain;
         }
       }
     }

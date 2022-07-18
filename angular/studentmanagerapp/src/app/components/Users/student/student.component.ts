@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { User } from 'src/app/models/user.model';
 import {
-  faSignOutAlt, faGraduationCap, faChartLine, faBook, faPercentage, faPlusCircle,
+  faGraduationCap, faChartLine, faBook, faPercentage, faPlusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -22,18 +22,13 @@ export class StudentComponent implements OnInit {
   showAttendance: boolean = false;
   showCourses: boolean = false;
   showGrades: boolean = false;
-  faSignOutAlt = faSignOutAlt;
   faBook = faBook;
   faChartLine = faChartLine;
   faPercentage = faPercentage;
   faGraduationCap = faGraduationCap;
   faPlusCircle = faPlusCircle;
 
-  /**
-   * 1 -> Student -> edeitz@sdaacademy.uni -> ID 52
-   * 2 -> Professor -> lchambers@sdaacademy.uni -> ID 56
-   * 3 -> Admin -> johnd@gmail.com, areardon@sdaacademy.uni -> ID 1, 53
-   */
+  // Student -> edeitz@sdaacademy.uni -> ID 52
 
   constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) {
     this.updateUserDataEventSubscription = this.authService.getUpdateUserDataEvent()

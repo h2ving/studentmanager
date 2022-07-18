@@ -1,0 +1,110 @@
+<div class="grades-component">
+  <div class="grades-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Marks - Grades
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Add Grades</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Marks - </b>You can only select Courses where you have joined. If you don't see the Course in the List, please join the Course first.
+            </li>
+            <li>
+              <b>Adding - </b>Fill out the Users you would like to mark Grades. If you wish to add Grades later to certain Users, you can come back here again and add more.
+            </li>
+            <li>
+              <b>Remainder - </b>One Session can have multiple Grades. There are no restrictions.
+            </li>
+            <li>
+              <b>Remainder - </b>Marks are in 5 point grade scale.
+            </li>
+            <li>
+              <b>Editing - </b>If you wish to View Grades or Edit a single Grade, then this can be done in the Marks Dashboard
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section class="section-bottom">
+      <h1>Select Course</h1>
+      <select *ngIf="currentUserLoaded" (change)="getCourseSessions($event)">
+        <option [value]="''"></option>
+        <option
+          *ngFor="let course of currentUser.user.coursesAssigned"
+          [value]="course.id"
+        >
+          {{ course.name }}
+        </option>
+      </select>
+
+      <h1 *ngIf="courseSessions && courseSessions.length !== 0">Select Session</h1>
+      <select *ngIf="courseSessions && courseSessions.length !== 0" (change)="getSessionUsers($event)">
+        <option [value]="''"></option>
+        <option
+          *ngFor="let session of courseSessions"
+          [value]="session.id"
+        >
+          {{ session.description }}
+        </option>
+      </select>
+
+      <div class="session-users" *ngIf="sessionUsers && sessionUsers.length !== 0">
+        <form [formGroup]="addGradesForm" (ngSubmit)="submitAddGrades()">
+          <div class="user" *ngFor="let user of sessionUsers; let i = index">
+            <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+            <p>{{ user.email }}</p>
+
+            <label for="grade">Grade</label>
+            <input
+              type="number"
+              name="grade"
+              min="1"
+              max="5"
+              (change)="onInputChange($event, user.id)"
+            >
+          </div>
+
+          <input type="submit" value="Submit">
+        </form>
+
+      </div>
+
+      <div class="session-users" *ngIf="sessionUsers && sessionUsers.length === 0">
+        <h4>This Course has no Active Users</h4>
+      </div>
+
+      <button
+        *ngIf="currentUserLoaded"
+        class="btn-back"
+        [routerLink]="['/marks/professor/', currentUser.user.id]"
+      >
+        Back to Marks Dashboard
+      </button>
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

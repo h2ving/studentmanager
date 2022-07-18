@@ -1,0 +1,134 @@
+<div class="announcements-component">
+  <div class="announcements-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Announcements
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Browse & Manage Announcements</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Editing - </b>You can only manage Announcement that are listed in the Courses where you have joined! If you don't see the Course you would like to add an Announcements, please join the Course first.
+            </li>
+            <li>
+              <b>Remainder - </b>Students can only see the Announcements if the Course end date is not due and the Course is archived.
+            </li>
+            <li>
+              <b>Remainder - </b>Announcements can't be empty, they are limited from 10 to 255 characters.
+            </li>
+            <li>
+              <b>Deleting - </b> This action is irreversible. There is no way getting it back!
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section class="section-bottom">
+      <h1>Select Course</h1>
+
+      <select *ngIf="currentUserLoaded" (change)="getCourseAnnouncements($event)">
+        <option [value]="''"></option>
+        <option
+          *ngFor="let course of currentUser.user.coursesAssigned"
+          [value]="course.id"
+        >
+          {{ course.name }}
+        </option>
+      </select>
+
+      <div
+        class="course-announcements"
+        *ngIf="selectedCourseId && courseAnnouncements && courseAnnouncements.length > 0"
+      >
+        <div
+          class="announcement"
+          *ngFor="let announcement of courseAnnouncements"
+        >
+          <div class="announcement-info">
+            <div>
+              <h4>{{ announcement.createdAt | date: 'medium' }}</h4>
+              <p>{{ announcement.announcement }}</p>
+            </div>
+
+            <div class="announcement-actions">
+              <fa-icon
+                [icon]="faEdit"
+                (click)="toggleEditAnnouncement(announcement.id)"
+              ></fa-icon>
+              <fa-icon
+                [icon]="faTrash"
+                (click)="deleteAnnouncement(announcement.id)"
+              ></fa-icon>
+            </div>
+          </div>
+
+          <form
+            *ngIf="editAnnouncementId === announcement.id"
+            [formGroup]="editAnnouncementForm"
+            (ngSubmit)="submitEditAnnouncement()"
+          >
+            <label for="announcement">Edit Announcement</label>
+            <input type="text" name="announcement" formControlName="announcement">
+
+            <input type="submit" value="Submit">
+          </form>
+        </div>
+
+        <form
+          *ngIf="selectedCourseId"
+          [formGroup]="addAnnouncementForm"
+          (ngSubmit)="submitAddAnnouncement()"
+          class="add-announcement"
+        >
+          <h1>Add an Announcement</h1>
+
+          <label for="announcement">New Announcement</label>
+          <input type="text" name="announcement" formControlName="announcement" placeholder="New Announcement">
+
+          <input type="submit" value="Add Announcement">
+        </form>
+      </div>
+
+      <div
+        class="course-announcements"
+        *ngIf="selectedCourseId && courseAnnouncements && courseAnnouncements.length === 0"
+      >
+        <div class="announcement">
+          <h2>No Announcements</h2>
+        </div>
+      </div>
+
+      <button
+        *ngIf="currentUserLoaded"
+        class="btn-back"
+        [routerLink]="['/professor/', currentUser.user.id]"
+      >
+        Back to Dashboard
+      </button>
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

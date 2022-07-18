@@ -1,0 +1,153 @@
+<div class="sessions-component">
+  <div class="sessions-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Sessions
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Browse & Manage Sessions</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Editing - </b>You can only manage Sessions that are listed in the Courses where you have joined! If you don't see the Course you would like to add a Session, please join the Course first.
+            </li>
+            <li>
+              <b>Remainder - </b>Students can only see the Sessions if the Course end date is not due and the Course is archived.
+            </li>
+            <li>
+              <b>Remainder - </b>Session length is in academic hours.
+            </li>
+            <li>
+              <b>Remainder - </b>Session description can't be empty, they are limited from 10 to 255 characters.
+            </li>
+            <li>
+              <b>Deleting - </b> This action is irreversible. There is no way getting it back!
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section class="section-bottom">
+      <app-calendar></app-calendar>
+
+      <h1>Select Course</h1>
+
+      <select *ngIf="currentUserLoaded" (change)="getCourseSessions($event)">
+        <option [value]="''"></option>
+        <option
+          *ngFor="let course of currentUser.user.coursesAssigned"
+          [value]="course.id"
+        >
+          {{ course.name }}
+        </option>
+      </select>
+
+      <div
+        class="course-sessions"
+        *ngIf="selectedCourseId && courseSessions && courseSessions.length > 0"
+      >
+        <div
+          class="session"
+          *ngFor="let session of courseSessions"
+        >
+          <div class="session-info">
+            <div>
+              <h4>{{ session.description }}</h4>
+              <p><b>Date:</b> {{ session.startDateTime | date: 'medium' }}</p>
+              <p><b>Academic hours:</b> {{ session.academicHours }}</p>
+            </div>
+
+            <div class="session-actions">
+              <fa-icon
+                [icon]="faEdit"
+                (click)="toggleEditSession(session.id)"
+              ></fa-icon>
+              <fa-icon
+                [icon]="faTrash"
+                (click)="deleteSession(session.id)"
+              ></fa-icon>
+            </div>
+          </div>
+
+          <form
+            *ngIf="editSessionId === session.id"
+            [formGroup]="editSessionForm"
+            (ngSubmit)="submitEditSession()"
+          >
+            <label for="description">Session Description</label>
+            <input type="text" name="description" formControlName="description">
+
+            <label for="startDateTime">New Date</label>
+            <input type="datetime-local" name="startDateTime" formControlName="startDateTime">
+
+            <label for="academicHours">Length</label>
+            <input type="number" name="academicHours" formControlName="academicHours">
+
+            <input type="submit" value="Submit">
+          </form>
+        </div>
+
+        <form
+          *ngIf="selectedCourseId"
+          [formGroup]="addSessionForm"
+          (ngSubmit)="submitAddSession()"
+          class="add-session"
+        >
+          <h1>Add a Session</h1>
+
+          <label for="description">Session Description</label>
+          <input type="text" name="description" formControlName="description" placeholder="Session Description">
+
+          <label for="startDateTime">Start Date</label>
+          <input type="datetime-local" name="startDateTime" formControlName="startDateTime">
+
+          <label for="academicHours">Length</label>
+          <input type="number" name="academicHours" formControlName="academicHours">
+
+          <input type="submit" value="Add Session">
+        </form>
+      </div>
+
+      <div
+        class="course-announcements"
+        *ngIf="selectedCourseId && courseSessions && courseSessions.length === 0"
+      >
+        <div class="announcement">
+          <h2>No Announcements</h2>
+        </div>
+      </div>
+
+      <button
+        *ngIf="currentUserLoaded"
+        class="btn-back"
+        [routerLink]="['/professor/', currentUser.user.id]"
+      >
+        Back to Dashboard
+      </button>
+    </section>
+
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

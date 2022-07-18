@@ -18,10 +18,10 @@ public class Attendance {
 
     private boolean didAttend;
 
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "session_id")
     private Session session;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

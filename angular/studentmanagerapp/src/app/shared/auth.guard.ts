@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlSegment } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
@@ -16,25 +16,33 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, public router: Router, public notificationService: NotificationService, private http: HttpClient) { }
 
-  canLoad() { }
-
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const isLoggedIn: boolean = this.authService.isLoggedIn;
     const { accessToken, refreshToken }: {
       accessToken: string, refreshToken: string
     } = this.authService.getTokens!;
-    const { url }: { url: string } = state;
 
-    const redirectURI: string | undefined = this.jwtHelper.decodeToken(accessToken).redirectURI;
+    const userRedirectURI = this.jwtHelper.decodeToken(accessToken).redirectURI;
 
-    // If not logged in, redirect to login page
+    const userRole = this.jwtHelper.decodeToken(accessToken).roles[0];
+    const routeRoles = route.data['roles'];
+
+    const userId = userRedirectURI.split('/')[userRedirectURI.split('/').length - 1];
+    const routeId = route.params['id'];
+
+    // Is logged in Check
     if (isLoggedIn !== true) {
       this.router.navigate(['login']);
     }
 
-    // Redirect back to Dashboard if User acces to another role/ID
-    if (url !== redirectURI) {
-      this.router.navigate([redirectURI]);
+    // User Role Check
+    if (!routeRoles.includes(userRole)) {
+      this.router.navigate(['404'], { skipLocationChange: true });
+    }
+
+    // User ID Check
+    if (routeId !== userId) {
+      this.router.navigate(['404'], { skipLocationChange: true });
     }
 
     // If jwt token not expired
@@ -69,8 +77,7 @@ export class AuthGuard implements CanActivate {
       this.notificationService.showSuccess("Token renewed successfully");
 
       isRefreshSuccess = true;
-    }
-    catch (ex) {
+    } catch (e) {
       isRefreshSuccess = false;
     }
 
