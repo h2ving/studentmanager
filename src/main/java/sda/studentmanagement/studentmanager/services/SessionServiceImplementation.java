@@ -7,12 +7,17 @@ import org.springframework.transaction.annotation.Transactional;
 import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.domain.Session;
 import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.dto.AddSessionFormDto;
+import sda.studentmanagement.studentmanager.dto.EditSessionFormDto;
+import sda.studentmanagement.studentmanager.projections.CourseDataProjection;
+import sda.studentmanagement.studentmanager.projections.SessionDataProjection;
 import sda.studentmanagement.studentmanager.repositories.CourseRepository;
 import sda.studentmanagement.studentmanager.repositories.SessionRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -57,6 +62,11 @@ public class SessionServiceImplementation implements SessionService {
         } else {
             throw new EntityNotFoundException("Invalid User ID");
         }
+    }
+
+    @Override
+    public List<SessionDataProjection> getSessionsData() {
+        return sessionRepository.findAllProjectedBy();
     }
 
     @Override
@@ -112,7 +122,35 @@ public class SessionServiceImplementation implements SessionService {
     }
 
     @Override
-    public Session saveSession(Session session) {
+    public Session saveSession(AddSessionFormDto sessionForm) throws ConstraintViolationException {
+        Session newSession = new Session();
+        Course course = courseRepository.findById(sessionForm.getCourseId());
+
+        if (course != null) {
+            newSession.setDescription(sessionForm.getDescription());
+            newSession.setStartDateTime(sessionForm.getStartDateTime());
+            newSession.setAcademicHours(sessionForm.getAcademicHours());
+            newSession.setCourse(course);
+
+            List<User> sessionUsers = new ArrayList<>();
+
+            for(User user : course.getUsers()) {
+                Optional<User> findUser = userRepository.findById(user.getId());
+                sessionUsers.add(findUser.orElse(null));
+            }
+
+            newSession.setUser(sessionUsers);
+
+            sessionRepository.save(newSession);
+
+            return newSession;
+        } else {
+            throw new EntityNotFoundException("Course not found");
+        }
+    }
+
+    @Override
+    public Session savePopulateSession(Session session) {
         Session findSession = getSession(session.getId());
 
         if(findSession != null) {
@@ -123,16 +161,40 @@ public class SessionServiceImplementation implements SessionService {
     }
 
     @Override
-    public Session editSession(Session session) {
-        // Todo
+    public Session editSession(long sessionId, EditSessionFormDto sessionForm) {
+        Session session = getSession(sessionId);
 
-        return null;
+        if (session != null) {
+            if (sessionForm.getDescription().length() < 10 || sessionForm.getDescription().length() > 255) {
+                throw new IllegalArgumentException("Session is limited from 10 to 255 characters");
+            }
+
+            if (sessionForm.getStartDateTime() == null) {
+                throw new IllegalArgumentException("Session date can not be empty");
+            }
+
+            if (sessionForm.getAcademicHours() == null) {
+                throw new IllegalArgumentException("Session duration can not be empty");
+            }
+
+            session.setDescription(sessionForm.getDescription());
+            session.setStartDateTime(sessionForm.getStartDateTime());
+            session.setAcademicHours(sessionForm.getAcademicHours());
+
+            return session;
+        } else {
+            throw new EntityNotFoundException("Session not found");
+        }
     }
 
     @Override
     public void deleteSession(long sessionId) {
         Session session = getSession(sessionId);
 
-        sessionRepository.delete(session);
+        if (session == null) {
+            throw new EntityNotFoundException("Session not found");
+        } else {
+            sessionRepository.delete(session);
+        }
     }
 }

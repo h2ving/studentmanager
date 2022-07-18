@@ -28,7 +28,7 @@
       <tr *ngFor="let session of userSessions;">
         <td data-label="Course">{{ session.course.name }}</td>
         <td data-label="Description"><b>{{ session.description }}</b></td>
-        <td data-label="Date">{{ session.startDateTime | date }}</td>
+        <td data-label="Date">{{ session.startDateTime | date: 'medium' }}</td>
         <td data-label="Academic hours">{{ session.academicHours }}</td>
       </tr>
     </tbody>

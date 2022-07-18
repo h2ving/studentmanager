@@ -1,0 +1,240 @@
+<div class="marks-component">
+  <div class="marks-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Marks
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Browse & Manage Marks</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Marks - </b>You can only view Marks from Courses where you have joined. If you don't see the Course in the List, please join the Course first.
+            </li>
+            <li>
+              <b>Grades - </b>This will lead to Grades page where you can add new Grades
+            </li>
+            <li>
+              <b>Attendances- </b>This will lead to Attendances page where you can mark Session Attendances
+            </li>
+            <li>
+              <b>Deleting - </b> This action is irreversible. There is no way getting it back!
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section class="section-bottom">
+      <button
+        class="btn-link"
+        [routerLink]="['/marks/grades/professor/', currentUser.user.id]"
+      >
+        Grades <fa-icon [icon]="faArrowRight"></fa-icon>
+      </button>
+
+      <button
+        class="btn-link"
+        [routerLink]="['/marks/attendances/professor/', currentUser.user.id]"
+        >
+        Attendances <fa-icon [icon]="faArrowRight"></fa-icon>
+      </button>
+
+      <h1>View & Edit Marks</h1>
+
+      <select *ngIf="currentUserLoaded" (change)="getCourseUsers($event)">
+        <option [value]="''"></option>
+        <option
+          *ngFor="let course of currentUser.user.coursesAssigned"
+          [value]="course.id"
+        >
+          {{ course.name }}
+        </option>
+      </select>
+
+      <div
+        class="course-users"
+        *ngIf="selectedCourseId && course"
+      >
+          <div
+            class="user"
+            *ngFor="let user of course.usersAssigned"
+          >
+            <div class="user-info">
+              <div>
+                <h4>{{ user.firstName }} {{ user.lastName }}</h4>
+                <p>{{ user.email }}</p>
+              </div>
+
+              <div
+                *ngIf="user.id !== currentUser.user.id"
+                class="user-actions"
+              >
+                <div class="tooltip">
+                  <fa-icon
+                    [icon]="faChartLine"
+                    (click)="toggleShowGrades(user.id)"
+                  ></fa-icon>
+
+                  <span class="tooltiptext">Grades</span>
+                </div>
+                
+                <div class="tooltip">
+                  <fa-icon
+                    [icon]="faPercentage"
+                    (click)="toggleShowAttendances(user.id)"
+                  ></fa-icon>
+
+                  <span class="tooltiptext">Attendances</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="userGradesUserId === user.id && userGrades && userGrades.length !== 0"
+              class="user-grades"
+            >
+              <div *ngFor="let grade of userGrades">
+                <div>
+                  <h4>
+                    {{ grade.session.description }}, {{ grade.session.startDateTime | date }}
+                  </h4>
+                  <h5>Grade: {{ grade.grade }}</h5>
+
+                  <form
+                    *ngIf="editGradeId === grade.id"
+                    [formGroup]="editGradeForm"
+                    (ngSubmit)="submitEditGrade()"
+                  >
+                    <label for="grade">Grade</label>
+                    <input type="number" value="grade" formControlName="grade">
+  
+                    <input type="submit" value="Edit">
+                  </form>
+                </div>
+
+                <div
+                  *ngIf="user.id !== currentUser.user.id"
+                  class="grade-actions"
+                >
+                  <div class="tooltip">
+                    <fa-icon
+                      [icon]="faEdit"
+                      class="action-edit"
+                      (click)="toggleEditGrade(grade.id)"
+                    ></fa-icon>
+                    <span class="tooltiptext">Edit Grade</span>
+                  </div>
+
+                  <div class="tooltip">
+                    <fa-icon
+                      [icon]="faTrash"
+                      class="action-delete"
+                      (click)="submitDeleteGrade(grade.id)"
+                    ></fa-icon>
+
+                    <span class="tooltiptext">Delete Grade</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="userGradesUserId === user.id && userGrades && userGrades.length === 0"
+              class="user-grades"
+            >
+              <h4>No Grades</h4>
+            </div>
+
+            <div
+              *ngIf="userAttendancesUserId === user.id && userAttendances && userAttendances.length !== 0"
+              class="user-attendances"
+            >
+              <div *ngFor="let attendance of userAttendances">
+                <div>
+                  <h4>{{ attendance.session.description }}, {{ attendance.session.startDateTime | date }}</h4>
+                  <h5>Attendance: {{ attendance.didAttend ? '&#9989;' : '&#10060;' }}</h5>
+
+                  <form
+                    *ngIf="editAttendanceId === attendance.id"
+                    [formGroup]="editAttendanceForm"
+                    (ngSubmit)="submitEditAttendance()"
+                  >
+                    <label for="attendance">Attendance</label>
+
+                    <select name="attendance" formControlName="attendance">
+                      <option value="present">Present &#9989;</option>
+                      <option value="absent">Absent &#10060;</option>
+                    </select>
+
+                    <input type="submit" value="Edit">
+                  </form>
+                </div>
+
+                <div
+                  *ngIf="user.id !== currentUser.user.id"
+                  class="attendance-actions"
+                >
+                  <div class="tooltip">
+                    <fa-icon
+                      [icon]="faEdit"
+                      class="action-edit"
+                      (click)="toggleEditAttendance(attendance.id)"
+                    ></fa-icon>
+                    <span class="tooltiptext">Edit Attendance</span>
+                  </div>
+
+                  <div class="tooltip">
+                    <fa-icon
+                      [icon]="faTrash"
+                      class="action-delete"
+                      (click)="submitDeleteAttendance(attendance.id)"
+                    ></fa-icon>
+                    <span class="tooltiptext">Delete Attendance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              *ngIf="userAttendancesUserId === user.id && userAttendances && userAttendances.length === 0"
+              class="user-attendances"
+            >
+              <h4>No Attendances</h4>
+            </div>
+          </div>
+      </div>
+
+      <button
+        *ngIf="currentUserLoaded"
+        class="btn-back"
+        [routerLink]="['/professor/', currentUser.user.id]"
+      >
+        Back to Dashboard
+      </button>
+
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

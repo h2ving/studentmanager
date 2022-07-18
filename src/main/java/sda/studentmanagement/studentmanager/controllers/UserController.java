@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sda.studentmanagement.studentmanager.domain.Role;
@@ -141,9 +140,9 @@ public class UserController {
     }
 
     /**
-     * @Route PUT /api/user
+     * @Route PATCH /api/user
      * @Desc Edit User
-     * @Access
+     * @Access Student, Professor, Admin
      */
     @PatchMapping("/user")
     public ResponseEntity<?> editUser(@RequestBody EditUserFormDto userForm) {

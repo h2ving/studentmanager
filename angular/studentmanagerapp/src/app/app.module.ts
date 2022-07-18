@@ -18,13 +18,21 @@ import { ProfessorComponent } from './components/Users/professor/professor.compo
 import { LoaderComponent } from './components/loader/loader.component';
 import { LoaderInterceptor } from './interceptors/loader.interceptor';
 import { ProfileInformationComponent } from './components/User-components/profile-information/profile-information.component';
-import { StudentCourseTableComponent } from './components/Users/student/student-course-table/student-course-table.component';
+import { CourseTableComponent } from './components/User-components/course-table/course-table.component';
 import { StudentGradeTableComponent } from './components/Users/student/student-grade-table/student-grade-table.component';
 import { StudentAnnouncementListComponent } from './components/Users/student/student-announcement-list/student-announcement-list.component';
 import { StudentAttendanceTableComponent } from './components/Users/student/student-attendance-table/student-attendance-table.component';
 import { HeaderComponent } from './components/User-components/header/header.component';
 import { SessionListComponent } from './components/User-components/session-list/session-list.component';
 import { ClockComponent } from './components/User-components/clock/clock.component';
+import { AnnouncementsComponent } from './components/Announcements/announcements.component';
+import { MarksComponent } from './components/Marks/marks.component';
+import { SessionsComponent } from './components/Sessions/sessions.component';
+import { ConfirmationDialogModalComponent } from './components/confirmation-dialog-modal/confirmation-dialog-modal.component';
+import { CalendarsModule } from './components/calendar/module';
+import { GradesComponent } from './components/Marks/Grades/grades.component';
+import { AttendancesComponent } from './components/Marks/Attendances/attendances.component';
+import { CoursesComponent } from './components/Courses/courses.component';
 
 @NgModule({
   declarations: [
@@ -38,12 +46,19 @@ import { ClockComponent } from './components/User-components/clock/clock.compone
     ProfessorComponent,
     LoaderComponent,
     ProfileInformationComponent,
-    StudentCourseTableComponent,
+    CourseTableComponent,
     StudentAttendanceTableComponent,
     HeaderComponent,
     SessionListComponent,
     ClockComponent,
     StudentAnnouncementListComponent,
+    AnnouncementsComponent,
+    MarksComponent,
+    SessionsComponent,
+    ConfirmationDialogModalComponent,
+    GradesComponent,
+    AttendancesComponent,
+    CoursesComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,12 +68,13 @@ import { ClockComponent } from './components/User-components/clock/clock.compone
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot({ timeOut: 3000, positionClass: 'toast-top-right', preventDuplicates: true, enableHtml: true })
+    ToastrModule.forRoot({ timeOut: 3000, positionClass: 'toast-top-right', preventDuplicates: true, enableHtml: true }),
+    CalendarsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

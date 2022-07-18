@@ -2,15 +2,19 @@ package sda.studentmanagement.studentmanager.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sda.studentmanagement.studentmanager.domain.Grade;
+import sda.studentmanagement.studentmanager.dto.AddGradesFormDto;
+import sda.studentmanagement.studentmanager.dto.EditGradeFormDto;
 import sda.studentmanagement.studentmanager.services.CourseServiceImplementation;
 import sda.studentmanagement.studentmanager.services.GradeServiceImplementation;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -75,6 +79,19 @@ public class GradeController {
     ) {
         return ResponseEntity.ok(gradeService.getUserSessionGrades(userId, sessionId));
     }
+
+    /**
+     * @Route GET /api/grades/user/{userId}/course/{courseId}
+     * @Desc Get All User Grades from Course
+     * @Access Professor, Admin
+     */
+    @GetMapping("/grades/user/{userId}/course/{courseId}")
+    public ResponseEntity<List<Grade>> getUserCourseGrades(
+            @PathVariable("userId") long userId, @PathVariable("courseId") long courseId
+    ) {
+        return ResponseEntity.ok(gradeService.getUserCourseGrades(userId, courseId));
+    }
+
     /**
      * @Route GET /api/grade/{gradeId}
      * @Desc Get Grade
@@ -96,15 +113,43 @@ public class GradeController {
     }
 
     /**
-     * @Route PUT /api/grade/{gradeId}
-     * @Desc Save a new Grade
-     * @Access
+     * @Route POST /api/grades
+     * @Desc Save multiple Grades
+     * @Access Professor, Admin
      */
-    @PutMapping("/grade/{gradeId}")
-    public ResponseEntity<?> editGrade(@PathVariable("gradeId") long gradeId) {
-        // Todo
+    @PostMapping("/grades")
+    public ResponseEntity<?> saveGrades(@RequestBody AddGradesFormDto addGradesForm) {
+        try {
+            gradeService.saveGrades(addGradesForm);
 
-        return null;
+            return new ResponseEntity<>(
+                    "Grades Added Successfully", new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    /**
+     * @Route PATCH /api/grade/{gradeId}
+     * @Desc Edit Grade
+     * @Access Professor, Admin
+     */
+    @PatchMapping("/grade/{gradeId}")
+    public ResponseEntity<?> editGrade(@PathVariable("gradeId") long gradeId, @RequestBody EditGradeFormDto gradeForm) {
+        try {
+            Grade grade = gradeService.editGrade(gradeId, gradeForm);
+
+            return new ResponseEntity<>(
+                    grade, new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -113,9 +158,17 @@ public class GradeController {
      * @Access
      */
     @DeleteMapping("/grade/{gradeId}")
-    public ResponseEntity<?> deleteGrade(@PathVariable("gradeId") long gradeId) {
-        // Todo
+    public ResponseEntity<?> deleteAttendance(@PathVariable long gradeId) {
+        try {
+            gradeService.deleteGrade(gradeId);
 
-        return null;
+            return new ResponseEntity<>(
+                    "Grade deleted successfully", new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND
+            );
+        }
     }
 }

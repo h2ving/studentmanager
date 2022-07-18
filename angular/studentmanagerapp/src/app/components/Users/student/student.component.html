@@ -30,7 +30,14 @@
           }"
         >
           <div class="card-info">
-            <span>{{ currentUser.averageGrade }}</span>
+            <span *ngIf="currentUser.averageGrade">
+              {{ currentUser.averageGrade }}
+            </span>
+
+            <span *ngIf="currentUser.averageGrade === null">
+              --
+            </span>
+
             <p>Avg. grade</p>
           </div>
 
@@ -102,7 +109,7 @@
     </section>
 
     <section class="section-top-card-info" *ngIf="showCourses">
-      <app-student-course-table [currentUser]="currentUser.user"></app-student-course-table>
+      <app-course-table [currentUser]="currentUser.user"></app-course-table>
     </section>
 
     <section class="section-middle">

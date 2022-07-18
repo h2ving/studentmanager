@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.domain.Grade;
 import sda.studentmanagement.studentmanager.domain.Session;
 import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.dto.AddGradesFormDto;
+import sda.studentmanagement.studentmanager.dto.EditGradeFormDto;
+import sda.studentmanagement.studentmanager.repositories.CourseRepository;
 import sda.studentmanagement.studentmanager.repositories.GradeRepository;
 import sda.studentmanagement.studentmanager.repositories.SessionRepository;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
@@ -14,6 +18,7 @@ import sda.studentmanagement.studentmanager.repositories.UserRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -23,6 +28,7 @@ import java.util.List;
 public class GradeServiceImplementation implements GradeService {
     private final GradeRepository gradeRepository;
     private final SessionRepository sessionRepository;
+    private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -86,6 +92,25 @@ public class GradeServiceImplementation implements GradeService {
     }
 
     @Override
+    public List<Grade> getUserCourseGrades(long userId, long courseId) {
+        Course course = courseRepository.findById(courseId);
+        User user = userRepository.findById(userId);
+        List<Grade> userCourseGrades = new ArrayList<>();
+
+        if (course != null && user != null) {
+            for (Grade grade : getGrades()) {
+                if (grade.getUser().equals(user) && grade.getSession().getCourse().equals(course)) {
+                    userCourseGrades.add(grade);
+                }
+            }
+
+            return userCourseGrades;
+        } else {
+            throw new EntityNotFoundException("Invalid Session, User ID");
+        }
+    }
+
+    @Override
     public Grade getGrade(long gradeId) {
         Grade grade = gradeRepository.findById(gradeId);
 
@@ -108,16 +133,65 @@ public class GradeServiceImplementation implements GradeService {
     }
 
     @Override
-    public Grade editGrade(long gradeId) {
-        // Todo
+    public void saveGrades(AddGradesFormDto addGradesForm) {
+        Session session = sessionRepository.findById(addGradesForm.getSessionId());
+        List<Grade> gradeList = new ArrayList<>();
 
-        return null;
+        if (session == null) {
+            throw new EntityNotFoundException("Session not found");
+        } else if (addGradesForm.getGrades().length == 0) {
+            throw new IllegalArgumentException("No Grades marked");
+        } else {
+            for (int i = 0; i < addGradesForm.getGrades().length; i++) {
+                Grade grade = new Grade();
+                User user = userRepository.findById(addGradesForm.getGrades()[i].getUserId());
+
+                if (user == null) {
+                    throw new EntityNotFoundException("User with ID: " + addGradesForm.getGrades()[i].getUserId() + " not found");
+                }
+
+                if (addGradesForm.getGrades()[i].getGrade() <= 0 || addGradesForm.getGrades()[i].getGrade() > 5) {
+                    throw new IllegalArgumentException("Marks are in 5 point grade scale");
+                }
+
+                grade.setSession(session);
+                grade.setUser(user);
+                grade.setGrade(addGradesForm.getGrades()[i].getGrade());
+
+                gradeList.add(grade);
+            }
+
+            gradeRepository.saveAll(gradeList);
+        }
+    }
+
+    @Override
+    public Grade editGrade(long gradeId, EditGradeFormDto gradeForm) {
+        Grade grade = gradeRepository.findById(gradeId);
+
+        if (grade != null) {
+            if (gradeForm.getGrade() <= 0 || gradeForm.getGrade() > 5) {
+                throw new IllegalArgumentException("Grades are using 5 point scale");
+            }
+
+            grade.setGrade(gradeForm.getGrade());
+
+            gradeRepository.save(grade);
+
+            return grade;
+        } else {
+            throw new EntityNotFoundException("Session not found");
+        }
     }
 
     @Override
     public void deleteGrade(long gradeId) {
-        Grade grade = gradeRepository.findById(gradeId);
+        Grade grade = getGrade(gradeId);
 
-        gradeRepository.delete(grade);
+        if (grade == null) {
+            throw new EntityNotFoundException("Grade not found");
+        } else {
+            gradeRepository.delete(grade);
+        }
     }
 }

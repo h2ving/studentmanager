@@ -12,6 +12,8 @@ public interface CourseService {
 
     List<String> getUserCourseNames(long userId);
 
+    // Get Course Users? nono, get course by ID which includes usersAssigned
+
     List<CourseDataProjection> getCoursesData();
 
     Course getCourse(long courseId);

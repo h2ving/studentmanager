@@ -9,11 +9,11 @@ import { Course } from 'src/app/models/course.module';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-student-course-table',
-  templateUrl: './student-course-table.component.html',
-  styleUrls: ['./student-course-table.component.scss']
+  selector: 'app-course-table',
+  templateUrl: './course-table.component.html',
+  styleUrls: ['./course-table.component.scss']
 })
-export class StudentCourseTableComponent implements OnInit {
+export class CourseTableComponent implements OnInit {
   @Input() currentUser: UserDataInterface;
   courses: Array<Course>;
   selectedCourseType: string;

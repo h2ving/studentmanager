@@ -17,11 +17,7 @@ import sda.studentmanagement.studentmanager.filters.CustomAuthenticationFilter;
 import sda.studentmanagement.studentmanager.filters.CustomAuthorizationFilter;
 import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -65,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // SESSION ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/sessions/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/session/**").hasAnyAuthority("Professor", "Admin");
-        http.authorizeRequests().antMatchers(DELETE, "/api/session/delete/**").hasAuthority("Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/api/session//**").hasAnyAuthority("Professor", "Admin");
 
         // COURSE ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/course/**").hasAnyAuthority("Student", "Professor", "Admin");
@@ -77,15 +73,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // GRADE ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/grades/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/grade/**").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/grades/**").hasAnyAuthority("Professor", "Admin");
         http.authorizeRequests().antMatchers(GET, "/api/grade/**").hasAnyAuthority("Student", "Professor", "Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/api/grade/**").hasAnyAuthority("Professor", "Admin");
 
         // ATTENDANCE ROUTES
         http.authorizeRequests().antMatchers(GET, "/api/attendances/**").hasAnyAuthority("Student", "Professor", "Admin");
-        http.authorizeRequests().antMatchers(POST, "/api/attendances/save").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/attendance/**").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/attendances/**").hasAnyAuthority("Professor", "Admin");
         http.authorizeRequests().antMatchers(GET, "/api/attendances").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(DELETE, "/api/attendance/**").hasAnyAuthority("Professor", "Admin");
 
         // ANNOUNCEMENT ROUTES
-        http.authorizeRequests().antMatchers(GET, "/api/announcements/user/**").hasAnyAuthority("Student");
+        http.authorizeRequests().antMatchers(GET, "/api/announcements/user/**").hasAnyAuthority("Student", "Professor");
+        http.authorizeRequests().antMatchers(GET, "/api/announcements/course/**").hasAnyAuthority("Professor", "Admin");
+        http.authorizeRequests().antMatchers(PATCH, "/api/announcement").hasAnyAuthority("Professor", "Admin");
 
         http.authorizeRequests().anyRequest().authenticated();
 

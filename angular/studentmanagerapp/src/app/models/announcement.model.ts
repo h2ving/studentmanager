@@ -4,14 +4,12 @@ export class Announcement {
   id: number;
   announcement: string;
   course: Course;
-  date: Date;
-  markAsRead: boolean;
+  createdAt: Date;
 
-  constructor(id: number, announcement: string, course: Course, markAsRead: boolean, date: Date) {
+  constructor(id: number, announcement: string, course: Course, createdAt: Date) {
     this.id = id;
     this.announcement = announcement;
     this.course = course;
-    this.date = date;
-    this.markAsRead = markAsRead;
+    this.createdAt = createdAt;
   }
 }

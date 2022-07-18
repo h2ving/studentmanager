@@ -8,12 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sda.studentmanagement.studentmanager.domain.Course;
 import sda.studentmanagement.studentmanager.domain.Session;
+import sda.studentmanagement.studentmanager.dto.AddSessionFormDto;
+import sda.studentmanagement.studentmanager.dto.EditSessionFormDto;
+import sda.studentmanagement.studentmanager.projections.SessionDataProjection;
 import sda.studentmanagement.studentmanager.services.CourseServiceImplementation;
 import sda.studentmanagement.studentmanager.services.SessionServiceImplementation;
 import sda.studentmanagement.studentmanager.utils.RandomThings;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -54,19 +60,31 @@ public class SessionController {
     /**
      * @Route GET /api/sessions/course/{courseId}
      * @Desc Get all Course Sessions
-     * @Access
+     * @Access Student, Professor, Admin
      */
     @GetMapping("/sessions/course/{courseId}")
-    public ResponseEntity<Object> getCourseSessions(@PathVariable("courseId") long courseId) {
+    public ResponseEntity<?> getCourseSessions(@PathVariable("courseId") long courseId) {
         try {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(sessionService.getCourseSessions(courseId));
+            List<Session> courseSessions = sessionService.getCourseSessions(courseId);
+
+            return new ResponseEntity<>(
+                    courseSessions, new HttpHeaders(), HttpStatus.OK
+            );
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(
                     e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND
             );
         }
+    }
+
+    /**
+     * @Route GET /api/sessions/data
+     * @Desc Get All Sessions data using SessionDataProjection
+     * @Access Professor, Admin
+     */
+    @GetMapping("/sessions/data")
+    public ResponseEntity<List<SessionDataProjection>> getSessionsData() {
+        return ResponseEntity.ok(sessionService.getSessionsData());
     }
 
     /**
@@ -82,37 +100,73 @@ public class SessionController {
     /**
      * @Route POST /api/session
      * @Desc Save a new Session
-     * @Access
+     * @Access Professor, Admin
      */
     @PostMapping("/session")
-    public ResponseEntity<Session> saveNewSession(@RequestBody Session session) {
-        // Todo
+    public ResponseEntity<?> saveSession(@RequestBody AddSessionFormDto sessionForm) {
+        System.out.println(sessionForm);
+        try {
+            Session session = sessionService.saveSession(sessionForm);
 
-        return null;
+            return new ResponseEntity<>(
+                    session, new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND
+            );
+        } catch (ConstraintViolationException e) {
+            Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+
+            StringBuilder builder = new StringBuilder();
+            violations.forEach(violation -> builder.append("- ").append(violation.getMessage()).append("</br>"));
+
+            String errorMessage = builder.toString();
+
+            return new ResponseEntity<>(
+                    errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     /**
-     * @Route PUT /api/session/{sessionId}
+     * @Route PATCH /api/session/{sessionId}
      * @Desc Edit Session
-     * @Access
+     * @Access Professor, Admin
      */
-    @PutMapping("/session/{sessionId}")
-    public ResponseEntity<?> editSession(@PathVariable long sessionId) {
-        // Todo
+    @PatchMapping("/session/{sessionId}")
+    public ResponseEntity<?> editSession(@PathVariable long sessionId, @RequestBody EditSessionFormDto sessionForm) {
+        try {
+            Session session = sessionService.editSession(sessionId, sessionForm);
 
-        return null;
+            return new ResponseEntity<>(
+                    session, new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     /**
      * @Route DELETE /api/session/{sessionId}
      * @Desc Delete Session
-     * @Access
+     * @Access Professor, Admin
      */
     @DeleteMapping("/session/{sessionId}")
     public ResponseEntity<?> deleteSession(@PathVariable("sessionId") long sessionId) {
-        // Todo
+        try {
+            sessionService.deleteSession(sessionId);
 
-        return null;
+            return new ResponseEntity<>(
+                    "Session deleted successfully", new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     /**
@@ -125,7 +179,7 @@ public class SessionController {
         List<Session> sessionList = RandomThings.generateRandomSessions(courseService.getCourse(courseId));
 
         for (Session session : sessionList) {
-            sessionService.saveSession(session);
+            sessionService.savePopulateSession(session);
         }
 
         return ResponseEntity.ok(sessionList);
@@ -145,7 +199,7 @@ public class SessionController {
             List<Session> sessionList = RandomThings.generateRandomSessions(courseService.getCourse(course.getId()));
 
             for (Session session : sessionList) {
-                sessionService.saveSession(session);
+                sessionService.savePopulateSession(session);
                 log.info("Session " + session.getDescription() + " added");
             }
             log.info("Course " + course.getName() + " populated!");

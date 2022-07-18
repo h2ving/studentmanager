@@ -11,7 +11,7 @@
 
   <div class="announcement" *ngFor="let announcement of announcements">
     <h5>{{ announcement.course.name }}</h5>
-    <h6>{{ announcement.date | date }}</h6>
+    <h6>{{ announcement.createdAt | date }}</h6>
     <p>{{ announcement.announcement }}</p>
   </div>
 </div>

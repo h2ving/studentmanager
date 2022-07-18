@@ -20,18 +20,18 @@ import java.util.Objects;
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Session {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Start Date can not be empty")
     private LocalDateTime startDateTime;
 
-    @NotNull
+    @NotNull(message = "Session length can not be empty")
     private Integer academicHours;
 
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Session description can not be empty")
+    @Size(min = 10, max = 255, message = "Session Description is limited from {min} to {max} characters")
     private String description;
 
     @ManyToMany(fetch = FetchType.LAZY)

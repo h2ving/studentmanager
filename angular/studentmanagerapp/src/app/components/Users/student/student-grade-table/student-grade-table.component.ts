@@ -3,7 +3,6 @@ import { Grade } from 'src/app/models/grade.model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { GradeService } from 'src/app/services/grade.service';
 import { UserDataInterface } from 'src/app/interfaces/user-data-interface';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-student-grade-table',

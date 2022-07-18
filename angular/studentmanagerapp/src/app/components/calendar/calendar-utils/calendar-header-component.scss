@@ -1,0 +1,99 @@
+$blue-text-color: #2a6ee2;
+$blue-border: #eeeff4;
+$blue-shadow: #d8dbe2;
+$light-blue-color: #e2e5ec;
+
+.calendar-header-container {
+  margin-bottom: 2rem;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  .btn {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    width: 100px;
+    height: 45px;
+    border: 2px solid rgba($color: $blue-text-color, $alpha: 0.5);
+    border-radius: 5px;
+    margin: 0 0.5rem;
+
+    &:first {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &:hover {
+      background-color: $light-blue-color;
+    }
+  }
+
+  .calendar-time {
+    margin-left: 2rem;
+    display: flex;
+  }
+
+  .calendar-date {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .calendar-view {
+    margin-right: 2rem;
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .calendar-header-container {
+    flex-direction: column;
+    align-items: center;
+
+    .btn {
+      width: 150px;
+    }
+
+    .calendar-time {
+      margin-left: 0;
+    }
+
+    .calendar-date {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .calendar-view {
+      margin-right: 0;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .calendar-header-container {
+    .btn {
+      width: 90px;
+    }
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .calendar-header-container {
+    .btn {
+      font-size: 0.8rem;
+      margin: 0 0.25rem;
+      height: 35px;
+      width: 75px;
+    }
+
+    .calendar-date {
+      font-size: 1rem;
+    }
+  }
+}
