@@ -1,4 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { User } from 'src/app/models/user.model';
+import { Subscription } from 'rxjs';
+import {
+  faGraduationCap, faBook, faPlusCircle, faBullhorn, faEdit
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-admin',
@@ -6,12 +14,52 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
+  updateUserDataEventSubscription: Subscription;
+  currentUser: User = <User>{};
+  currentUserLoaded: boolean = false;
 
-  // Admin -> johnd@gmail.com, areardon@sdaacademy.uni -> ID 1, 53
+  onGoingCourses: number;
 
-  constructor() { }
+  showCourses: boolean = false;
 
-  ngOnInit(): void {
+  faBook = faBook;
+  faGraduationCap = faGraduationCap;
+  faPlusCircle = faPlusCircle;
+  faBullhorn = faBullhorn;
+  faEdit = faEdit;
+
+  // Admin -> johnd@gmail.com, mdoran@sdaacademy.uni -> ID 1, 54
+
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) {
+    this.updateUserDataEventSubscription = this.authService.getUpdateUserDataEvent()
+      .subscribe(() => {
+        this.getUserData();
+      })
   }
 
+  ngOnInit(): void {
+    this.getUserData();
+  }
+
+  getUserData(): void {
+    let userId: any = this.activatedRoute.snapshot.paramMap.get('id');
+    this.currentUserLoaded = false;
+
+    this.authService.getUserDatatById(userId).subscribe({
+      next: () => {
+        this.currentUser = this.authService.currentUser;
+        this.currentUserLoaded = true;
+
+        this.onGoingCourses = this.currentUser.user
+          .coursesAssigned.filter((course) => course.endDate < new Date().toLocaleDateString()).length;
+      },
+      error: () => {
+        this.notificationService.showError('Error getting User data, please refresh the page');
+      }
+    });
+  }
+
+  toggleCourses(): void {
+    this.showCourses = !this.showCourses;
+  }
 }

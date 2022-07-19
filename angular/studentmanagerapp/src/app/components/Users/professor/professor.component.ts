@@ -20,9 +20,6 @@ export class ProfessorComponent implements OnInit {
 
   onGoingCourses: number;
 
-  showAttendance: boolean = false;
-  showGrades: boolean = false;
-
   showCourses: boolean = false;
 
   faBook = faBook;
@@ -66,24 +63,7 @@ export class ProfessorComponent implements OnInit {
     });
   }
 
-  toggleAttendance(): void {
-    if (this.showCourses === true) this.showCourses = false;
-    if (this.showGrades === true) this.showGrades = false;
-
-    this.showAttendance = !this.showAttendance;
-  }
-
   toggleCourses(): void {
-    if (this.showAttendance === true) this.showAttendance = false;
-    if (this.showGrades === true) this.showGrades = false;
-
     this.showCourses = !this.showCourses;
-  }
-
-  toggleGrades(): void {
-    if (this.showAttendance === true) this.showAttendance = false;
-    if (this.showCourses === true) this.showCourses = false;
-
-    this.showGrades = !this.showGrades;
   }
 }

@@ -29,7 +29,8 @@ export class StudentAnnouncementListComponent implements OnInit {
         next: (response) => {
           this.announcements = response;
         },
-        error: () => {
+        error: (error) => {
+          console.log(error)
           this.notificationService.showError('Failed to receive Announcements')
         }
       })

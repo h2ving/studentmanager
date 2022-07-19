@@ -95,14 +95,6 @@
       </div>
     </section>
 
-    <section class="section-top-card-info" *ngIf="showGrades">
-      <app-student-grade-table [currentUser]="currentUser.user"></app-student-grade-table>
-    </section>
-
-    <section class="section-top-card-info" *ngIf="showAttendance">
-      <app-student-attendance-table [currentUser]="currentUser.user"></app-student-attendance-table>
-    </section>
-
     <section class="section-top-card-info" *ngIf="showCourses">
       <app-course-table [currentUser]="currentUser.user"></app-course-table>
     </section>

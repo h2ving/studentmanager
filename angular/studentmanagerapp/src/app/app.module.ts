@@ -33,6 +33,7 @@ import { CalendarsModule } from './components/calendar/module';
 import { GradesComponent } from './components/Marks/Grades/grades.component';
 import { AttendancesComponent } from './components/Marks/Attendances/attendances.component';
 import { CoursesComponent } from './components/Courses/courses.component';
+import { ChartsComponent } from './components/charts/charts.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { CoursesComponent } from './components/Courses/courses.component';
     GradesComponent,
     AttendancesComponent,
     CoursesComponent,
+    ChartsComponent,
   ],
   imports: [
     BrowserModule,
