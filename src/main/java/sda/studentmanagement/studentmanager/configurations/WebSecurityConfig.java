@@ -85,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(DELETE, "/api/attendance/**").hasAnyAuthority("Professor", "Admin");
 
         // ANNOUNCEMENT ROUTES
-        http.authorizeRequests().antMatchers(GET, "/api/announcements/user/**").hasAnyAuthority("Student", "Professor");
+        http.authorizeRequests().antMatchers(GET, "/api/announcements/user/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(GET, "/api/announcements/course/**").hasAnyAuthority("Professor", "Admin");
         http.authorizeRequests().antMatchers(PATCH, "/api/announcement").hasAnyAuthority("Professor", "Admin");
 
