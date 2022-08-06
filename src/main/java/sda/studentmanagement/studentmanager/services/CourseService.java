@@ -1,18 +1,26 @@
 package sda.studentmanagement.studentmanager.services;
 
+import org.springframework.data.domain.Page;
 import sda.studentmanagement.studentmanager.domain.Course;
+import sda.studentmanagement.studentmanager.dto.AddCourseFormDto;
+import sda.studentmanagement.studentmanager.projections.CourseDataChartsProjection;
 import sda.studentmanagement.studentmanager.projections.CourseDataProjection;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface CourseService {
     List<Course> getCourses();
 
+    List<CourseDataChartsProjection> getCoursesCharts();
+
+    List<HashMap<Object, Object>> getCourseCountCharts();
+
+    Page<Course> getPaginatedCourses(int pageNumber, int pageSize);
+
     List<Course> getUserCourses(long userId, boolean userCourses);
 
     List<String> getUserCourseNames(long userId);
-
-    // Get Course Users? nono, get course by ID which includes usersAssigned
 
     List<CourseDataProjection> getCoursesData();
 
@@ -22,7 +30,9 @@ public interface CourseService {
 
     void removeUserFromCourse(long userId, long courseId);
 
-    Course saveCourse(Course course);
+    void saveCourse(AddCourseFormDto addCourseForm);
+
+    Course savePopulateCourse(Course course);
 
     Course editCourse(Course course);
 

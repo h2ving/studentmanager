@@ -1,0 +1,188 @@
+$bg-white: #fff;
+$green-color: #5cba3e;
+$red-color: #f71c1c;
+$blue-color: #4c84ff;
+$yellow-color: #fdce07;
+$orange-color: #f5a100;
+
+$blue-text-color: #2a6ee2;
+$blue-border: #eeeff4;
+$blue-shadow: #d8dbe2;
+$light-blue-color: #e2e5ec;
+
+.user-list-component {
+  background-color: $light-blue-color;
+
+  &-container {
+    width: 1400px;
+    background: $bg-white;
+    margin: 0 auto;
+    box-shadow: 0px 6px 13px 16px $blue-shadow;
+
+    .section-top {
+      padding: 1rem;
+    }
+
+    .section-bottom {
+      margin: 1rem;
+
+      h1 {
+        color: $blue-text-color;
+        margin-bottom: 1rem;
+      }
+
+      .users {
+        .user {
+          margin-bottom: 1rem;
+          padding: 0.4rem;
+          border: 2px solid $blue-border;
+          border-radius: 3px;
+
+          h3,
+          p {
+            margin-bottom: 0.2rem;
+          }
+
+          h3 {
+            fa-icon {
+              cursor: pointer;
+              margin-left: 1rem;
+              color: $blue-text-color;
+
+              &:hover {
+                opacity: .5;
+              }
+            }
+          }
+
+          &-name {
+            display: flex;
+            justify-content: space-between;
+
+            fa-icon {
+              cursor: pointer;
+
+              &:first-child {
+                margin-right: 0.5rem;
+                color: $orange-color;
+              }
+
+              &:last-child {
+                color: $red-color;
+              }
+            }
+          }
+
+          &-courses,
+          &-sessions,
+          &-attendances,
+          &-grades {
+            margin: 1rem;
+            padding: 0.3rem;
+            border-bottom: 2px solid $blue-border;
+            border-radius: 3px;
+
+            &.hide {
+              display: none;
+            }
+          }
+
+          &:hover {
+            background-color: rgba($color: $light-blue-color, $alpha: 0.5);
+          }
+        }
+
+        button {
+          cursor: pointer;
+          background-color: $light-blue-color;
+          border: 2px solid $blue-text-color;
+          border-radius: 2px;
+          margin: 0 0.75rem;
+          padding: 0.75rem;
+
+          &:hover {
+            background-color: $bg-white;
+          }
+        }
+
+        .page-current {
+          display: inline;
+        }
+      }
+
+      .btn-back {
+        cursor: pointer;
+        display: block;
+        margin-top: 4rem;
+        padding: 0.6rem 1.3rem;
+        background-color: #fff;
+        border: 2px solid $blue-text-color;
+        letter-spacing: 0.5px;
+        font-size: 1.1rem;
+        transition: transform .16s ease;
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        &:hover {
+          background-color: $light-blue-color;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  .user-list-component {
+    &-container {
+      width: 100%;
+      box-shadow: 0;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .user-list-component {
+    &-container {
+      .section-bottom {
+        .course-users {
+          .user {
+            padding: 0.625rem 0;
+          }
+
+          form {
+            input[type=submit] {
+              width: 100%;
+            }
+          }
+        }
+
+        .btn-back {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .user-list-component {
+    &-container {
+
+      .section-top {
+        padding: 0.5rem;
+      }
+
+      .section-bottom {
+        margin: 0.5rem;
+
+        .session-users {
+          input[type=submit] {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

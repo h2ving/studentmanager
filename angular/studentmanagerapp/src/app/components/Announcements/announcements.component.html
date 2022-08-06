@@ -118,7 +118,7 @@
       <button
         *ngIf="currentUserLoaded"
         class="btn-back"
-        [routerLink]="['/professor/', currentUser.user.id]"
+        [routerLink]="['/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
       >
         Back to Dashboard
       </button>

@@ -43,15 +43,15 @@
     <section class="section-bottom">
       <button
         class="btn-link"
-        [routerLink]="['/marks/grades/professor/', currentUser.user.id]"
+        [routerLink]="['/marks/grades/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
       >
         Grades <fa-icon [icon]="faArrowRight"></fa-icon>
       </button>
 
       <button
         class="btn-link"
-        [routerLink]="['/marks/attendances/professor/', currentUser.user.id]"
-        >
+        [routerLink]="['/marks/attendances/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+      >
         Attendances <fa-icon [icon]="faArrowRight"></fa-icon>
       </button>
 
@@ -223,11 +223,10 @@
       <button
         *ngIf="currentUserLoaded"
         class="btn-back"
-        [routerLink]="['/professor/', currentUser.user.id]"
+        [routerLink]="['/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
       >
         Back to Dashboard
       </button>
-
     </section>
 
     <app-student-announcement-list

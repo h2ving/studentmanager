@@ -1,0 +1,103 @@
+<div class="create-user-component">
+  <div class="create-user-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - User - Create
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Create User</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Remainder - </b>All of the values must be filled in.
+            </li>
+            <li>
+              <b>Remainder - </b>First & Last names are restricted from 2 to 45 characters.
+            </li>
+            <li>
+              <b>Remainder - </b> Email is restricted from 6 to 45 characters.
+            </li>
+            <li>
+              <b>Remainder - </b> Password is restricted from 6 to 255 characters.
+            </li>
+            <li>
+              <b>Remainder - </b> Mobile number is restricted from 5 to 45 digits.
+            </li>
+            <li>
+              <b>Mobile Numbers - </b> Please add a International country calling code to the mobile number
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section *ngIf="currentUserLoaded" class="section-bottom">
+      <h1>Create User</h1>
+
+      <form [formGroup]="createUserForm" (ngSubmit)="submitCreateUser()">
+        <label for="firstName">First Name</label>
+        <input type="text" name="firstName" formControlName="firstName">
+
+        <label for="lastName">Last Name</label>
+        <input type="text" name="lastName" formControlName="lastName">
+
+        <label for="email">Email</label>
+        <input type="email" name="email" formControlName="email">
+
+        <label for="password">Password</label>
+        <input type="password" name="password" formControlName="password">
+
+        <label for="role">Role</label>
+        <select name="role" formControlName="role">
+          <option value="Student">Student</option>
+          <option value="Professor">Professor</option>
+          <option value="Admin">Admin</option>
+        </select>
+
+        <label for="gender">Gender</label>
+        <select name="gender" formControlName="gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" name="dob" formControlName="dob">
+
+        <label for="mobile">Mobile</label>
+        <input type="number" name="mobile" formControlName="mobile">
+
+        <input type="submit" value="Create User">
+      </form>
+
+      <button
+        class="btn-back"
+        [routerLink]="['/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+      >
+        Back to Dashboard
+      </button>
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

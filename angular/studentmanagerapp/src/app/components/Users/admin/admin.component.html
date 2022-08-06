@@ -14,7 +14,7 @@
         <div 
           *ngIf="currentUserLoaded"
           class="card highlight"
-          [routerLink]="['/announcements/professor/', currentUser.user.id]"
+          [routerLink]="['/announcements/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
         >
           <div class="card-info">
             <p>Add an Announcement</p>
@@ -33,7 +33,7 @@
         <div
           *ngIf="currentUserLoaded"
           class="card highlight"
-          [routerLink]="['/marks/professor', currentUser.user.id]"
+          [routerLink]="['/marks/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
         >
           <div class="card-info">
             <p>Mark Grades, Attendances</p>
@@ -50,9 +50,9 @@
         </div>
 
         <div
-        *ngIf="currentUserLoaded"
+          *ngIf="currentUserLoaded"
           class="card highlight"
-          [routerLink]="['/sessions/professor/',currentUser.user.id]"
+          [routerLink]="['/sessions/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
         >
           <div class="card-info">
             <p>Manage Sessions</p>
@@ -93,6 +93,84 @@
           </div>
         </div>
       </div>
+
+      <div class="cards">
+        <div
+          *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/courses/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>View Courses</p>
+          </div>
+
+          <fa-icon [icon]="faBook" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+            </p>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/courses/create/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>Create Course</p>
+          </div>
+
+          <fa-icon [icon]="faEdit" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+            </p>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/users/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>View Users</p>
+          </div>
+
+          <fa-icon [icon]="faUserGraduate" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+            </p>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentUserLoaded"
+          class="card highlight"
+          [routerLink]="['/users/create/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+        >
+          <div class="card-info">
+            <p>Create User</p>
+          </div>
+
+          <fa-icon [icon]="faEdit" class="card-icon"></fa-icon>
+
+          <div class="expand">
+            <p>
+              More info
+              <fa-icon [icon]="faPlusCircle"></fa-icon>
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="section-top-card-info" *ngIf="showCourses">
@@ -101,29 +179,19 @@
 
     <p>-- Cards</p>
 <p>  -- Courses</p>
-<p>    -- Create new Course</p>
 <p>    -- List of Paginated Courses</p>
 <p>      -- Course</p>
 <p>        -- All Information(Sessions, Users, Grades, Attendances) (Paginated?)</p>
-<p>        -- Edit Course</p>
-<p>        -- Delete Course</p>
 <p>  -- Users</p>
 <p>    -- List of Paginated Users</p>
 <p>      -- User</p>
 <p>        -- User data(AVG grade, AVG attendance, profile info, joined Courses)</p>
-<p>    -- Create new User (Role)</p>
-<p>  -- N/A? Professor View</p>
-<p>  -- N/A? Student View</p>
+
+
 <p>-- Courses</p>
 <p>-- Create new Course</p>
 <p>-- Users</p>
 <p>-- Create new Users</p>
-<p>-- Charts</p>
-<p>  -- Number of Users in different Courses</p>
-<p>  -- Attendance in Courses</p>
-<p>  -- Average Grade in Courses</p>
-<p>  -- Number of Professors/students/Admins</p>
-<p>  -- Number of Courses (Ongoing, Finished)</p>
 
     <section class="section-middle">
       <div class="profile-left">
@@ -142,6 +210,8 @@
         ></app-session-list>
       </div>
     </section>
+
+    <app-charts></app-charts>
 
       <app-student-announcement-list
         *ngIf="currentUserLoaded"

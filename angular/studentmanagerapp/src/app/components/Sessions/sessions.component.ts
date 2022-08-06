@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -27,10 +27,10 @@ export class SessionsComponent implements OnInit {
   courseSessions: Array<Session>;
   editSessionId: number | null;
 
-  editSessionForm: FormGroup;
-  addSessionForm: FormGroup;
+  editSessionForm: UntypedFormGroup;
+  addSessionForm: UntypedFormGroup;
 
-  constructor(private authService: AuthService, private sessionService: SessionService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
+  constructor(private authService: AuthService, private sessionService: SessionService, private formBuilder: UntypedFormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => this.currentUserId = params['id']);

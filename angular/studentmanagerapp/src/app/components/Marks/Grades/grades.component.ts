@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { GradeService } from 'src/app/services/grade.service';
@@ -27,9 +27,9 @@ export class GradesComponent implements OnInit {
   sessionUsers: Array<UserDataInterface> | null;
   sessionId: number;
 
-  addGradesForm: FormGroup;
+  addGradesForm: UntypedFormGroup;
 
-  constructor(private authService: AuthService, private gradeService: GradeService, private sessionsService: SessionService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
+  constructor(private authService: AuthService, private gradeService: GradeService, private sessionsService: SessionService, private formBuilder: UntypedFormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => this.currentUserId = params['id']);
@@ -65,11 +65,11 @@ export class GradesComponent implements OnInit {
     });
   }
 
-  get grades(): FormArray {
-    return this.addGradesForm.get('grades') as FormArray;
+  get grades(): UntypedFormArray {
+    return this.addGradesForm.get('grades') as UntypedFormArray;
   }
 
-  newGrade(userId: number, grade: number): FormGroup {
+  newGrade(userId: number, grade: number): UntypedFormGroup {
     return this.formBuilder.group({
       userId,
       grade,

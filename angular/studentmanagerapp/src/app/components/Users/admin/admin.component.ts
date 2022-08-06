@@ -5,7 +5,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 import { User } from 'src/app/models/user.model';
 import { Subscription } from 'rxjs';
 import {
-  faGraduationCap, faBook, faPlusCircle, faBullhorn, faEdit
+  faGraduationCap, faBook, faPlusCircle, faBullhorn, faEdit, faUserGraduate
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -27,6 +27,7 @@ export class AdminComponent implements OnInit {
   faPlusCircle = faPlusCircle;
   faBullhorn = faBullhorn;
   faEdit = faEdit;
+  faUserGraduate = faUserGraduate;
 
   // Admin -> johnd@gmail.com, mdoran@sdaacademy.uni -> ID 1, 54
 

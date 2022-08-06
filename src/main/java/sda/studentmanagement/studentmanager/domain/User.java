@@ -3,6 +3,7 @@ package sda.studentmanagement.studentmanager.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -10,10 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import sda.studentmanagement.studentmanager.dto.CourseDTO;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -49,7 +47,7 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(min = 6, max = 255)
+    @Size(min = 6, max = 255, message = "Password must be at least 6 characters")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -58,11 +56,12 @@ public class User {
     @NotBlank(message = "Gender cannot be empty")
     private String gender;
 
+    @NotNull(message = "Date of Birth can't be empty")
     @Past(message = "Invalid Date of Birth")
     private LocalDate DOB;
 
-    @Size(max = 45, message = "Mobile number cannot exceed 45 digits")
-    @Size(min = 5, message = "Mobile number must be at least 5 digits")
+    @NotBlank(message = "Mobile number can't be empty")
+    @Size(min = 5, max = 45, message = "Mobile number must be at least 5 digits and can't exceed 45 digits")
     private String mobile;
 
     @Transient
@@ -71,7 +70,7 @@ public class User {
         return age.getYears();
     }
 
-    @CreatedDate
+    @CreationTimestamp
     private final LocalDate createdAt = LocalDate.now();
 
     @LastModifiedDate

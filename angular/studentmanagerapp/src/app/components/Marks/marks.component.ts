@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { AttendanceService } from 'src/app/services/attendance.service';
@@ -42,10 +42,10 @@ export class MarksComponent implements OnInit {
   editGradeId: number | null;
   editAttendanceId: number | null;
 
-  editGradeForm: FormGroup;
-  editAttendanceForm: FormGroup;
+  editGradeForm: UntypedFormGroup;
+  editAttendanceForm: UntypedFormGroup;
 
-  constructor(private authService: AuthService, private attendanceService: AttendanceService, private gradeService: GradeService, private courseService: CourseService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
+  constructor(private authService: AuthService, private attendanceService: AttendanceService, private gradeService: GradeService, private courseService: CourseService, private formBuilder: UntypedFormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => this.currentUserId = params['id']);
@@ -254,7 +254,7 @@ export class MarksComponent implements OnInit {
   }
 
   submitDeleteAttendance(attendanceId: number) {
-    if (confirm("Conformation. Are you sure you want to delete id?")) {
+    if (confirm("Conformation. Are you sure you want to delete it?")) {
       this.attendanceService.deleteAttendance(attendanceId)
         .subscribe({
           next: (response) => {

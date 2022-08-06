@@ -1,0 +1,157 @@
+<div class="user-list-component">
+  <div class="user-list-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Users
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-bottom">
+      <h1>View Users ({{ totalUsers }})</h1>
+
+      <div class="users" *ngIf="currentUserLoaded && users">
+        <div class="user" *ngFor="let user of users">
+          <h1 class="user-name">
+            <div>{{ user.firstName }} {{ user.lastName }}, {{ user.roles[0].name }}</div>
+
+            <div>
+              <fa-icon [icon]="faEdit" [routerLink]="['/users/edit/', user.id, currentUser.user.role.toLowerCase(), currentUserId]"></fa-icon>
+              <fa-icon [icon]="faTrash" (click)="submitDeleteUser(user.id)"></fa-icon>
+            </div>
+          </h1>
+
+          <h3>{{ user.email }}</h3>
+
+          <h3>{{ user.dob | date }} - {{ user.age }}y</h3>
+
+          <h3>{{ user.mobile }}</h3>
+
+          <br>
+
+          <h3>Created: {{ user.createdAt | date }}</h3>
+
+          <h3>Last updated: {{ user.updatedAt | date }}</h3>
+
+          <br>
+
+          <h3>
+            Courses: {{ user.coursesAssigned.length }}
+
+            <fa-icon [icon]="faGraduationCap" (click)="toggleCoursesAssigned(user.id)"></fa-icon>
+          </h3>
+          <div
+            [ngClass]="[userCoursesAssignedUserId === user.id ? 'user-courses' : 'user-courses hide']"
+            *ngFor="let course of user.coursesAssigned"
+          >
+            <p>{{ course.name }}</p>
+          </div>
+
+          <h3>
+            Marked attendances: {{ userAttendancesCount }}
+
+            <fa-icon [icon]="faBook" (click)="toggleUserAttendances(user.id)"></fa-icon>
+          </h3>
+          <div *ngIf="userAttendances && userAttendancesUserId === user.id">
+            <div
+              [ngClass]="[userAttendancesUserId === user.id ? 'user-attendances' : 'user-attendances hide']"
+              *ngFor="let attendance of userAttendances"
+            >
+              <p>
+                <b>{{ attendance.session.description }}</b> {{ attendance.didAttend ?'Present &#9989;' : 'Absent &#10060;' }}
+              </p>
+            </div>
+
+            <h1>Page</h1>
+            <button 
+              *ngIf="userAttendancesFirstPage !== true"
+              (click)="switchUserAttendancesPage(userAttendancesPageNumber - 1)"
+            >
+              {{ userAttendancesPageNumber - 1 }}
+            </button>
+    
+            <h1 class="page-current" *ngIf="userAttendancesPageNumber !== 0">{{ userAttendancesPageNumber }}</h1>
+    
+            <button
+              *ngIf="userAttendancesLastPage !== true"
+              (click)="switchUserAttendancesPage(userAttendancesPageNumber + 1)"
+            >
+              {{ userAttendancesPageNumber + 1 }}
+            </button>
+          </div>
+
+          <h3>
+            Grades
+
+            <fa-icon [icon]="faBook" (click)="toggleUserGrades(user.id)"></fa-icon>
+          </h3>
+          <div *ngIf="userGrades && userGradesUserId === user.id">
+            <div
+              [ngClass]="[userGradesUserId === user.id ? 'user-grades' : 'user-grades hide']"
+              *ngFor="let grade of userGrades"
+            >
+            <p>
+              {{ grade.session.description }} / <b>{{ grade.grade }}</b>
+            </p>
+            </div>
+
+            <h1>Page</h1>
+            <button
+              *ngIf="userGradesFirstPage !== true"
+              (click)="switchUserGradesPage(userGradesPageNumber - 1)"
+            >
+              {{ userGradesPageNumber - 1 }}
+            </button>
+    
+            <h1 class="page-current" *ngIf="userGradesPageNumber !== 0">{{ userGradesPageNumber }}</h1>
+    
+            <button
+              *ngIf="userGradesLastPage !== true"
+              (click)="switchUserGradesPage(userGradesPageNumber + 1)"
+            >
+              {{ userGradesPageNumber + 1 }}
+            </button>
+          </div>
+        </div>
+
+        <h1>Page</h1>
+        <button 
+          *ngIf="firstPage !== true"
+          (click)="switchPage(pageNumber - 1)"
+        >
+          {{ pageNumber - 1 }}
+        </button>
+
+        <h1 class="page-current" *ngIf="pageNumber !== 0">{{ pageNumber }}</h1>
+
+        <button
+          *ngIf="lastPage !== true"
+          (click)="switchPage(pageNumber + 1)"
+        >
+          {{ pageNumber + 1 }}
+        </button>
+      </div>
+
+      <button
+        *ngIf="currentUserLoaded"
+        class="btn-back"
+        [routerLink]="['/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+      >
+        Back to Dashboard
+      </button>
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

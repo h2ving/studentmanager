@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormArray } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { AttendanceService } from 'src/app/services/attendance.service';
@@ -26,9 +26,9 @@ export class AttendancesComponent implements OnInit {
   sessionUsers: Array<UserDataInterface> | null;
   sessionId: number;
 
-  addAttendancesForm: FormGroup;
+  addAttendancesForm: UntypedFormGroup;
 
-  constructor(private authService: AuthService, private attendanceService: AttendanceService, private sessionsService: SessionService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
+  constructor(private authService: AuthService, private attendanceService: AttendanceService, private sessionsService: SessionService, private formBuilder: UntypedFormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => this.currentUserId = params['id']);
@@ -64,11 +64,11 @@ export class AttendancesComponent implements OnInit {
     });
   }
 
-  get attendances(): FormArray {
-    return this.addAttendancesForm.get('attendances') as FormArray;
+  get attendances(): UntypedFormArray {
+    return this.addAttendancesForm.get('attendances') as UntypedFormArray;
   }
 
-  newAttendace(userId: number, attendance: boolean): FormGroup {
+  newAttendace(userId: number, attendance: boolean): UntypedFormGroup {
     return this.formBuilder.group({
       userId,
       attendance,

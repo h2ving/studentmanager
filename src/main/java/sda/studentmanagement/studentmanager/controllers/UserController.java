@@ -7,13 +7,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sda.studentmanagement.studentmanager.domain.Role;
 import sda.studentmanagement.studentmanager.domain.User;
+import sda.studentmanagement.studentmanager.dto.AddUserFormDto;
 import sda.studentmanagement.studentmanager.dto.EditUserFormDto;
 import sda.studentmanagement.studentmanager.dto.ResetUserPasswordFormDto;
 import sda.studentmanagement.studentmanager.dto.RoleToUserFormDto;
@@ -28,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +51,26 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
+    }
+
+    /**
+     * @Route GET /api/users/paginated
+     * @Desc Get all Users, Paginated
+     * @Access
+     */
+    @GetMapping("/users/paginated")
+    public ResponseEntity<Page<User>> getPaginatedUsers(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize) {
+        return ResponseEntity.ok(userService.getPaginatedUsers(pageNumber, pageSize));
+    }
+
+    /**
+     * @Route GET /api/users/data/charts
+     * @Desc Get all Users count for charts
+     * @Access
+     */
+    @GetMapping("/users/data/charts")
+    public ResponseEntity<List<HashMap<Object, Object>>> getUsersCountCharts() {
+        return ResponseEntity.ok(userService.getUsersCountCharts());
     }
 
     /**
@@ -129,14 +149,29 @@ public class UserController {
      * @Access
      */
     @PostMapping("/user")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
-        URI uri = URI.create(
-                ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user").toUriString()
-        );
+    public ResponseEntity<?> saveUser(@RequestBody AddUserFormDto addUserForm) {
+        try {
+            userService.saveUser(addUserForm);
 
-        System.out.println("URI = " + uri);
+            return new ResponseEntity<>(
+                    "User created Successfully.", new HttpHeaders(), HttpStatus.CREATED
+            );
+        } catch(EntityNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(
+              e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        } catch (ConstraintViolationException e) {
+            Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
 
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
+            StringBuilder builder = new StringBuilder();
+            violations.forEach(violation -> builder.append("- ").append(violation.getMessage()).append("</br>"));
+
+            String errorMessage = builder.toString();
+
+            return new ResponseEntity<>(
+                    errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -180,7 +215,7 @@ public class UserController {
      * @Access
      */
     @PostMapping("/user/spawn")
-    public ResponseEntity<User> spawnUser() {
+    public ResponseEntity<?> spawnUser() {
         boolean created = false;
         User user;
 
@@ -199,7 +234,7 @@ public class UserController {
             log.info("User {} generated", user.getEmail());
 
             if (userService.getUser(user.getEmail()) == null) {
-                userService.saveUser(user);
+                userService.savePopulateUser(user);
                 userService.addRoleToUser(user.getEmail(), role.getRoleName());
 
                 created = true;
@@ -209,7 +244,7 @@ public class UserController {
         }
         while(!created);
 
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body("User created Successfully");
     }
 
     /**

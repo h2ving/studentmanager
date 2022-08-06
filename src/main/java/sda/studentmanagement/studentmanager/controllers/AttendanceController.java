@@ -36,6 +36,16 @@ public class AttendanceController {
     }
 
     /**
+     * @Route GET /api/attendances/charts
+     * @Desc Get Attendances percentages for charts
+     * @Access
+     */
+    @GetMapping("/attendances/charts")
+    public ResponseEntity<List<HashMap<Object, Object>>> getCourseAttendancesChart() {
+        return ResponseEntity.ok(attendanceService.getCourseAttendancesChart());
+    }
+
+    /**
      * @Route GET /api/attendances/user/{userId}
      * @Desc Gets all User Attendances & list of Course names User is included
      * @Access
@@ -58,6 +68,16 @@ public class AttendanceController {
     }
 
     /**
+     * @Route GET /api/attendances/user/{userId}/paginated
+     * @Desc Get All User Attendances, Paginated
+     * @Access
+     */
+    @GetMapping("/attendances/user/{userId}/paginated")
+    public ResponseEntity<Page<Attendance>> getUserAttendances(@PathVariable("userId") long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(attendanceService.getUserAttendances(userId, pageNumber, pageSize));
+    }
+
+    /**
      * @Route GET /api/attendances/session/{sessionId}
      * @Desc Get All Attendances of one Session
      * @Access
@@ -65,6 +85,16 @@ public class AttendanceController {
     @GetMapping("/attendances/session/{sessionId}")
     public ResponseEntity<List<Attendance>> getSessionAttendances(@PathVariable("sessionId") long sessionId) {
         return ResponseEntity.ok(attendanceService.getSessionAttendances(sessionId));
+    }
+
+    /**
+     * @Route GET /api/course/{courseId}/attendances
+     * @Desc Get All Course Attendances, Paginated
+     * @Access Professor, Admin
+     */
+    @GetMapping("/course/{courseId}/attendances")
+    public ResponseEntity<Page<Attendance>> getCourseAttendances(@PathVariable("courseId") long courseId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(attendanceService.getCourseAttendances(courseId,pageNumber, pageSize));
     }
 
     /**
@@ -126,10 +156,10 @@ public class AttendanceController {
     public ResponseEntity<?> editAttendance(@PathVariable("attendanceId") long attendanceId, @RequestBody EditAttendanceFormDto attendanceForm) {
         try {
             Attendance attendance = attendanceService.editAttendance(attendanceId, attendanceForm);
-
             return new ResponseEntity<>(
                     attendance, new HttpHeaders(), HttpStatus.OK
             );
+
         } catch (EntityNotFoundException | IllegalArgumentException e) {
             return new ResponseEntity<>(
                     e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST

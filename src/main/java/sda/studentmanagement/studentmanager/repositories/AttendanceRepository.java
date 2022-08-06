@@ -16,6 +16,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     Attendance findById(long attendanceId);
 
+    @Query(value = """
+            select *\s
+            from attendance a\s
+            where a.user_id like %?1%""",
+    countQuery = """
+            select count(*)\s
+            from attendance a\s
+            where a.user_id like %?1%""", nativeQuery = true)
+    Page<Attendance> getUserAttendancesPaginatedByUserId(long userId, Pageable pageable);
+
     @Query(value = "select * from attendance a \n" +
             "where a.user_id like %?1% \n" +
             "and a.session_id like %?2%", nativeQuery = true)
@@ -27,4 +37,18 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
             "group by a.did_attend\n" +
             "limit 1;", nativeQuery = true)
     Number getAverageAttendanceByUser(long attendanceId);
+
+    @Query(value = """
+            select *\s
+            from attendance a\s
+            join `session` s\s
+            on a.session_id = s.id\s
+            where s.course_id like %?1%""",
+            countQuery = """
+                    select count(*)\s
+                    from attendance a\s
+                    join `session` s\s
+                    on a.session_id = s.id\s
+                    where s.course_id like %?1%""", nativeQuery = true)
+    Page<Attendance> getCourseAttendancesByCourseId(long courseId, Pageable pageable);
 }

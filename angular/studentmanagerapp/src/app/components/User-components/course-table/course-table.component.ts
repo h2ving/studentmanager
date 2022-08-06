@@ -46,6 +46,7 @@ export class CourseTableComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.courses = response;
+          console.log(response)
         },
         error: () => {
           this.notificationService.showError('Failed to receive courses.');

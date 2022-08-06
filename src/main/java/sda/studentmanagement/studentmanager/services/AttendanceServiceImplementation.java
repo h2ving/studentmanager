@@ -20,9 +20,8 @@ import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +36,46 @@ public class AttendanceServiceImplementation implements AttendanceService {
     @Override
     public List<Attendance> getAttendances() {
         return attendanceRepository.findAll();
+    }
+
+    @Override
+    public List<HashMap<Object, Object>> getCourseAttendancesChart() {
+        List<Attendance> attendances = getAttendances();
+        List<String> courseNames = new ArrayList<>();
+
+        for (Attendance attendance : attendances) {
+            String courseName = attendance.getSession().getCourse().getName();
+
+            if (!courseNames.contains(courseName)) {
+                courseNames.add(courseName);
+            }
+        }
+
+        List<HashMap<Object, Object>> courseAttendances = new ArrayList<>();
+
+        for (String courseName : courseNames) {
+            List<Attendance> attendanceList = attendances.stream()
+                    .filter(attendance -> attendance.getSession().getCourse().getName().equals(courseName))
+                    .collect(Collectors.toList());
+
+            final float totalAttendances = attendanceList.size();
+            float attendedSessions = 0;
+
+            for (Attendance attendance : attendanceList) {
+                if (attendance.isDidAttend()) {
+                    attendedSessions++;
+                }
+            }
+
+            int attendancePercentage = Math.round((attendedSessions / totalAttendances) * 100);
+
+            courseAttendances.add(new HashMap<>(){{
+                put("name", courseName);
+                put("value", attendancePercentage);
+            }});
+        }
+
+        return courseAttendances;
     }
 
     @Override
@@ -76,6 +115,13 @@ public class AttendanceServiceImplementation implements AttendanceService {
     }
 
     @Override
+    public Page<Attendance> getUserAttendances(long userId, int pageNumber, int pageSize) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+
+        return attendanceRepository.getUserAttendancesPaginatedByUserId(userId, paging);
+    }
+
+    @Override
     public List<Attendance> getSessionAttendances(long sessionId) {
         Session session = sessionRepository.findById(sessionId);
         List<Attendance> sessionAttendances = new ArrayList<>();
@@ -91,6 +137,13 @@ public class AttendanceServiceImplementation implements AttendanceService {
         } else {
             throw new EntityNotFoundException("Cannot find Session's Attendances");
         }
+    }
+
+    @Override
+    public Page<Attendance> getCourseAttendances(long courseId, int pageNumber, int pageSize) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+
+        return attendanceRepository.getCourseAttendancesByCourseId(courseId, paging);
     }
 
     @Override

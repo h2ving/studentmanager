@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { UserDataInterface } from 'src/app/interfaces/user-data-interface';
 import { faEdit, faArrowCircleLeft, faKey } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth.service';
@@ -16,10 +16,10 @@ export class ProfileInformationComponent implements OnInit {
   faArrowCircleLeft = faArrowCircleLeft;
   userAction: string = 'View';
   @Input() currentUser: UserDataInterface;
-  editUserForm: FormGroup;
-  resetUserPasswordForm: FormGroup;
+  editUserForm: UntypedFormGroup;
+  resetUserPasswordForm: UntypedFormGroup;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, public notificationService: NotificationService) { }
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.createEditUserForm();

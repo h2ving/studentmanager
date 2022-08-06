@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, retry } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Grade } from '../models/grade.model';
+import { ChartsInterface } from '../interfaces/charts-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,34 @@ export class GradeService {
     const url: string = `${this.apiUrl}/grades/user/${userId}`;
 
     return this.http.get<Grade[]>(url, { headers: this.headers });
+  }
+
+  getUserGradesPaginated(userId: number, pageNumber: number, pageSize: number): Observable<Grade[]> {
+    const url: string = `${this.apiUrl}/grades/user/${userId}/paginated`;
+
+    return this.http.get<Grade[]>(url, {
+      headers: this.headers, params: {
+        pageNumber,
+        pageSize,
+      }
+    });
+  }
+
+  getCourseAverageGradesChart(): Observable<ChartsInterface> {
+    const url: string = `${this.apiUrl}/grades/averages/chart`;
+
+    return this.http.get<ChartsInterface>(url, { headers: this.headers });
+  }
+
+  getCourseGrades(courseId: number, pageNumber: number, pageSize: number): Observable<Grade[]> {
+    const url: string = `${this.apiUrl}/course/${courseId}/grades`;
+
+    return this.http.get<Grade[]>(url, {
+      headers: this.headers, params: {
+        pageNumber,
+        pageSize,
+      }
+    });
   }
 
   getUserCourseGrades(userId: number, courseId: number): Observable<Grade[]> {

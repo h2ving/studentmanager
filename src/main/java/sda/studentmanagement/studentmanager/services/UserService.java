@@ -1,5 +1,7 @@
 package sda.studentmanagement.studentmanager.services;
 
+import org.springframework.data.domain.Page;
+import sda.studentmanagement.studentmanager.dto.AddUserFormDto;
 import sda.studentmanagement.studentmanager.dto.EditUserFormDto;
 import sda.studentmanagement.studentmanager.dto.ResetUserPasswordFormDto;
 import sda.studentmanagement.studentmanager.projections.UserDataProjection;
@@ -13,6 +15,10 @@ import java.util.List;
 public interface UserService {
     List<User> getUsers();
 
+    Page<User> getPaginatedUsers(int pageNumber, int pageSize);
+
+    List<HashMap<Object, Object>> getUsersCountCharts();
+
     List<UserDataProjection> getUsersData();
 
     User getUser(long userId);
@@ -25,7 +31,9 @@ public interface UserService {
 
     void resetUserPassword(long userId, ResetUserPasswordFormDto userForm);
 
-    User saveUser(User user);
+    void saveUser(AddUserFormDto addUserForm);
+
+    User savePopulateUser(User user);
 
     UserDataProjection editUser(EditUserFormDto userForm) throws ConstraintViolationException;
 

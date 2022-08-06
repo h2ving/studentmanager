@@ -2,6 +2,9 @@ package sda.studentmanagement.studentmanager.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sda.studentmanagement.studentmanager.domain.Course;
@@ -17,9 +20,9 @@ import sda.studentmanagement.studentmanager.repositories.UserRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,41 @@ public class GradeServiceImplementation implements GradeService {
     @Override
     public List<Grade> getGrades() {
         return gradeRepository.findAll();
+    }
+
+    @Override
+    public List<HashMap<Object, Object>> getCourseAverageGradesChart() {
+        List<Grade> grades = getGrades();
+        List<String> courseNames = new ArrayList<>();
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        for (Grade grade : grades) {
+            String courseName = grade.getSession().getCourse().getName();
+
+            if (!courseNames.contains(courseName)) {
+                courseNames.add(courseName);
+            }
+        }
+
+        List<HashMap<Object, Object>> courseGrades = new ArrayList<>();
+
+        for (String courseName : courseNames) {
+            List<Grade> gradeList = grades.stream()
+                    .filter(grade -> grade.getSession().getCourse().getName().equals(courseName))
+                    .collect(Collectors.toList());
+
+            Double average = gradeList.stream()
+                    .mapToDouble(Grade::getGrade)
+                    .average()
+                    .orElse(0);
+
+            courseGrades.add(new HashMap<>(){{
+                put("name", courseName);
+                put("value", df.format(average));
+            }});
+        }
+
+        return courseGrades;
     }
 
     @Override
@@ -55,6 +93,13 @@ public class GradeServiceImplementation implements GradeService {
     }
 
     @Override
+    public Page<Grade> getUserGrades(long userId, int pageNumber, int pageSize) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+
+        return gradeRepository.getUserGradesByUserId(userId, paging);
+    }
+
+    @Override
     public List<Grade> getSessionGrades(long sessionId) {
         Session session = sessionRepository.findById(sessionId);
         List<Grade> sessionGrades = new ArrayList<>();
@@ -70,6 +115,13 @@ public class GradeServiceImplementation implements GradeService {
         } else {
             throw new EntityNotFoundException("Invalid Session ID");
         }
+    }
+
+    @Override
+    public Page<Grade> getCourseGrades(long courseId, int pageNumber, int pageSize) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize);
+
+        return gradeRepository.getCourseGradesByCourseId(courseId, paging);
     }
 
     @Override

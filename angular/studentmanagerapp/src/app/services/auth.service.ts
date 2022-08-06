@@ -7,6 +7,7 @@ import { User } from '../models/user.model';
 import { NotificationService } from './notification.service';
 import { UserDataInterface } from '../interfaces/user-data-interface';
 import { ResetUserPasswordInterface } from '../interfaces/reset-user-password-interface';
+import { ChartsInterface } from '../interfaces/charts-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,24 @@ export class AuthService {
       });
   }
 
+  getUsersCharts(): Observable<ChartsInterface> {
+    const url: string = `${this.apiUrl}/users/data/charts`;
+
+    return this.http.get<ChartsInterface>(url, { headers: this.jsonHeaders });
+  }
+
+  getPaginatedUsers(pageNumber: number, pageSize: number): Observable<User> {
+    const url: string = `${this.apiUrl}/users/paginated`;
+
+    return this.http.get<User>(url, {
+      headers: this.jsonHeaders, params: {
+        pageNumber,
+        pageSize,
+      }
+    }
+    );
+  }
+
   getUserDatatById(userId: number): Observable<User | Error> {
     const url: string = `${this.apiUrl}/user/data/${userId}`;
 
@@ -69,6 +88,18 @@ export class AuthService {
 
         catchError(this.handleError)
       );
+  }
+
+  getUser(userId: number): Observable<UserDataInterface> {
+    const url: string = `${this.apiUrl}/user/${userId}`;
+
+    return this.http.get<UserDataInterface>(url, { headers: this.jsonHeaders });
+  }
+
+  saveUser(body: Object): Observable<string> {
+    const url: string = `${this.apiUrl}/user`;
+
+    return this.http.post(url, body, { responseType: 'text' });
   }
 
   editUser(user: UserDataInterface): Observable<User> {

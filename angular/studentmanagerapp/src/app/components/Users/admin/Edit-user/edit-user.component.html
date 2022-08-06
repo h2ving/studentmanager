@@ -1,0 +1,98 @@
+<div class="edit-user-component">
+  <div class="edit-user-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Courses - Edit
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Edit User</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Remainder - </b>All of the fields must be filled out.
+            </li>
+            <li>
+              <b>Remainder - </b>User first & last name is restrited from 2 to 45 characters.
+            </li>
+            <li>
+              <b>Remainder - </b>User Email is restricted from 6 to 45 characters.
+            </li>
+            <li>
+              <b>Remainder - </b>Password must be atleast at least 6 characters.
+            </li>
+            <li>
+              <b>Remainder - </b>Mobile number is restricted from 5 to 45 digits.
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section *ngIf="currentUserLoaded && user" class="section-bottom">
+      <h1>Edit User</h1>
+      <h2>{{ '' }}</h2>
+
+      <form [formGroup]="editUserForm" (ngSubmit)="submitEditUser(user.id)">
+        <label for="firstName">First Name</label>
+        <input type="text" name="firstName" formControlName="firstName">
+
+        <label for="lastName">Last Name</label>
+        <input type="text" name="lastName" formControlName="lastName">
+
+        <label for="email">Email</label>
+        <input type="email" name="email" formControlName="email">
+
+        <label for="role">Role</label>
+        <select name="role" formControlName="role">
+          <option value="Student">Student</option>
+          <option value="Professor">Professor</option>
+          <option value="Admin">Admin</option>
+        </select>
+
+        <label for="gender">Gender</label>
+        <select name="gender" formControlName="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" name="dob" formControlName="dob">
+
+        <label for="mobile">Mobile</label>
+        <input type="text" name="mobile" formControlName="mobile">
+
+        <input type="submit" value="Edit User">
+      </form>
+
+      <button
+        class="btn-back"
+        [routerLink]="['/users/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+      >
+        Back to Users Dashboard
+      </button>
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

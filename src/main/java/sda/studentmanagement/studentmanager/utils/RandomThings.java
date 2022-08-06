@@ -202,6 +202,7 @@ public class RandomThings {
         user.setGender(userGender.getGenderName());
         user.setDOB(RandomThings.getDOB(userRole));
         user.setMobile(RandomThings.getPhoneNumber());
+        user.setCourses(new ArrayList<>());
 
         return user;
     }

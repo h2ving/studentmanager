@@ -1,0 +1,82 @@
+<div class="create-course-component">
+  <div class="create-course-component-container">
+    <app-header
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-header>
+
+    <section class="section-top">
+      <div class="breadcrumb">
+        <h5 *ngIf="currentUserLoaded">
+          Home - {{ currentUser.user.role }} - Course - Create
+        </h5>
+      </div>
+    </section>
+
+    <section class="section-middle">
+      <h1>Create Course</h1>
+
+      <div class="info">
+        <div>
+          <h2>Good to know</h2>
+  
+          <ul>
+            <li>
+              <b>Remainder - </b>Course Name is restricted with 100 characters and can't be empty.
+            </li>
+            <li>
+              <b>Remainder - </b>Course Description can't be empty. Please add a detailed description about the Course.
+            </li>
+            <li>
+              <b>Remainder - </b> Course duration is in academic hours.
+            </li>
+          </ul>
+        </div>
+
+        <fa-icon [icon]="faLightbulb"></fa-icon>
+      </div>
+    </section>
+
+    <section *ngIf="currentUserLoaded" class="section-bottom">
+      <h1>Create Course</h1>
+
+      <form [formGroup]="createCourseForm" (ngSubmit)="submitCreateCourse()">
+        <label for="name">Name</label>
+        <input type="text" name="name" formControlName="name">
+
+        <label for="description">Description</label>
+        <textarea name="description" cols="60" rows="10" formControlName="description"></textarea>
+
+        <label for="startDate">Start Date</label>
+        <input type="date" name="startDate" formControlName="startDate">
+
+        <label for="endDate">End Date</label>
+        <input type="date" name="endDate" formControlName="endDate">
+
+        <label for="academicHours">Duration</label>
+        <input type="number" name="academicHours" formControlName="academicHours">
+
+        <div class="input-inline">
+          <label for="remote">Remote</label>
+          <input type="checkbox" name="remote" formControlName="remote">
+        </div>
+
+        <input type="submit" value="Create Course">
+      </form>
+
+      <button
+        class="btn-back"
+        [routerLink]="['/', currentUser.user.role.toLowerCase(), currentUser.user.id]"
+      >
+        Back to Dashboard
+      </button>
+    </section>
+
+    <app-student-announcement-list
+      *ngIf="currentUserLoaded"
+      [currentUser]="currentUser.user"
+    ></app-student-announcement-list>
+
+    <app-footer></app-footer>
+  </div>
+</div>

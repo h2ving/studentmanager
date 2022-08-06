@@ -2,18 +2,23 @@ package sda.studentmanagement.studentmanager.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sda.studentmanagement.studentmanager.domain.Course;
+import sda.studentmanagement.studentmanager.dto.AddCourseFormDto;
 import sda.studentmanagement.studentmanager.dto.UserToCourseFormDto;
+import sda.studentmanagement.studentmanager.projections.CourseDataChartsProjection;
 import sda.studentmanagement.studentmanager.projections.CourseDataProjection;
 import sda.studentmanagement.studentmanager.services.*;
 import sda.studentmanagement.studentmanager.utils.RandomThings;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.*;
 
 @RestController
@@ -32,6 +37,36 @@ public class CourseController {
     @GetMapping("/courses")
     public ResponseEntity<List<Course>> getCourses() {
         return ResponseEntity.ok(courseService.getCourses());
+    }
+
+    /**
+     * @Route GET /api/courses/data/charts
+     * @Desc Get all Courses data using CourseDataChartsProjection
+     * @Access
+     */
+    @GetMapping("/courses/data/charts")
+    public ResponseEntity<List<CourseDataChartsProjection>> getCoursesCharts() {
+        return ResponseEntity.ok(courseService.getCoursesCharts());
+    }
+
+    /**
+     * @Route GET /api/courses/paginated
+     * @Desc Get all Courses, paginated
+     * @Access
+     */
+    @GetMapping("/courses/paginated")
+    public ResponseEntity<Page<Course>> getPaginatedCourses(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(courseService.getPaginatedCourses(pageNumber, pageSize));
+    }
+
+    /**
+     * @Route GET /api/courses/count/charts
+     * @Desc Get all Courses count
+     * @Access
+     */
+    @GetMapping("/courses/count/charts")
+    public ResponseEntity<List<HashMap<Object, Object>>> getCourseCountCharts() {
+        return ResponseEntity.ok(courseService.getCourseCountCharts());
     }
 
     /**
@@ -130,8 +165,29 @@ public class CourseController {
      * @Access
      */
     @PostMapping("/course")
-    public ResponseEntity<Course> saveCourse(@RequestBody Course course) {
-        return ResponseEntity.ok(courseService.saveCourse(course));
+    public ResponseEntity<?> saveCourse(@RequestBody AddCourseFormDto addCourseForm) {
+        try {
+            courseService.saveCourse(addCourseForm);
+
+            return new ResponseEntity<>(
+                    "Course created successfully", new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND
+            );
+        } catch (ConstraintViolationException e) {
+            Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+
+            StringBuilder builder = new StringBuilder();
+            violations.forEach(violation -> builder.append("- ").append(violation.getMessage()).append("</br>"));
+
+            String errorMessage = builder.toString();
+
+            return new ResponseEntity<>(
+                    errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -141,9 +197,17 @@ public class CourseController {
      */
     @PutMapping("/course/{courseId}")
     public ResponseEntity<?> editCourse(@PathVariable("courseId") long courseId, @RequestBody Course course) {
-        // Todo
+        try {
+            courseService.editCourse(course);
 
-        return null;
+            return new ResponseEntity<>(
+                    "Course edited Successfully", new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -153,9 +217,17 @@ public class CourseController {
      */
     @DeleteMapping("/course/{courseId}")
     public ResponseEntity<?> deleteCourse(@PathVariable("courseId") long courseId) {
-        // Todo
+        try {
+            courseService.deleteCourse(courseId);
 
-        return null;
+            return new ResponseEntity<>(
+                    "Course deleted successfully", new HttpHeaders(), HttpStatus.OK
+            );
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND
+            );
+        }
     }
 
     /**
@@ -167,6 +239,6 @@ public class CourseController {
     public ResponseEntity<Course> spawnCourse() {
         Course randomCourse = RandomThings.getRandomCourse();
 
-        return ResponseEntity.ok(courseService.saveCourse(randomCourse));
+        return ResponseEntity.ok(courseService.savePopulateCourse(randomCourse));
     }
 }

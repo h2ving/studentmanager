@@ -3,6 +3,7 @@ package sda.studentmanagement.studentmanager.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,16 @@ public class GradeController {
     }
 
     /**
+     * @Route GET /api/grades/averages/chart
+     * @Desc Get Course average grades for chart
+     * @Access
+     */
+    @GetMapping("/grades/averages/chart")
+    public ResponseEntity<List<HashMap<Object, Object>>> getCourseAverageGradesChart() {
+        return ResponseEntity.ok(gradeService.getCourseAverageGradesChart());
+    }
+
+    /**
      * @Route GET /api/grades/user/{userId}
      * @Desc Gets all User Grades and list of Course names User is included
      * @Access
@@ -59,6 +70,16 @@ public class GradeController {
     }
 
     /**
+     * @Route GET /api/grades/user/{userId}/paginated
+     * @Desc Get All User Grades, Paginated
+     * @Access
+     */
+    @GetMapping("/grades/user/{userId}/paginated")
+    public ResponseEntity<Page<Grade>> getUserGradesPaginated(@PathVariable("userId") long userId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(gradeService.getUserGrades(userId, pageNumber, pageSize));
+    }
+
+    /**
      * @Route GET /api/grades/session/{sessionId}
      * @Desc Get All Grades from Session
      * @Access
@@ -66,6 +87,16 @@ public class GradeController {
     @GetMapping("/grades/session/{sessionId}")
     public ResponseEntity<List<Grade>> getSessionGrades(@PathVariable("sessionId") long sessionId) {
         return ResponseEntity.ok(gradeService.getSessionGrades(sessionId));
+    }
+
+    /**
+     * @Route GET /api/course/{courseId}/grades
+     * @Desc Get All Course Grades, Paginated
+     * @Access Professor, Admin
+     */
+    @GetMapping("/course/{courseId}/grades")
+    public ResponseEntity<Page<Grade>> getCourseGrades(@PathVariable("courseId") long courseId, @RequestParam int pageNumber, @RequestParam int pageSize) {
+        return ResponseEntity.ok(gradeService.getCourseGrades(courseId, pageNumber, pageSize));
     }
 
     /**

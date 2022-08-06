@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { Course } from '../models/course.module';
+import { ChartsInterface } from '../interfaces/charts-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,29 @@ export class CourseService {
     const url: string = `${this.apiUrl}/courses`;
 
     return this.http.get<Course[]>(url, { headers: this.headers });
+  }
+
+  getCourseUsersCharts(): Observable<ChartsInterface[]> {
+    const url: string = `${this.apiUrl}/courses/data/charts`;
+
+    return this.http.get<ChartsInterface[]>(url, { headers: this.headers });
+  }
+
+  getPaginatedCourses(pageNumber: number, pageSize: number): Observable<Course[]> {
+    const url: string = `${this.apiUrl}/courses/paginated`;
+
+    return this.http.get<Course[]>(url, {
+      headers: this.headers, params: {
+        pageNumber,
+        pageSize,
+      }
+    });
+  }
+
+  getCourseCountCharts(): Observable<ChartsInterface> {
+    const url: string = `${this.apiUrl}/courses/count/charts`;
+
+    return this.http.get<ChartsInterface>(url, { headers: this.headers });
   }
 
   getCourse(courseId: number): Observable<Course> {
@@ -44,10 +68,28 @@ export class CourseService {
     return this.http.post(url, body, { responseType: 'text' });
   }
 
+  addCourse(body: any): Observable<string> {
+    const url: string = `${this.apiUrl}/course`;
+
+    return this.http.post(url, body, { responseType: 'text' });
+  }
+
+  editCourse(courseId: number, body: any): Observable<string> {
+    const url: string = `${this.apiUrl}/course/${courseId}`;
+
+    return this.http.put(url, body, { responseType: 'text' });
+  }
+
   leaveCourse(userId: number, courseId: number) {
     const url: string = `${this.apiUrl}/course/remove/user`;
     const body = { userId, courseId };
 
     return this.http.post(url, body, { responseType: 'text' });
+  }
+
+  deleteCourse(courseId: number): Observable<string> {
+    const url: string = `${this.apiUrl}/course/${courseId}`;
+
+    return this.http.delete(url, { responseType: 'text' });
   }
 }

@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET, "/api/users/**").hasAnyAuthority("Professor", "Admin");
         http.authorizeRequests().antMatchers(POST, "/api/user/save/**", "/api/role/**").hasAuthority("Admin");
         http.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("Student", "Professor", "Admin");
-        http.authorizeRequests().antMatchers(POST, "/api/spawn/**", "/api/spawnmany/**").hasAuthority("Admin");
+        http.authorizeRequests().antMatchers(POST, "/api/user/spawn/**", "/api/user/spawnmany/**").hasAuthority("Admin");
         http.authorizeRequests().antMatchers(PATCH, "/api/user/**").hasAnyAuthority("Student", "Professor", "Admin");
         http.authorizeRequests().antMatchers(PUT, "/api/user/**").hasAnyAuthority("Student", "Professor", "Admin");
 

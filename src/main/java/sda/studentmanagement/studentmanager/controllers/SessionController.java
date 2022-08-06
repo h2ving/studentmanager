@@ -104,7 +104,6 @@ public class SessionController {
      */
     @PostMapping("/session")
     public ResponseEntity<?> saveSession(@RequestBody AddSessionFormDto sessionForm) {
-        System.out.println(sessionForm);
         try {
             Session session = sessionService.saveSession(sessionForm);
 

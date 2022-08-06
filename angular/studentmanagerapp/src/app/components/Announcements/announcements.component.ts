@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnnouncementService } from 'src/app/services/announcement.service';
@@ -27,10 +27,10 @@ export class AnnouncementsComponent implements OnInit {
   courseAnnouncements: Array<Announcement>;
   editAnnouncementId: number | null;
 
-  editAnnouncementForm: FormGroup;
-  addAnnouncementForm: FormGroup;
+  editAnnouncementForm: UntypedFormGroup;
+  addAnnouncementForm: UntypedFormGroup;
 
-  constructor(private authService: AuthService, private announcementService: AnnouncementService, private formBuilder: FormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
+  constructor(private authService: AuthService, private announcementService: AnnouncementService, private formBuilder: UntypedFormBuilder, private activatedRoute: ActivatedRoute, public notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => this.currentUserId = params['id']);

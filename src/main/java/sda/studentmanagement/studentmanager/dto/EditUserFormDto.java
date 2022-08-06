@@ -14,6 +14,8 @@ public class EditUserFormDto {
 
     private String email;
 
+    private String role;
+
     private String gender;
 
     private LocalDate DOB;
